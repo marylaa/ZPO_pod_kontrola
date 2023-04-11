@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".firebaselogin.RegisterActivity">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="85dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/rounded_corner"
+        android:gravity="center"
+        android:shadowColor="@color/white"
+        android:text="POD KONTROLĄ"
+        android:textColor="@color/yellow"
+        android:textSize="45dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/inputName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="40dp"
+        android:hint="Nazwa użytkownika"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <EditText
+        android:id="@+id/inputEmaill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:hint="Email"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputName" />
+
+    <EditText
+        android:id="@+id/inputPasswordd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:hint="Hasło"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputEmaill" />
+
+    <EditText
+        android:id="@+id/inputPassworddRepeat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="40dp"
+        android:hint="Powtórz hasło"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/inputPasswordd"
+        tools:layout_editor_absoluteX="40dp" />
+
+    <Button
+        android:id="@+id/registerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="160dp"
+        android:backgroundTint="@color/white"
+        android:enabled="true"
+        android:text="Zarejestruj się"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputPassworddRepeat" />
+
+    <ImageView
+        android:layout_width="129dp"
+        android:layout_height="107dp"
+        android:layout_marginRight="13dp"
+        android:background="@drawable/pills"
+        app:layout_constraintBottom_toTopOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="120dp"
+        android:background="@drawable/pills2"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"></ImageView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
