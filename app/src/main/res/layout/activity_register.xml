@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="85dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="150dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/rounded_corner"
         android:gravity="center"
@@ -104,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:layout_marginBottom="160dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="30dp"
         android:backgroundTint="@color/white"
         android:enabled="true"
         android:text="Zarejestruj się"
@@ -128,7 +128,7 @@
         android:layout_height="120dp"
         android:background="@drawable/pills2"
         android:layout_marginLeft="30dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"></ImageView>
 

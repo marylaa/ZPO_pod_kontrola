@@ -14,16 +14,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val uID = intent
         val userID = uID.getStringExtra("uID")
 
         welcomeTextView = findViewById(R.id.welcomeText)
         welcomeTextView?.text = "Welcome ${userID}!";
-
-
     }
-
 }
-
-

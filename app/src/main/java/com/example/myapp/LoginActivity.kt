@@ -70,7 +70,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
                     if(task.isSuccessful){
                         showErrorSnackBar("You are logged in successfully.", false)
-                        goToMainActivity()
+                        goToNextActivity()
                         finish()
                     } else{
                         showErrorSnackBar(task.exception!!.message.toString(),true)
@@ -79,12 +79,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    open fun goToMainActivity() {
+    open fun goToNextActivity() {
         val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.email.toString()
+        val uid = user?.uid
 
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("uID",uid)
+        val intent = Intent(this, UserScheduleActivity::class.java)
         startActivity(intent)
     }
 }
