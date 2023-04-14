@@ -1,7 +1,8 @@
-package com.example.myapp
+package com.example.myapp.login
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.myapp.R
 import com.google.android.material.snackbar.Snackbar
 
 open class BaseActivity : AppCompatActivity() {
