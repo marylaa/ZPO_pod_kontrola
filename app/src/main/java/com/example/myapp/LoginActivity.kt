@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
@@ -22,10 +24,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         inputPassword = findViewById(R.id.inputPassword)
         loginButton = findViewById(R.id.loginButton)
 
-        loginButton?.setOnClickListener{
-
-            logInRegisteredUser()
-        }
+        loginButton?.setOnClickListener{ logInRegisteredUser() }
     }
 
     override fun onClick(view: View?) {

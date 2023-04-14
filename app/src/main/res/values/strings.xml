@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">MyLog</string>
     <string name="err_msg_enter_email">Wprowadź email</string>
-    <string name="err_msg_enter_name">Wprowadź nazwę użytkownika</string>
+    <string name="err_msg_enter_first_name">Wprowadź imię</string>
+    <string name="err_msg_enter_last_name">Wprowadź nazwisko</string>
     <string name="err_msg_enter_password">Wprowadź hasło</string>
     <string name="err_msg_enter_reppassword">Potwierdź hasło</string>
     <string name="err_msg_password_mismatch">Podane hasła nie są takie same</string>
+
+    <array name="users">
+        <item>Pacjent</item>
+        <item>Lekarz</item>
+    </array>
 </resources>

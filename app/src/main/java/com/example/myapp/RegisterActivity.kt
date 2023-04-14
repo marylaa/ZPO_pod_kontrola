@@ -6,18 +6,24 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class RegisterActivity : BaseActivity() {
 
     private var registerButton: Button? = null
     private var inputEmail: EditText? = null
-    private var inputName: EditText? = null
+    private var inputFirstName: EditText? = null
+    private var inputLastName: EditText? = null
     private var inputPassword: EditText? = null
     private var inputRepPass: EditText? = null
+
+    private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +31,8 @@ class RegisterActivity : BaseActivity() {
 
         registerButton = findViewById(R.id.registerButton)
         inputEmail = findViewById(R.id.inputEmaill)
-        inputName = findViewById(R.id.inputName)
+        inputFirstName = findViewById(R.id.inputFirstName)
+        inputLastName = findViewById(R.id.inputLastName)
         inputPassword = findViewById(R.id.inputPasswordd)
         inputRepPass = findViewById(R.id.inputPassworddRepeat)
 
@@ -43,8 +50,12 @@ class RegisterActivity : BaseActivity() {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_email),true)
                 false
             }
-            TextUtils.isEmpty(inputName?.text.toString().trim{ it <= ' '}) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_name),true)
+            TextUtils.isEmpty(inputFirstName?.text.toString().trim{ it <= ' '}) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_first_name),true)
+                false
+            }
+            TextUtils.isEmpty(inputLastName?.text.toString().trim{ it <= ' '}) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name),true)
                 false
             }
 
@@ -85,6 +96,8 @@ class RegisterActivity : BaseActivity() {
                         val firebaseUser: FirebaseUser = task.result!!.user!!
                         showErrorSnackBar("You are registered successfully. Your user id is ${firebaseUser.uid}",false)
 
+                        saveUser(firebaseUser)
+
                         FirebaseAuth.getInstance().signOut()
                         finish()
                     } else{
@@ -92,5 +105,19 @@ class RegisterActivity : BaseActivity() {
                     }
                 })
         }
+    }
+
+    private fun saveUser(firebaseUser: FirebaseUser) {
+        dbRef = FirebaseDatabase.getInstance().getReference("Users")
+
+        val firstName = inputFirstName?.text.toString().trim() {it <= ' '}
+        val lastName = inputLastName?.text.toString().trim() {it <= ' '}
+
+        val spinnerUser = findViewById<Spinner>(R.id.spinnerUser)
+        val selectedUser = spinnerUser.selectedItem as String
+
+        val newUser = UserModel(selectedUser, firstName, lastName)
+
+        dbRef.child(firebaseUser.uid).setValue(newUser)
     }
 }
