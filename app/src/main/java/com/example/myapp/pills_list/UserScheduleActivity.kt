@@ -2,20 +2,20 @@ package com.example.myapp.pills_list
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.AddPillActivity
 import com.example.myapp.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var newRecyclerView: RecyclerView
-    private lateinit var newArrayList: ArrayList<PillItem>
-    lateinit var hour: Array<String>
-    lateinit var name: Array<String>
+    private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,31 +24,10 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         val addButton = findViewById<Button>(R.id.addPill)
         addButton.setOnClickListener(this)
 
-        name = arrayOf(
-            "Lek1",
-            "Lek2",
-            "Lek3",
-            "Lek4",
-            "Lek5",
-            "Lek6",
-            "Lek7",
-            "Lek8")
-
-        hour = arrayOf(
-            "15:00",
-            "16:00",
-            "17:00",
-            "18:00",
-            "19:00",
-            "20:00",
-            "21:00",
-            "22:00")
-
         newRecyclerView = findViewById(R.id.rvPills)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
-        newArrayList = arrayListOf<PillItem>()
-        getUserData()
+        getDataFromDatabase()
     }
 
     override fun onClick(view: View?) {
@@ -63,12 +42,34 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun getUserData() {
-        for(i in name.indices) {
-            val pill = PillItem(name[i], hour[i])
-            newArrayList.add(pill)
-        }
-        newRecyclerView.adapter = PillItemAdapter(newArrayList)
+    private fun getDataFromDatabase() {
+        dbRef = FirebaseDatabase.getInstance().getReference("Pills")
+        val user = FirebaseAuth.getInstance().currentUser;
+        val uid = user?.uid
+
+        val pillList: MutableList<PillModel> = mutableListOf()
+
+        val query = dbRef.orderByChild("pacient").equalTo(uid)
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // Usuń dane z listy
+                pillList.clear()
+                // Pobierz dane i dodaj do listy
+                for (snapshot in dataSnapshot.children) {
+                    val pill = snapshot.getValue(PillModel::class.java)
+                    pillList.add(pill!!)
+                }
+                for (item in pillList) {
+                    Log.d("TAG", item.toString())
+                }
+                // utwórz adapter i przekaż listę do niego
+                newRecyclerView.adapter = PillItemAdapter(pillList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+            }
+        })
     }
 }
 

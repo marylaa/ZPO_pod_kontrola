@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 
 class PillItemAdapter (
-    private val pillList: ArrayList<PillItem>): RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>()
+    private val pillList: MutableList<PillModel>? ): RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>()
 {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PillItemViewHolder {
@@ -17,15 +17,15 @@ class PillItemAdapter (
     }
 
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
-        val currentItem = pillList[position]
-        holder.hour.text = currentItem.hour.toString()
+        val currentItem = pillList!![position]
+        holder.time.text = currentItem.hour.toString() + ":" + currentItem.minute.toString()
         holder.pillTitle.text = currentItem.name
     }
 
-    override fun getItemCount(): Int = pillList.size
+    override fun getItemCount(): Int = pillList!!.size
 
     class PillItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pillTitle: TextView = itemView.findViewById(R.id.pillTitle)
-        val hour: TextView = itemView.findViewById(R.id.pillHour)
+        val time: TextView = itemView.findViewById(R.id.pillHour)
     }
 }

@@ -47,7 +47,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".AddPillActivity"
+            android:name=".pills_list.AddPillActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
