@@ -1,11 +1,16 @@
 <resources>
-    <string name="app_name">MyLog</string>
+    <string name="app_name">MyApp</string>
     <string name="err_msg_enter_email">Wprowadź email</string>
     <string name="err_msg_enter_first_name">Wprowadź imię</string>
     <string name="err_msg_enter_last_name">Wprowadź nazwisko</string>
     <string name="err_msg_enter_password">Wprowadź hasło</string>
     <string name="err_msg_enter_reppassword">Potwierdź hasło</string>
     <string name="err_msg_password_mismatch">Podane hasła nie są takie same</string>
+    <string name="err_msg_enter_pill_name">Wprowadź nazwę leku</string>
+    <string name="err_msg_enter_valid_hour">Podana godzina jest niepoprawna</string>
+    <string name="err_msg_enter_valid_minute">Podane minuty są niepoprawne</string>
+    <string name="err_msg_enter_valid_amount">Podana ilość jest niepoprawna</string>
+    <string name="err_msg_enter_valid_in_box">Podana ilość w opakowaniu jest niepoprawna</string>
 
     <array name="users">
         <item>Pacjent</item>

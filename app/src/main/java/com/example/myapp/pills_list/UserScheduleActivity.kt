@@ -1,12 +1,16 @@
 package com.example.myapp.pills_list
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.AddPillActivity
 import com.example.myapp.R
 
-class UserScheduleActivity : AppCompatActivity() {
+class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var newArrayList: ArrayList<PillItem>
@@ -15,7 +19,10 @@ class UserScheduleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.user_pills_schedule)
+        setContentView(R.layout.activity_user_pills_schedule)
+
+        val addButton = findViewById<Button>(R.id.addPill)
+        addButton.setOnClickListener(this)
 
         name = arrayOf(
             "Lek1",
@@ -37,14 +44,23 @@ class UserScheduleActivity : AppCompatActivity() {
             "21:00",
             "22:00")
 
-//        val uID = intent
-//        val userID = uID.getStringExtra("uID")
-
         newRecyclerView = findViewById(R.id.rvPills)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
         newArrayList = arrayListOf<PillItem>()
         getUserData()
+    }
+
+    override fun onClick(view: View?) {
+        if(view !=null){
+            when (view.id){
+
+                R.id.addPill ->{
+                    val intent = Intent(this, AddPillActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     private fun getUserData() {

@@ -80,9 +80,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     open fun goToNextActivity() {
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
-
         val intent = Intent(this, UserScheduleActivity::class.java)
         startActivity(intent)
     }

@@ -28,6 +28,4 @@ open class BaseActivity : AppCompatActivity() {
         }
         snackbar.show()
     }
-
-
 }
