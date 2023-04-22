@@ -10,15 +10,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApp"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <activity
             android:name=".login.BaseActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.MyApp"/>
         <activity
             android:name=".login.RegisterActivity"
             android:exported="false">
@@ -48,6 +46,13 @@
         </activity>
         <activity
             android:name=".pills_list.AddPillActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".DoctorPageActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
