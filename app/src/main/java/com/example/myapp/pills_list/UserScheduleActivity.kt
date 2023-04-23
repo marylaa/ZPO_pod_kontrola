@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
+import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.report.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -44,6 +45,22 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                 };
                 R.id.addRaport ->{
                     val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                };
+                R.id.navigation_home -> {
+                    // Create a new intent for the new activity
+                    val intent = Intent(this, UserScheduleActivity::class.java)
+
+
+                    // Start the new activity
+                    startActivity(intent)
+                };
+                R.id.navigation_dashboard -> {
+                    // Create a new intent for the new activity
+                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
+
+
+                    // Start the new activity
                     startActivity(intent)
                 }
             }

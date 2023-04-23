@@ -10,9 +10,9 @@ import java.util.*
 
 //@Serializable
 class Report(
-    private var ValuesList: Array<Value>,
-    private var mood: String?,
-    private var notes: String,
+    private var valuesList: Array<Value> = emptyArray<Value>(),
+    private var mood: String? = "",
+    private var notes: String? = ""
 ){
     private var date: String = ""
 //    private val date: LocalDate
@@ -54,14 +54,17 @@ class Report(
         date = "$year-$month-$day"
     }
 
-    fun setMood(mood: String) {
+    fun setMood(mood: String?) {
         this.mood = mood
     }
 
-    fun setNotes(notes: String) {
+    fun setNotes(notes: String?) {
         this.notes = notes
     }
 
+    fun setValueList(array: Array<Value>){
+        this.valuesList = array
+    }
     fun printReport(): String{
         return this.mood + " " + this.notes + " "
     }
@@ -70,7 +73,7 @@ class Report(
         return mood.toString()
     }
 
-    fun getNotes(): String {
+    fun getNotes(): String? {
         return notes
     }
 
@@ -109,7 +112,7 @@ class Report(
 //        dbReference.child("report").push().setValue(this)
         dbReference.child("report").push().setValue(
             mapOf(
-                "ValuesList" to this.ValuesList.joinToString(","),
+                "ValuesList" to this.valuesList.joinToString(","),
                 "mood" to this.mood,
                 "notes" to this.notes,
                 "date" to this.date

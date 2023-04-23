@@ -1,9 +1,12 @@
 package com.example.myapp.report
 
 
+//import com.example.myapp.report.databinding.ActivityMainBinding
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -11,46 +14,48 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
-import com.example.myapp.pills_list.AddPillActivity
-//import com.example.myapp.report.databinding.ActivityMainBinding
-import com.example.myapp.report.ContactsAdapter
+import com.example.myapp.monthly_report.MainActivityMonthlyReport
+import com.example.myapp.pills_list.UserScheduleActivity
+
+
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
 
-abstract class MainActivity : AppCompatActivity(), View.OnClickListener {
-
-
-    var value: Value? = null
-    val valuesName =
-        arrayOf("Ciśnienie krwii", "Aktywność", "Waga", "Sen", "Temp. ciała", "Poziom cukru")
-    val valuesUnit = arrayOf("mmHg", "godz.", "kg", "godz.", "°C", "mmol/L")
-    var valuesList = arrayListOf<Value>()
-
+    var report: Report = Report()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
-//        val valuesList = arrayListOf<Value>()
-
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener(this)
 
+        var value: Value? = null
+        val valuesName =
+            arrayOf("Ciśnienie krwii", "Aktywność", "Waga", "Sen", "Temp. ciała", "Poziom cukru")
+        val valuesUnit = arrayOf("mmHg", "godz.", "kg", "godz.", "°C", "mmol/L")
+        val valuesList = arrayListOf<Value>()
 
         for (i in valuesName.indices) {
-            val value = Value(valuesName[i], valuesUnit[i], i, " ")
+            value = Value(valuesName[i], valuesUnit[i], i, " ")
             Log.d(TAG, valuesName[i])
-            this.valuesList.add(value)
+            valuesList.add(value)
         }
 
 
-        val adapter = ContactsAdapter(valuesList)
+        var adapter = ContactsAdapter(valuesList)
+
+
 
 
         // ...
         // Lookup the recyclerview in activity layout
         val rvContacts = findViewById<View>(R.id.rvItems) as RecyclerView
+//
+//        rvContacts.setAdapter(adapter);
+//        adapter.notifyDataSetChanged()
         // Initialize contacts
 //        contacts = Contact.createContactsList()
         // Create adapter passing in the sample user data
@@ -67,20 +72,85 @@ abstract class MainActivity : AppCompatActivity(), View.OnClickListener {
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
             val radioButton = findViewById<RadioButton>(checkedId)
             checkedRadioButton = radioButton.text.toString()
+            this.report.setMood(checkedRadioButton)
         }
 
 
         val notes = findViewById<EditText>(R.id.contact_name6)
-        button.setOnClickListener {
-            val stringNotes = notes.text.toString()
-            val report = Report(adapter.returnValuesArray(), checkedRadioButton, stringNotes)
-            Log.d(TAG, report.printReport())
-            report.saveToFirebase()
+        notes.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
+            }
 
+            override fun onTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+                val stringNotes = editable.toString()
+                report.setNotes(stringNotes)
+            }
+        })
+
+
+//        val stringNotes = notes.text.toString()
+//            val report = Report(adapter.returnValuesArray(), checkedRadioButton, stringNotes)
+        this.report.setValueList(adapter.returnValuesArray())
+//        this.report.setNotes(stringNotes)
+
+        Log.d(TAG, report.printReport())
+        Log.d(TAG, report.printReport())
+//            report.saveToFirebase()
+
+
+
+
+    }
+
+    override fun onClick(view: View?) {
+
+        if (view != null) {
+            when (view.id) {
+                R.id.button -> {
+                    // Create a new intent for the new activity
+                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
+
+
+                    // Save the report to Firebase
+                    this.report.saveToFirebase()
+
+                    // Start the new activity
+                    startActivity(intent)
+                };
+                R.id.navigation_home -> {
+                    // Create a new intent for the new activity
+                    val intent = Intent(this, UserScheduleActivity::class.java)
+
+
+                    // Start the new activity
+                    startActivity(intent)
+                };
+                R.id.navigation_dashboard -> {
+                    // Create a new intent for the new activity
+                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
+
+
+                    // Start the new activity
+                    startActivity(intent)
+                }
+
+            }
+        }else if(view != null && this.report.getMood() != ""){
+            when (view.id) {
+                R.id.button -> {
+                    // Create a new intent for the new activity
+                    val intent = Intent(this, UserScheduleActivity::class.java)
+
+
+                    // Start the new activity
+                    startActivity(intent)
+                }
+            }
 
         }
-
-
     }
 
 //    override fun onClick(view: View?) {
@@ -102,29 +172,24 @@ abstract class MainActivity : AppCompatActivity(), View.OnClickListener {
 //
 //    }
 
-    override fun onClick(view: View?) {
-
-        val adapter = ContactsAdapter(valuesList)
-
-
-        if (view != null) {
-            when (view.id) {
-                R.id.button -> {
-                    // Create a new intent for the new activity
-                    val intent = Intent(this, NewActivity::class.java)
-
-                    // Create a new report
-                    val report = Report(adapter.returnValuesArray(), checkedRadioButton, notes.text.toString())
-
-                    // Save the report to Firebase
-                    report.saveToFirebase()
-
-                    // Start the new activity
-                    startActivity(intent)
-                }
-            }
-        }
-    }
+//    override fun onClick(view: View?) {
+//
+//        if (view != null) {
+//            when (view.id) {
+//                R.id.button -> {
+//                    // Create a new intent for the new activity
+////                    val intent = Intent(this, UserScheduleActivity::class.java)
+//
+//
+//                    // Save the report to Firebase
+//                    this.report.saveToFirebase()
+//
+//                    // Start the new activity
+////                    startActivity(intent)
+//                }
+//            }
+//        }
+//    }
 
 
 
