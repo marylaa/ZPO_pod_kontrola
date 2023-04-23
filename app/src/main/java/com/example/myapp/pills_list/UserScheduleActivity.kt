@@ -60,7 +60,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                     val intent = Intent(this, MainActivityMonthlyReport::class.java)
 
 
-                    // Start the new activity
+
                     startActivity(intent)
                 }
             }
