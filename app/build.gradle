@@ -2,11 +2,15 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-android'
+    id 'kotlinx-serialization'
 }
 
 android {
     namespace 'com.example.myapp'
     compileSdk 33
+    useLibrary 'org.apache.http.legacy'
+    buildToolsVersion '33.0.2'
 
     defaultConfig {
         applicationId "com.example.myapp"
@@ -31,6 +35,8 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildToolsVersion '33.0.2'
+
 }
 
 dependencies {
@@ -44,4 +50,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+
+
 }

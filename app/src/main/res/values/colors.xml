@@ -9,7 +9,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-
+    <color name="orange">#FF5722</color>
+    <color name="blue_green_1">#DC00BCD4</color>
     <color name="colorSnackBarSuccess">#03A9F4</color>
     <color name="colorSnackBarError">#EB1B63</color>
+    <color name="gray">#CCCCCC</color>
 </resources>

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
+import com.example.myapp.report.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -24,6 +25,9 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         val addButton = findViewById<Button>(R.id.addPill)
         addButton.setOnClickListener(this)
 
+        val addReport = findViewById<Button>(R.id.addRaport)
+        addReport.setOnClickListener(this)
+
         newRecyclerView = findViewById(R.id.rvPills)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
@@ -36,6 +40,10 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
                 R.id.addPill ->{
                     val intent = Intent(this, AddPillActivity::class.java)
+                    startActivity(intent)
+                };
+                R.id.addRaport ->{
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
             }
