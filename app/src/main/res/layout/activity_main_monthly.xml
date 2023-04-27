@@ -50,22 +50,26 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvItems"
             android:layout_width="match_parent"
-            android:layout_height="375dp"
+            android:layout_height="350dp"
             android:textSize="3mm" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#3C000000"
-        android:paddingLeft="100dp"
-        android:paddingRight="100dp"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconSize="35dp"/>
+            android:id="@+id/bottom_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#3C000000"
+            android:paddingLeft="100dp"
+            android:paddingRight="100dp"
+            app:itemIconSize="35dp"
+            app:labelVisibilityMode="unlabeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/bottom_nav_menu"
+
+            />
 
 
-</LinearLayout>
+
+
+    </LinearLayout>
 
 </ScrollView>

@@ -13,7 +13,7 @@ import com.example.myapp.R;
 
 import java.util.List;
 
-public class RecycleViewAdapterItem extends RecyclerView.Adapter<RecycleViewAdapterItem.ViewHolder> {
+public class RecycleViewAdapterItemJava extends RecyclerView.Adapter<RecycleViewAdapterItemJava.ViewHolder> {
 
     private List<String> mdate;
     private List<String> mDoctors;
@@ -21,7 +21,7 @@ public class RecycleViewAdapterItem extends RecyclerView.Adapter<RecycleViewAdap
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecycleViewAdapterItem(Context context, List<String> mdate, List<String> mDoctors) {
+    RecycleViewAdapterItemJava(Context context, List<String> mdate, List<String> mDoctors) {
         this.mInflater = LayoutInflater.from(context);
         this.mdate = mdate;
         this.mDoctors = mDoctors;

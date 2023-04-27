@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.pills_list.UserScheduleActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -100,6 +101,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.d(TAG, report.printReport())
 //            report.saveToFirebase()
 
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+//        val navController = findNavController(R.id.navigation_home)
+        navView.menu.findItem(R.id.navigation_home).isChecked = true
+
+        navView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this@MainActivity, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_dashboard -> {
+                    val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_notifications -> {
+                    val intent = Intent(this@MainActivity, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
+
 
 
 
@@ -116,22 +142,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                     // Save the report to Firebase
                     this.report.saveToFirebase()
-
-                    // Start the new activity
-                    startActivity(intent)
-                };
-                R.id.navigation_home -> {
-                    // Create a new intent for the new activity
-                    val intent = Intent(this, UserScheduleActivity::class.java)
-
-
-                    // Start the new activity
-                    startActivity(intent)
-                };
-                R.id.navigation_dashboard -> {
-                    // Create a new intent for the new activity
-                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
-
 
                     // Start the new activity
                     startActivity(intent)

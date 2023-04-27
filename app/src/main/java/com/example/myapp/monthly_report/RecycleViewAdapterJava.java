@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder> {
+public class RecycleViewAdapterJava extends RecyclerView.Adapter<RecycleViewAdapterJava.ViewHolder> {
 
     private List<Integer> mViewColors;
     private List<LocalDate> mdate;
@@ -26,7 +26,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecycleViewAdapter(Context context, List<Integer> colors, List<LocalDate> date) {
+    RecycleViewAdapterJava(Context context, List<Integer> colors, List<LocalDate> date) {
         this.mInflater = LayoutInflater.from(context);
         this.mViewColors = colors;
         this.mdate = date;
