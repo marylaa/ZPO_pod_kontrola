@@ -1,21 +1,21 @@
 package com.example.myapp.pacients_list
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.settings.DoctorSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.UserModel
-import com.example.myapp.pills_list.PillItemAdapter
-import com.example.myapp.pills_list.PillModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class ViewPacientsActivity : AppCompatActivity() {
 
     private lateinit var newRecyclerView: RecyclerView
-    private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +25,30 @@ class ViewPacientsActivity : AppCompatActivity() {
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
         getDataFromDatabase()
+
+        val navView: BottomNavigationView = findViewById(R.id.navigation_bar)
+//        navView.menu.findItem(R.id.navigation_home).isChecked = true
+
+        navView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this@ViewPacientsActivity, ViewPacientsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+//                R.id.navigation_dashboard -> {
+//                    val intent = Intent(this@ViewPacientsActivity, MainActivityMonthlyReport::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+                R.id.navigation_settings -> {
+                    val intent = Intent(this@ViewPacientsActivity, DoctorSettingsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun getDataFromDatabase() {
@@ -33,28 +57,33 @@ class ViewPacientsActivity : AppCompatActivity() {
 
         val pacientList: MutableList<UserModel> = mutableListOf()
 
-        val doctorRef = FirebaseDatabase.getInstance().getReference("Pacients/$uid")
-        doctorRef.addValueEventListener(object : ValueEventListener {
+        val doctorRef = FirebaseDatabase.getInstance().getReference("Pacients")
+        val query = doctorRef.orderByChild("doctor").equalTo(uid)
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pacientList.clear()
 
-                val id = dataSnapshot.value
-                Log.d("TAG", id.toString())
+                for (snapshot in dataSnapshot.children) {
+                    val pacientId = snapshot.child("pacient").value.toString()
+                    getDataFromDatabase(pacientId, pacientList)
+                }
+            }
 
-                val pacientRef = FirebaseDatabase.getInstance().getReference("Users/$id")
-                pacientRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val pacient = dataSnapshot.getValue(UserModel::class.java)
-                        pacientList.add(pacient!!)
-                        Log.d("TAG", pacient.toString())
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+            }
+        })
+    }
 
-                        newRecyclerView.adapter = PacientItemAdapter(pacientList)
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.d("TAG", "Błąd")
-                    }
-                })
+    private fun getDataFromDatabase(pacientId: String, pacientList: MutableList<UserModel>) {
+        val pacientRef = FirebaseDatabase.getInstance().getReference("Users").child(pacientId)
+        pacientRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val pacient = dataSnapshot.getValue(UserModel::class.java)
+                if (pacient != null) { // sprawdzamy czy pacjent nie jest pusty
+                    pacientList.add(pacient)
+                    newRecyclerView.adapter = PacientItemAdapter(pacientList)
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {

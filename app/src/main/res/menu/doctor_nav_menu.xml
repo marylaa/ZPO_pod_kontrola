@@ -3,14 +3,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 <item
     android:id="@+id/navigation_home"
-    android:icon="@drawable/baseline_calendar_today_24"
+    android:icon="@drawable/baseline_format_list_bulleted_24"
     android:title="calendar" />
 <item
-    android:id="@+id/navigation_dashboard"
-    android:icon="@drawable/baseline_insert_chart_outlined_24"
+    android:id="@+id/navigation_messages"
+    android:icon="@drawable/baseline_announcement_24"
     android:title="chart" />
 <item
-    android:id="@+id/navigation_notifications"
+    android:id="@+id/navigation_settings"
     android:icon="@drawable/baseline_settings_24"
     android:title="settings" />
 </menu>

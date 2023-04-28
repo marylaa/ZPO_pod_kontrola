@@ -33,7 +33,7 @@
         tools:layout_editor_absoluteX="185dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
+        android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#3C000000"
@@ -42,6 +42,6 @@
         app:itemIconSize="35dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/doctor_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

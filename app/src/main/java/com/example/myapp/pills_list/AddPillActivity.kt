@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
+import com.example.myapp.settings.PacientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -60,6 +62,32 @@ class AddPillActivity : BaseActivity()  {
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+//        navView.menu.findItem(R.id.navigation_home).isChecked = true
+
+        navView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this@AddPillActivity, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+//                R.id.navigation_report -> {
+//                    val intent = Intent(this@AddPillActivity, MainActivityMonthlyReport::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+                R.id.navigation_settings -> {
+                    val intent = Intent(this@AddPillActivity, PacientSettingsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
 
     private fun validatePillDetails(): Boolean {
