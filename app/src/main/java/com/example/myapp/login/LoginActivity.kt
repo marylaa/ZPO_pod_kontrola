@@ -87,7 +87,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         val user = FirebaseAuth.getInstance().currentUser;
 
         dbRef = FirebaseDatabase.getInstance().getReference("Users").child(user?.uid.toString())
-        dbRef.addValueEventListener(object : ValueEventListener {
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if(dataSnapshot.child("userType").value.toString().equals("Pacjent")) {
                     val intent = Intent(this@LoginActivity, UserScheduleActivity::class.java)
