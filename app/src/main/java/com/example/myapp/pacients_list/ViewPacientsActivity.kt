@@ -27,7 +27,7 @@ class ViewPacientsActivity : AppCompatActivity() {
         getDataFromDatabase()
 
         val navView: BottomNavigationView = findViewById(R.id.navigation_bar)
-//        navView.menu.findItem(R.id.navigation_home).isChecked = true
+        navView.menu.findItem(R.id.navigation_home).isChecked = true
 
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {

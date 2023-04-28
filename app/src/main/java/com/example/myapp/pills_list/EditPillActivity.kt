@@ -3,19 +3,19 @@ package com.example.myapp.pills_list
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.myapp.settings.PacientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import java.util.*
+import com.google.firebase.database.*
 
-class AddPillActivity : BaseActivity()  {
+class EditPillActivity : BaseActivity() {
 
+    private var pillId: String? = null
+    private var pill: PillModel? = null
     private var saveButton: Button? = null
     private var inputName: EditText? = null
     private var inputHour: EditText? = null
@@ -28,7 +28,7 @@ class AddPillActivity : BaseActivity()  {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_pill)
+        setContentView(R.layout.activity_edit_pill)
 
         saveButton = findViewById(R.id.savePill)
         inputName = findViewById(R.id.pillName)
@@ -43,6 +43,33 @@ class AddPillActivity : BaseActivity()  {
                 finish()
             }
         }
+
+        pillId = intent.getStringExtra("pillId")
+        dbRef = FirebaseDatabase.getInstance().getReference("Pills")
+        dbRef.child(pillId!!).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                pill = snapshot.getValue(PillModel::class.java)
+
+                pill?.let {
+                    inputName?.setText(it.name)
+                    inputHour?.setText(it.hour.toString())
+                    inputMinute?.setText(it.minute.toString())
+                    inputLeft?.setText(it.availability.toString())
+                    inputPackage?.setText(it.inBox.toString())
+
+                    val spinner = findViewById<Spinner>(R.id.spinner1)
+                    when (it.frequency) {
+                        "Codziennie" -> spinner.setSelection(0)
+                        "Co drugi dzień" -> spinner.setSelection(1)
+                        "Raz w tygodniu" -> spinner.setSelection(2)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+            }
+        })
 
         val spinner = findViewById<Spinner>(R.id.spinner1)
         val elements = arrayOf("Codziennie", "Co drugi dzień", "Raz w tygodniu")
@@ -65,12 +92,11 @@ class AddPillActivity : BaseActivity()  {
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        navView.menu.findItem(R.id.navigation_home).isChecked = true
 
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
-                    val intent = Intent(this@AddPillActivity, UserScheduleActivity::class.java)
+                    val intent = Intent(this@EditPillActivity, UserScheduleActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -80,7 +106,7 @@ class AddPillActivity : BaseActivity()  {
 //                    true
 //                }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@AddPillActivity, PacientSettingsActivity::class.java)
+                    val intent = Intent(this@EditPillActivity, PacientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -133,19 +159,13 @@ class AddPillActivity : BaseActivity()  {
     private fun savePill() {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
-        val name = inputName?.text.toString().trim() { it <= ' ' }
-        val hour = inputHour?.text.toString().toIntOrNull()
-        val minute = inputMinute?.text.toString().toIntOrNull()
-        val amountLeft = inputLeft?.text.toString().toIntOrNull()
-        val amountBox = inputPackage?.text.toString().toIntOrNull()
-        val frequency = selectedFrequency
+        pill!!.name = inputName?.text.toString().trim() { it <= ' ' }
+        pill!!.hour = inputHour?.text.toString().toIntOrNull()
+        pill!!.minute = inputMinute?.text.toString().toIntOrNull()
+        pill!!.availability = inputLeft?.text.toString().toIntOrNull()
+        pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
+        pill!!.frequency = selectedFrequency
 
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
-
-        val id = UUID.randomUUID().toString()
-        val newPill = PillModel(id, uid, name, amountLeft, amountBox, frequency, hour, minute)
-
-        dbRef.child(id).setValue(newPill)
+        dbRef.child(pill!!.id.toString()).setValue(pill)
     }
 }

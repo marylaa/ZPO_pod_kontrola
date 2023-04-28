@@ -1,6 +1,7 @@
 package com.example.myapp.pills_list
 
 data class PillModel (
+    var id: String? = null,
     var pacient: String? = null,
     var name: String = "",
     var availability: Int? = null,

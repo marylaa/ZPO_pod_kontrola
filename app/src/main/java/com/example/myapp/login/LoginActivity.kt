@@ -55,7 +55,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
                 false
             } else -> {
-                showErrorSnackBar("Your details are valid",false)
+                showErrorSnackBar("Wprowadzono poprawne dane",false)
                 true
             }
         }
@@ -73,7 +73,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .addOnCompleteListener{task ->
 
                     if(task.isSuccessful){
-                        showErrorSnackBar("You are logged in successfully.", false)
                         goToNextActivity()
                         finish()
                     } else{

@@ -32,7 +32,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         getDataFromDatabase()
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        navView.menu.findItem(R.id.navigation_home).isChecked = true
+        navView.menu.findItem(R.id.navigation_home).isChecked = true
 
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -54,7 +54,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                 else -> false
             }
         }
-
     }
 
 
@@ -80,17 +79,14 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // Usuń dane z listy
                 pillList.clear()
-                // Pobierz dane i dodaj do listy
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
                     pillList.add(pill!!)
                 }
-                for (item in pillList) {
-                    Log.d("TAG", item.toString())
-                }
-                // utwórz adapter i przekaż listę do niego
+//                for (item in pillList) {
+//                    Log.d("TAG", item.toString())
+//                }
                 newRecyclerView.adapter = PillItemAdapter(pillList)
             }
 
