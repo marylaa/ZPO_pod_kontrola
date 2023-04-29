@@ -1,4 +1,4 @@
-package com.example.myapp.pacients_list
+package com.example.myapp.patients_list
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class ViewPacientsActivity : AppCompatActivity() {
+class ViewPatientsActivity : AppCompatActivity() {
 
     private lateinit var newRecyclerView: RecyclerView
 
@@ -32,17 +32,12 @@ class ViewPacientsActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
-                    val intent = Intent(this@ViewPacientsActivity, ViewPacientsActivity::class.java)
+                    val intent = Intent(this@ViewPatientsActivity, ViewPatientsActivity::class.java)
                     startActivity(intent)
                     true
                 }
-//                R.id.navigation_dashboard -> {
-//                    val intent = Intent(this@ViewPacientsActivity, MainActivityMonthlyReport::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@ViewPacientsActivity, DoctorSettingsActivity::class.java)
+                    val intent = Intent(this@ViewPatientsActivity, DoctorSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -82,7 +77,7 @@ class ViewPacientsActivity : AppCompatActivity() {
                 val pacient = dataSnapshot.getValue(UserModel::class.java)
                 if (pacient != null) { // sprawdzamy czy pacjent nie jest pusty
                     pacientList.add(pacient)
-                    newRecyclerView.adapter = PacientItemAdapter(pacientList)
+                    newRecyclerView.adapter = PatientItemAdapter(pacientList)
                 }
             }
 

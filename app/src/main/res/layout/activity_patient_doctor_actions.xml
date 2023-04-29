@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PatientActionsActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#DC00BCD4"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/baseline_arrow_back_24"
+            android:scaleX="2"
+            android:scaleY="2" />
+
+        <TextView
+            android:id="@+id/patientName"
+            android:layout_width="350dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="10dp"
+            android:background="#DC00BCD4"
+            android:gravity="center_vertical"
+            android:text="Pacjent"
+            android:paddingLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/pacientReport"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="Miesięczny raport"
+        android:textSize="27sp"
+        app:layout_constraintEnd_toStartOf="@+id/chooseReport"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <ImageButton
+        android:id="@+id/chooseReport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/baseline_arrow_forward_ios_24"
+        android:backgroundTint="#97222323"
+        app:layout_constraintBottom_toBottomOf="@+id/pacientReport"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pacientReport" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="20dp"
+        android:background="#F2000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pacientReport" />
+
+    <TextView
+        android:id="@+id/pacientPills"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="Leki"
+        android:textSize="27sp"
+        app:layout_constraintEnd_toStartOf="@+id/choosePills"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <ImageButton
+        android:id="@+id/choosePills"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/baseline_arrow_forward_ios_24"
+        android:backgroundTint="#97222323"
+        app:layout_constraintBottom_toBottomOf="@+id/pacientPills"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/pacientPills" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="20dp"
+        android:background="#F2000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pacientPills" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#3C000000"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        app:itemIconSize="35dp"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/doctor_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

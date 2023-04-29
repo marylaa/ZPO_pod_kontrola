@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
-import com.example.myapp.settings.PacientSettingsActivity
+import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -14,7 +14,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
-class AddPillActivity : BaseActivity()  {
+class AddPillActivity : BaseActivity(), View.OnClickListener {
 
     private var saveButton: Button? = null
     private var inputName: EditText? = null
@@ -29,6 +29,9 @@ class AddPillActivity : BaseActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_pill)
+
+        val backButton = findViewById<ImageButton>(R.id.close)
+        backButton.setOnClickListener(this)
 
         saveButton = findViewById(R.id.savePill)
         inputName = findViewById(R.id.pillName)
@@ -65,7 +68,6 @@ class AddPillActivity : BaseActivity()  {
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        navView.menu.findItem(R.id.navigation_home).isChecked = true
 
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -80,7 +82,7 @@ class AddPillActivity : BaseActivity()  {
 //                    true
 //                }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@AddPillActivity, PacientSettingsActivity::class.java)
+                    val intent = Intent(this@AddPillActivity, PatientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -147,5 +149,17 @@ class AddPillActivity : BaseActivity()  {
         val newPill = PillModel(id, uid, name, amountLeft, amountBox, frequency, hour, minute)
 
         dbRef.child(id).setValue(newPill)
+    }
+
+    override fun onClick(view: View?) {
+        if(view !=null){
+            when (view.id){
+
+                R.id.close ->{
+                    val intent = Intent(this, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 }

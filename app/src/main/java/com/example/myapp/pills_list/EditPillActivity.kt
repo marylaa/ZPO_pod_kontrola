@@ -6,13 +6,13 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.*
-import com.example.myapp.settings.PacientSettingsActivity
+import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 
-class EditPillActivity : BaseActivity() {
+class EditPillActivity : BaseActivity(), View.OnClickListener {
 
     private var pillId: String? = null
     private var pill: PillModel? = null
@@ -29,6 +29,9 @@ class EditPillActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pill)
+
+        val backButton = findViewById<ImageButton>(R.id.close)
+        backButton.setOnClickListener(this)
 
         saveButton = findViewById(R.id.savePill)
         inputName = findViewById(R.id.pillName)
@@ -106,7 +109,7 @@ class EditPillActivity : BaseActivity() {
 //                    true
 //                }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@EditPillActivity, PacientSettingsActivity::class.java)
+                    val intent = Intent(this@EditPillActivity, PatientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -167,5 +170,17 @@ class EditPillActivity : BaseActivity() {
         pill!!.frequency = selectedFrequency
 
         dbRef.child(pill!!.id.toString()).setValue(pill)
+    }
+
+    override fun onClick(view: View?) {
+        if(view !=null){
+            when (view.id){
+
+                R.id.close ->{
+                    val intent = Intent(this, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 }

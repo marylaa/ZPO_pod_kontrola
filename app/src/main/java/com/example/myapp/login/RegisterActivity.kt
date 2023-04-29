@@ -114,7 +114,7 @@ class RegisterActivity : BaseActivity() {
         val spinnerUser = findViewById<Spinner>(R.id.spinnerUser)
         val selectedUser = spinnerUser.selectedItem as String
 
-        val newUser = UserModel(selectedUser, firstName, lastName)
+        val newUser = UserModel(firebaseUser.uid, selectedUser, firstName, lastName)
 
         dbRef.child(firebaseUser.uid).setValue(newUser)
     }

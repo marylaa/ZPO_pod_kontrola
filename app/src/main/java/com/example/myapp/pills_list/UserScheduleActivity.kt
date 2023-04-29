@@ -8,7 +8,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.settings.PacientSettingsActivity
+import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -47,7 +47,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 //                    true
 //                }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@UserScheduleActivity, PacientSettingsActivity::class.java)
+                    val intent = Intent(this@UserScheduleActivity, PatientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -84,9 +84,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                     val pill = snapshot.getValue(PillModel::class.java)
                     pillList.add(pill!!)
                 }
-//                for (item in pillList) {
-//                    Log.d("TAG", item.toString())
-//                }
                 newRecyclerView.adapter = PillItemAdapter(pillList)
             }
 

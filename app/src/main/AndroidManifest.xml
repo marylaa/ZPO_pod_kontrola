@@ -52,7 +52,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".pacients_list.ViewPacientsActivity"
+            android:name=".patients_list.ViewPatientsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -66,7 +66,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".settings.PacientSettingsActivity"
+            android:name=".settings.PatientSettingsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -74,6 +74,13 @@
         </activity>
         <activity
             android:name=".pills_list.EditPillActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".PatientActionsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
