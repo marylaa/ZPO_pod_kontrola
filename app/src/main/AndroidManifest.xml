@@ -80,7 +80,28 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".PatientActionsActivity"
+            android:name=".doctor_view.PatientActionsActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".doctor_view.DoctorAddPillActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".doctor_view.DoctorEditPillActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".doctor_view.PatientPillsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

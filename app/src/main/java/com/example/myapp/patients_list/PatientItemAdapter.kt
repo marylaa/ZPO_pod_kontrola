@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.PatientActionsActivity
+import com.example.myapp.doctor_view.PatientActionsActivity
 import com.example.myapp.R
 import com.example.myapp.login.UserModel
 
