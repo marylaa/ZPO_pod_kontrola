@@ -29,29 +29,21 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAnimals"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:paddingTop="0dp" />
 
-        <!--    <Button-->
-<!--        android:id="@+id/button"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="28dp"-->
-<!--        android:background="@color/white"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        android:text="Zapisz"-->
-<!--        android:textColor="@color/white"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.905"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvItems"
+        <Spinner
+            android:id="@+id/spinner3"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:textSize="3mm" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="320dp" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation_view"

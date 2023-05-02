@@ -1,49 +1,23 @@
 package com.example.myapp.report
 
-import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
-import java.time.LocalDate
 import java.util.*
 
 
 //@Serializable
-class Report(
-    private var valuesList: Array<Value> = emptyArray<Value>(),
-    private var mood: String? = "",
-    private var notes: String? = ""
+data class Report(
+    var valuesList: Array<Value> = emptyArray<Value>(),
+    internal var mood: String? = "",
+    internal var notes: String? = ""
 ){
-    private var date: String = ""
-//    private val date: LocalDate
+    internal var date: String = ""
+    var user: String = ""
 
-//@Contextual
-//var date: LocalDate? = null
-//
-//    init {
-//        date = LocalDate.now()
-//    }
-
-//    constructor(ValuesList: String, mood: String, notes: String) : this() {
-//        this.ValuesList = ValuesList.split(",").map { Value(it) }.toTypedArray()
-//        this.mood = mood
-//        this.notes = notes
-//    }
-
-
-
-//    fun setArray(array: Array<Value>) {
-//        this.ValuesList = array
-//    }
-
-//    val c = Calendar.getInstance()
-//
-//    val year = c.get(Calendar.YEAR)
-//    val month = c.get(Calendar.MONTH)
-//    val day = c.get(Calendar.DAY_OF_MONTH)
-//
-//    val hour = c.get(Calendar.HOUR_OF_DAY)
-//    val minute = c.get(Calendar.MINUTE)
+    constructor() : this(emptyArray<Value>(), "", ""
+    )
 
     init {
         val c = Calendar.getInstance()
@@ -52,28 +26,36 @@ class Report(
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         date = "$year-$month-$day"
+
+
     }
 
-    fun setMood(mood: String?) {
+    init {
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid
+        this.user = uid ?: ""
+    }
+
+    public fun setMood(mood: String?) {
         this.mood = mood
     }
 
-    fun setNotes(notes: String?) {
+    public fun setNotes(notes: String?) {
         this.notes = notes
     }
 
-    fun setValueList(array: Array<Value>){
+    public fun setValueList(array: Array<Value>){
         this.valuesList = array
     }
-    fun printReport(): String{
+    public fun printReport(): String{
         return this.mood + " " + this.notes + " "
     }
 
-    fun getMood(): String{
+    public fun getMood(): String{
         return mood.toString()
     }
 
-    fun getNotes(): String? {
+    public fun getNotes(): String? {
         return notes
     }
 
@@ -109,14 +91,25 @@ class Report(
         val dbFirebase = FirebaseDatabase.getInstance()
         val dbReference = dbFirebase.getReference()
 
+        val user = FirebaseAuth.getInstance().currentUser;
+        val uid = user?.uid
+
 //        dbReference.child("report").push().setValue(this)
         dbReference.child("report").push().setValue(
             mapOf(
-                "ValuesList" to this.valuesList.joinToString(","),
+//                "ValuesList" to this.valuesList.joinToString(","),
+                "Ciśnienie" to this.valuesList[0].getInput().toString(),
+                "Aktywność" to this.valuesList[1].getInput().toString(),
+                "Waga" to this.valuesList[2].getInput().toString(),
+                "Sen" to this.valuesList[3].getInput().toString(),
+                "Temp" to this.valuesList[4].getInput().toString(),
+                "Poziom" to this.valuesList[5].getInput().toString(),
                 "mood" to this.mood,
                 "notes" to this.notes,
-                "date" to this.date
-            )
+                "date" to this.date,
+                "user" to this.user
+            ),
+            uid
         )
 
 

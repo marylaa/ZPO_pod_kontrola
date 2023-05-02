@@ -70,53 +70,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-//    private fun replaceFragment(fragment: Fragment) {
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.rvPills, fragment)
-//            .commit()
-//    }
-//
-//    class FragmentOne : Fragment() {
-//
-//        override fun onCreateView(
-//            inflater: LayoutInflater, container: ViewGroup?,
-//            savedInstanceState: Bundle?
-//        ): View? {
-//            // Inflate the layout for this fragment
-//            return inflater.inflate(R.layout.activity_user_pills_schedule, container, false)
-//        }
-//
-//    }
-//
-//    class FragmentTwo : Fragment() {
-//
-//        override fun onCreateView(
-//            inflater: LayoutInflater, container: ViewGroup?,
-//            savedInstanceState: Bundle?
-//        ): View? {
-//            // Inflate the layout for this fragment
-//            return inflater.inflate(R.layout.activity_main_monthly, container, false)
-//        }
-//
-//    }
-//
-//    private fun selectFragment(itemId: Int) {
-//        var fragment: Fragment? = null
-//
-//        // Initialize the selected fragment based on the item id
-//        when (itemId) {
-//            R.id.navigation_home -> fragment = FragmentOne()
-//            R.id.navigation_dashboard -> fragment = FragmentTwo()
-//
-//        }
-//
-//        // Replace the current fragment with the selected fragment
-//        if (fragment != null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.rvPills, fragment)
-//                .commit()
-//        }
-//    }
+
 
 
     override fun onClick(view: View?) {

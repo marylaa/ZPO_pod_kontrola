@@ -6,7 +6,7 @@ package com.example.myapp.report
 //import kotlinx.serialization.encodeToString
 
 //@Serializable
-class Value(private val name: String, private val unit: String,private val id: Int,private var input: String) {
+class Value(internal val name: String, private val unit: String, private val id: Int, internal var input: String) {
 //    var this_name: String = name
 //        // Custom Getter
 //        get() {
