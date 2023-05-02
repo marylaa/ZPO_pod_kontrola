@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".pills_list.AddPillActivity"
+    tools:context=".pills_list.EditPillActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -32,7 +32,7 @@
             android:background="#DC00BCD4"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:text="Nowy lek"
+            android:text="Edytuj lek"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
@@ -54,7 +54,7 @@
         android:id="@+id/textViewName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Podaj nazwę"
+        android:text="Zmień nazwę"
         android:padding="10dp"
         android:textSize="24sp"
         android:textColor="@color/black"

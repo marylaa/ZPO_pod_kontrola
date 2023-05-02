@@ -1,21 +1,23 @@
-package com.example.myapp.pills_list
+package com.example.myapp.doctor_view
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.*
-import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
+import com.example.myapp.patients_list.ViewPatientsActivity
+import com.example.myapp.pills_list.PillModel
+import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.util.*
 
-class AddPillActivity : BaseActivity(), View.OnClickListener {
+class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
+    private var patientId: String? = null
     private var saveButton: Button? = null
     private var inputName: EditText? = null
     private var inputHour: EditText? = null
@@ -29,6 +31,8 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_pill)
+
+        patientId = intent.getStringExtra("patientId")
 
         val backButton = findViewById<ImageButton>(R.id.close)
         backButton.setOnClickListener(this)
@@ -72,17 +76,12 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
-                    val intent = Intent(this@AddPillActivity, UserScheduleActivity::class.java)
+                    val intent = Intent(this@DoctorAddPillActivity, ViewPatientsActivity::class.java)
                     startActivity(intent)
                     true
                 }
-//                R.id.navigation_report -> {
-//                    val intent = Intent(this@AddPillActivity, MainActivityMonthlyReport::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@AddPillActivity, PatientSettingsActivity::class.java)
+                    val intent = Intent(this@DoctorAddPillActivity, DoctorSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -127,7 +126,8 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun goToSchedule(view: View) {
-        val intent = Intent(this, UserScheduleActivity::class.java)
+        val intent = Intent(this, PatientPillsActivity::class.java)
+        intent.putExtra("patientId", patientId)
         startActivity(intent)
         finish()
     }
@@ -142,11 +142,8 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         val amountBox = inputPackage?.text.toString().toIntOrNull()
         val frequency = selectedFrequency
 
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
-
         val id = UUID.randomUUID().toString()
-        val newPill = PillModel(id, uid, name, amountLeft, amountBox, frequency, hour, minute)
+        val newPill = PillModel(id, patientId, name, amountLeft, amountBox, frequency, hour, minute)
 
         dbRef.child(id).setValue(newPill)
     }
@@ -156,7 +153,8 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
             when (view.id){
 
                 R.id.close ->{
-                    val intent = Intent(this, UserScheduleActivity::class.java)
+                    val intent = Intent(this, PatientPillsActivity::class.java)
+                    intent.putExtra("patientId", patientId)
                     startActivity(intent)
                 }
             }

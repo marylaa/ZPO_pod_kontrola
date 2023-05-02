@@ -1,4 +1,4 @@
-package com.example.myapp.pills_list
+package com.example.myapp.doctor_view
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,27 +9,18 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
+import com.example.myapp.pills_list.PillModel
 import com.google.firebase.database.FirebaseDatabase
 
-class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>() {
+class PatientPillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerView.Adapter<PatientPillItemAdapter.PillItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PillItemViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_pill, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_pill_doctor_view, parent, false)
         return PillItemViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
-        var hour: String? = currentItem.hour.toString()
-        var minute: String? = currentItem.minute.toString()
-
-        if (currentItem.hour!! < 10) {
-            hour = "0" + currentItem.hour.toString()
-        }
-        if (currentItem.minute!! < 10) {
-            minute = "0" + currentItem.minute.toString()
-        }
-        holder.time.text = hour + ":" + minute
         holder.pillTitle.text = currentItem.name
 
         holder.itemView.apply {
@@ -41,8 +32,9 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                 popupMenu.setOnMenuItemClickListener { menuItem ->
                     when (menuItem.title) {
                         "Edytuj lek" -> {
-                            val intent = Intent(holder.itemView.context, EditPillActivity::class.java)
+                            val intent = Intent(holder.itemView.context, DoctorEditPillActivity::class.java)
                             intent.putExtra("pillId", currentItem.id)
+                            intent.putExtra("patientId", currentItem.pacient)
                             holder.itemView.context.startActivity(intent)
                             true
                         }
@@ -67,6 +59,5 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
 
     class PillItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pillTitle: TextView = itemView.findViewById(R.id.pillTitle)
-        val time: TextView = itemView.findViewById(R.id.pillHour)
     }
 }

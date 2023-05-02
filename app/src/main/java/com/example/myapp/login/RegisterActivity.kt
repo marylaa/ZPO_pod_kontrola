@@ -59,17 +59,14 @@ class RegisterActivity : BaseActivity() {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name),true)
                 false
             }
-
             TextUtils.isEmpty(inputPassword?.text.toString().trim{ it <= ' '}) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
                 false
             }
-
             TextUtils.isEmpty(inputRepPass?.text.toString().trim{ it <= ' '}) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_reppassword),true)
                 false
             }
-
             inputPassword?.text.toString().trim {it <= ' '} != inputRepPass?.text.toString().trim{it <= ' '} -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_password_mismatch),true)
                 false
@@ -117,7 +114,7 @@ class RegisterActivity : BaseActivity() {
         val spinnerUser = findViewById<Spinner>(R.id.spinnerUser)
         val selectedUser = spinnerUser.selectedItem as String
 
-        val newUser = UserModel(selectedUser, firstName, lastName)
+        val newUser = UserModel(firebaseUser.uid, selectedUser, firstName, lastName)
 
         dbRef.child(firebaseUser.uid).setValue(newUser)
     }

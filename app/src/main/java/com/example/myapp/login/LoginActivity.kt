@@ -3,18 +3,22 @@ package com.example.myapp.login
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import com.example.myapp.R
+import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private var inputEmail: EditText? = null
     private var inputPassword: EditText? = null
     private var loginButton: Button? = null
+    private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
                 false
             } else -> {
-                showErrorSnackBar("Your details are valid",false)
+                showErrorSnackBar("Wprowadzono poprawne dane",false)
                 true
             }
         }
@@ -69,7 +73,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .addOnCompleteListener{task ->
 
                     if(task.isSuccessful){
-                        showErrorSnackBar("You are logged in successfully.", false)
                         goToNextActivity()
                         finish()
                     } else{
@@ -80,7 +83,22 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     open fun goToNextActivity() {
-        val intent = Intent(this, UserScheduleActivity::class.java)
-        startActivity(intent)
+        val user = FirebaseAuth.getInstance().currentUser;
+
+        dbRef = FirebaseDatabase.getInstance().getReference("Users").child(user?.uid.toString())
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(dataSnapshot.child("userType").value.toString().equals("Pacjent")) {
+                    val intent = Intent(this@LoginActivity, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    val intent = Intent(this@LoginActivity, ViewPatientsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+            }
+        })
     }
 }

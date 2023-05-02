@@ -1,90 +1,76 @@
-package com.example.myapp.pills_list
+package com.example.myapp.doctor_view
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
+import com.example.myapp.patients_list.ViewPatientsActivity
+import com.example.myapp.pills_list.PillModel
+import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.example.myapp.monthly_report.MainActivityMonthlyReport
-import com.example.myapp.report.MainActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
-class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
+class PatientPillsActivity : AppCompatActivity(), View.OnClickListener {
+
+    private var patientId: String? = null
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_pills_schedule)
+        setContentView(R.layout.activity_patient_pills_schedule)
+
+        val backButton = findViewById<ImageButton>(R.id.back)
+        backButton.setOnClickListener(this)
 
         val addButton = findViewById<Button>(R.id.addPill)
         addButton.setOnClickListener(this)
 
-        val addReport = findViewById<Button>(R.id.addRaport)
-        addReport.setOnClickListener(this)
-
-        newRecyclerView = findViewById(R.id.rvPills)
+        patientId = intent.getStringExtra("patientId")
+        newRecyclerView = findViewById(R.id.rvPatientPills)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
         getDataFromDatabase()
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        val navController = findNavController(R.id.navigation_home)
-        navView.menu.findItem(R.id.navigation_home).isChecked = true
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
-                    true
-                }
-                R.id.navigation_dashboard -> {
-                    val intent = Intent(this@UserScheduleActivity, MainActivityMonthlyReport::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.navigation_notifications -> {
-                    val intent = Intent(this@UserScheduleActivity, UserScheduleActivity::class.java)
+                    val intent = Intent(this@PatientPillsActivity, ViewPatientsActivity::class.java)
                     startActivity(intent)
                     true
                 }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@UserScheduleActivity, PatientSettingsActivity::class.java)
+                    val intent =
+                        Intent(this@PatientPillsActivity, DoctorSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
                 else -> false
             }
         }
-
-
-
     }
 
     override fun onClick(view: View?) {
-        if(view !=null){
-            when (view.id){
+        if (view != null) {
+            when (view.id) {
 
-                R.id.addPill ->{
-                    val intent = Intent(this, AddPillActivity::class.java)
+                R.id.back -> {
+                    val intent = Intent(this, PatientActionsActivity::class.java)
+                    intent.putExtra("patientId", patientId)
                     startActivity(intent)
-                };
-                R.id.addRaport -> {
-                    val intent = Intent(this, MainActivity::class.java)
+                }
+
+                R.id.addPill -> {
+                    val intent = Intent(this, DoctorAddPillActivity::class.java)
+                    intent.putExtra("patientId", patientId)
                     startActivity(intent)
                 }
             }
@@ -93,12 +79,10 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun getDataFromDatabase() {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
 
         val pillList: MutableList<PillModel> = mutableListOf()
 
-        val query = dbRef.orderByChild("pacient").equalTo(uid)
+        val query = dbRef.orderByChild("pacient").equalTo(patientId)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
@@ -106,7 +90,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                     val pill = snapshot.getValue(PillModel::class.java)
                     pillList.add(pill!!)
                 }
-                newRecyclerView.adapter = PillItemAdapter(pillList)
+                newRecyclerView.adapter = PatientPillItemAdapter(pillList)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -115,5 +99,3 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 }
-
-
