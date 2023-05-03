@@ -1,27 +1,23 @@
 package com.example.myapp.pills_list
 
-import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.report.MainActivity
+import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.util.*
+import com.example.myapp.pills_list.TestAdapter.Callback
+
 
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -38,10 +34,24 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         val addReport = findViewById<Button>(R.id.addRaport)
         addReport.setOnClickListener(this)
 
+
+
         newRecyclerView = findViewById(R.id.rvPills)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
-        getDataFromDatabase()
+        var pillsList = getDataFromDatabase()
+//        saveCheckedState(pillsList)
+//
+//        val adapter = TestAdapter()
+//        adapter.setCallback(object : Callback {
+//            override fun onCheckedChanged(item: String?, isChecked: Boolean) {
+//                Log.d("checked", item.toString())
+//                Log.d("cheked1", isChecked.toString())
+//            }
+//        })
+//
+//        adapter.addItem(pillsList)
+
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
 //        val navController = findNavController(R.id.navigation_home)
@@ -52,13 +62,8 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.navigation_home -> {
                     true
                 }
-                R.id.navigation_dashboard -> {
+                R.id.navigation_report -> {
                     val intent = Intent(this@UserScheduleActivity, MainActivityMonthlyReport::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.navigation_notifications -> {
-                    val intent = Intent(this@UserScheduleActivity, UserScheduleActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -91,7 +96,23 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun getDataFromDatabase() {
+//    fun saveCheckedState(list: MutableList<PillModel>) {
+//        val checkedItems = mutableListOf<Int>()
+//        val user = FirebaseAuth.getInstance().currentUser;
+//        val uid = user?.uid
+//        val c = Calendar.getInstance()
+//        val year = c.get(Calendar.YEAR)
+//        val month = c.get(Calendar.MONTH) + 1
+//        val day = c.get(Calendar.DAY_OF_MONTH)
+//
+//        var date = "$year-$month-$day"
+//
+//        for (i in list.indices) {
+//            checkedItems.add(i)
+//        }
+//    }
+
+    private fun getDataFromDatabase(): MutableList<PillModel> {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
         val user = FirebaseAuth.getInstance().currentUser;
         val uid = user?.uid
@@ -113,6 +134,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                 Log.d("TAG", "Błąd")
             }
         })
+        return pillList
     }
 }
 

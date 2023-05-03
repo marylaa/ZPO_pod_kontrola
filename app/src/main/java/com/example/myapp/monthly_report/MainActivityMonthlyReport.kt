@@ -19,6 +19,7 @@ import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.example.myapp.report.Report
+import com.example.myapp.settings.PatientSettingsActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -30,7 +31,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.collections.*
 
 
@@ -59,30 +62,28 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val viewColors = arrayListOf(
             Color.BLUE,
             Color.YELLOW,
+            Color.MAGENTA,
+            Color.YELLOW,
             Color.MAGENTA
         )
 
-        val dates = arrayListOf(
-            LocalDate.now().plusDays(1),
-            LocalDate.now().plusDays(2),
-            LocalDate.now().plusDays(3)
-        )
+//        val dates = arrayListOf(
+//            LocalDate.now().minusDays(2),
+//            LocalDate.now().minusDays(1),
+//            LocalDate.now(),
+//            LocalDate.now().plusDays(1),
+//            LocalDate.now().plusDays(2),
+//
+//        )
+//
+//        // set up the RecyclerView
+//        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
+//        val horizontalLayoutManager =
+//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        recyclerView1.layoutManager = horizontalLayoutManager
+//        adapterDate = RecycleViewAdapter(this, viewColors, dates)
+//        recyclerView1.adapter = adapterDate
 
-        // set up the RecyclerView
-        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-        val horizontalLayoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView1.layoutManager = horizontalLayoutManager
-        adapterDate = RecycleViewAdapter(this, viewColors, dates)
-        recyclerView1.adapter = adapterDate
-
-
-
-
-
-//        var entries = getDataFromDatabase { data ->
-//            createDict(data, "pressure")
-//        }
 
         var spinner = findViewById<View>(R.id.spinner3) as Spinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
@@ -94,49 +95,11 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         spinner.setAdapter(adapter)
         spinner.setOnItemSelectedListener(this)
 
-//        getDataFromDatabase { data ->
-//            createDict(data, "weight")
-//        }
-
-
-
-        
-
-//        linelist = ArrayList()
-//        linelist.add(Entry(10f, 100f))
-//        linelist.add(Entry(20f, 200f))
-//        linelist.add(Entry(30f, 100f))
-//        linelist.add(Entry(40f, 500f))
-
-
-
-
-//        var keys = dict.keys
-//        var values = dict.values.map { it.toFloat() }
-//        var entries = keys.zip(values).map { (key, value) -> Entry(key, value) }
-//
-//        val lineDataSet = LineDataSet(entries, "count")
-//        val lineData = LineData(lineDataSet)
-//        val lineChart = findViewById<LineChart>(R.id.lineChart)
-//        lineChart.data = lineData
-//        lineDataSet.colors = ColorTemplate.JOYFUL_COLORS
-//        lineDataSet.valueTextColor = Color.BLUE
-//        lineDataSet.valueTextSize = 20f
-//        lineChart.invalidate()
-//        lineChart.invalidate()
-
-
-
-
-
-
-
-
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
 //        val navController = findNavController(R.id.navigation_home)
-        navView.menu.findItem(R.id.navigation_dashboard).isChecked = true
+        navView.menu.findItem(R.id.navigation_report).isChecked = true
 
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -146,12 +109,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                     startActivity(intent)
                     true
                 }
-                R.id.navigation_dashboard -> {
-                    true
-                }
-                R.id.navigation_notifications -> {
-                    val intent =
-                        Intent(this@MainActivityMonthlyReport, UserScheduleActivity::class.java)
+                R.id.navigation_settings -> {
+                    val intent = Intent(this@MainActivityMonthlyReport, PatientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -195,62 +154,167 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         return reportValuesList
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getPillsDataFromDatabase(callback: (List<String>) -> Unit): MutableList<String> {
+        val dbRef = FirebaseDatabase.getInstance().getReference("pills_status")
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid
 
-    //    private fun getDataFromDatabase(): MutableList<String> {
-//        val dbRef = FirebaseDatabase.getInstance().getReference("report")
-//        val user = FirebaseAuth.getInstance().currentUser
-//        val uid = user?.uid
+        val query = dbRef.orderByChild("user").equalTo(uid)
+        val reportValuesList = mutableListOf<String>()
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                val reportValuesList = mutableListOf<String>()
+
+                for (snapshot in dataSnapshot.children) {
+                    for (rep in snapshot.children){
+                        val reportValues = rep.getValue<String>().toString()
+                        reportValuesList.add(reportValues)
+                    }
+                }
+
+                Log.d("zczytanie pills", reportValuesList.toString())
+
+                // Zwracamy wartość przez callback
+                callback(reportValuesList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+            }
+        })
+        return reportValuesList
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun Create(data: List<Any>): MutableMap<LocalDate, String> {
+        Log.d("cos", data.toString())
+
+        val days = listOf(-2, -1, 0, 1, 2)
+        var daysElems = mutableListOf<LocalDate>()
+
+        val current = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formatted = current.format(formatter)
+
+        for(i in days){
+            val date = current.plusDays(i.toLong())
+            val formattedDate = date.format(formatter)
+            val dateTime = LocalDate.parse(formattedDate, formatter)
+            daysElems.add(dateTime)
+
+
+        }
+
+
+
 //
-//        val query = dbRef.orderByChild("user").equalTo(uid)
-//        val reportValuesList = mutableListOf<String>()
 //
-//        query.addListenerForSingleValueEvent(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                val reports = mutableListOf<String>()
-////                var inputsString = ""
-////                val valueList = mutableListOf<String>()
+//        var day1 = "$year-$month-$day11"
+//        var day2 = "$year-$month-$day22"
+//        var day3 = "$year-$month-$day33"
+//        var day4 = "$year-$month-$day44"
+//        var day5 = "$year-$month-$day55"
 //
 //
-//
-//                for (snapshot in dataSnapshot.children) {
-////                    val elem = mutableListOf<String>()
-////                    val report = snapshot.getValue(Report::class.java)
-////                    val date = report?.date ?: ""
-////                    val notes = report?.notes ?: ""
-////                    val mood = report?.mood?.toString() ?: ""
-////
-////                    elem.add(date)
-////                    elem.add(notes)
-////                    elem.add(mood)
-//
-//
-//                    for (rep in snapshot.children){
-//                        val reportValues = rep.getValue<String>().toString()
-//                        reportValuesList.add(reportValues)
+//        if (day11 < 1) {
+//            val prevMonth = if (month == 1) 12 else month - 1
+//            val prevYear = if (month == 1) year - 1 else year
+//            val lastDayOfPrevMonth = getLastDayOfMonth(prevYear, prevMonth)
+//            day1 = "$prevYear-$prevMonth-$lastDayOfPrevMonth"
+//        }
+//        if (day22 < 1) {
+//            val prevMonth = if (month == 1) 12 else month - 1
+//            val prevYear = if (month == 1) year - 1 else year
+//            val lastDayOfPrevMonth = getLastDayOfMonth(prevYear, prevMonth)
+//            day2 = "$prevYear-$prevMonth-$lastDayOfPrevMonth"
+//        }
+//        if (day33 < 1) {
+//            val prevMonth = if (month == 1) 12 else month - 1
+//            val prevYear = if (month == 1) year - 1 else year
+//            val lastDayOfPrevMonth = getLastDayOfMonth(prevYear, prevMonth)
+//            day3 = "$prevYear-$prevMonth-$lastDayOfPrevMonth"
+//        }
+//        if (day44 < 1) {
+//            val prevMonth = if (month == 1) 12 else month - 1
+//            val prevYear = if (month == 1) year - 1 else year
+//            val lastDayOfPrevMonth = getLastDayOfMonth(prevYear, prevMonth)
+//            day4 = "$prevYear-$prevMonth-$lastDayOfPrevMonth"
+//        }
+//        if (day55 < 1) {
+//            val prevMonth = if (month == 1) 12 else month - 1
+//            val prevYear = if (month == 1) year - 1 else year
+//            val lastDayOfPrevMonth = getLastDayOfMonth(prevYear, prevMonth)
+//            day5 = "$prevYear-$prevMonth-$lastDayOfPrevMonth"
+//        }
+//        Log.d("wyglad daty", day1.toString())
+
+
+        val resultDict = mutableMapOf<LocalDate, String>()
+        var daysInDataBase = mutableListOf<LocalDate>()
+
+        for (i in data.indices step 4) {
+            if (data[i] is String) {
+                try {
+//                    var date = data[i] as String
+//                    var date =  LocalDate.parse(data[i] as String, DateTimeFormatter.ISO_DATE
+                    var dateTime = LocalDate.parse(data[i] as String, formatter)
+
+//                    var value = data[i + 2] as String
+                    daysInDataBase.add(dateTime)
+//                    for (j in daysElems){
+//                        if(date.equals(j)){
+//                            resultDict[date] = value
+//                        }
 //                    }
-//
-////                    val inputsList = mutableListOf<String>()
-////                    report?.valuesList?.forEach { value ->
-////                        inputsList.add("${value.name}: ${value.input}")
-////                    }
-////                    inputsString = inputsList.joinToString(separator = ", ")
-//
-////                    reports.add("Notes: $notes, Mood: $mood, date: $date")
-////                    reports.add(elem.toString())
-//                }
-//
-//
-//                Log.d("TAG", reports.toString())
-//                Log.d("TAG", reportValuesList.toString())
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.d("TAG", "Błąd")
-//            }
-//        })
-//
-//        return reportValuesList
-//    }
+
+                } catch (e: IndexOutOfBoundsException) {
+                    continue
+                }
+            }
+        }
+        var commonElems = daysInDataBase.intersect(daysElems)
+        Log.d("daysindata", daysInDataBase.toString())
+        Log.d("daysElems", daysElems.toString())
+
+
+        for(k in commonElems){
+            resultDict[k as LocalDate] = "true"
+            daysElems.removeIf{it == k}
+        }
+        for (l in daysElems){
+            resultDict[l] = "false"
+        }
+
+        val sortedDates = resultDict.toSortedMap()
+
+        var colors = pillsColors(sortedDates)
+
+        val dates = arrayListOf(
+            LocalDate.now().minusDays(2),
+            LocalDate.now().minusDays(1),
+            LocalDate.now(),
+            LocalDate.now().plusDays(1),
+            LocalDate.now().plusDays(2),
+
+            )
+
+        // set up the RecyclerView
+        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
+        val horizontalLayoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView1.layoutManager = horizontalLayoutManager
+        adapterDate = RecycleViewAdapter(this, colors, dates)
+        recyclerView1.adapter = adapterDate
+
+        Log.d("daty pils", resultDict.toString())
+        return resultDict
+    }
+
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun createDict(data: List<Any>, param: String): MutableList<Entry> {
         val dictionary = mapOf("Ciśnienie [mmHg]" to 0, "Aktywność [godz.]" to 1, "Waga [kg]" to 2, "Sen [godz.]" to 3, "Temp. ciała [oC]" to 4, "Cukier [mmol/L]" to 5, "mood" to 6, "notes" to 7)
@@ -264,7 +328,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             if (data[i] is String) {
                 try {
                     var date = data[i+6] as String
-                    var value = data[i + index!! + 1] as String
+                    var value = data[i + index!!] as String
                     resultDict[date] = value.toFloat()
 
                 } catch (e: IndexOutOfBoundsException) {
@@ -281,21 +345,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             )
         }.sortedBy { it.x }.toMutableList()
 
-        var label = ""
 
-        if(param ===  "pressure"){
-            label = "Ciśnienie [mmHg]"
-        }else if(param === "workout"){
-            label = "Aktywność [godz.]"
-        }else if(param === "weight"){
-            label = "Waga [kg]"
-        }else if(param === "sleep"){
-            label = "Sen [godz.]"
-        }else if(param === "sugar"){
-            label = "Cukier [mmol/L]"
-        }else if(param === "temp"){
-            label = "Temp. ciała [oC]"
-        }
 
         val lineDataSet = LineDataSet(entries, param)
         val lineData = LineData(lineDataSet)
@@ -367,11 +417,43 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         getDataFromDatabase { data ->
             createDict(data, selectedItem)
         }
+        getPillsDataFromDatabase { data ->
+            Create(data)
+        }
+//        getDataFromDatabase { data ->
+//            val resultDict = createDict(data, selectedItem)
+//            var list = getPillsDataFromDatabase { data ->
+//                Create(data)
+//            }
+//            var colors = Colors(list)
+//
+//
+//        }
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         // Handle no item selection here
     }
+    fun getLastDayOfMonth(year: Int, month: Int): Int {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, year)
+        calendar.set(Calendar.MONTH, month - 1)
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+        return calendar.get(Calendar.DAY_OF_MONTH)
+    }
+
+    fun pillsColors(list: SortedMap<LocalDate, String>): ArrayList<Int> {
+        var colors = arrayListOf<Int>()
+        for ((key, value) in list.entries) {
+            if (value == "true") {
+                colors.add(Color.GREEN)
+            } else if (value == "false") {
+                colors.add(Color.RED)
+            }
+        }
+        return colors
+    }
+
 
 
 }

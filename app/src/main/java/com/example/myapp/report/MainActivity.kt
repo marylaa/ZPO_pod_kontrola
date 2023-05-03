@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.pills_list.UserScheduleActivity
+import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -112,13 +113,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     startActivity(intent)
                     true
                 }
-                R.id.navigation_dashboard -> {
+                R.id.navigation_report -> {
                     val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
                     startActivity(intent)
                     true
                 }
-                R.id.navigation_notifications -> {
-                    val intent = Intent(this@MainActivity, UserScheduleActivity::class.java)
+                R.id.navigation_settings -> {
+                    val intent = Intent(this@MainActivity, PatientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
