@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -20,12 +21,16 @@ data class Report(
     )
 
     init {
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH) + 1
-        val day = c.get(Calendar.DAY_OF_MONTH)
+//        val c = Calendar.getInstance()
+//        val year = c.get(Calendar.YEAR)
+//        val month = c.get(Calendar.MONTH) + 1
+//        val day = c.get(Calendar.DAY_OF_MONTH)
+//
+//        date = "$year-$month-$day"
 
-        date = "$year-$month-$day"
+        val c = Calendar.getInstance()
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        date = sdf.format(c.time)
 
 
     }

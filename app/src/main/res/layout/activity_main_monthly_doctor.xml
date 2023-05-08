@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context=".monthly_report.MainActivityMonthlyReport">
+    tools:context=".doctor_view.MonthyReportDoctor">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,20 +59,20 @@
 
         </com.github.mikephil.charting.charts.LineChart>
 
-<!--        <Button-->
-<!--            android:id="@+id/button"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="37dp"-->
-<!--            android:layout_alignTop="@+id/textView"-->
-<!--            android:layout_alignBottom="@+id/textView"-->
-<!--            android:layout_gravity="start"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:paddingStart="16dp"-->
-<!--            android:paddingEnd="16dp"-->
-<!--            android:text="Wyślij"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:gravity="right|center_vertical"/>-->
+        <!--        <Button-->
+        <!--            android:id="@+id/button"-->
+        <!--            android:layout_width="100dp"-->
+        <!--            android:layout_height="37dp"-->
+        <!--            android:layout_alignTop="@+id/textView"-->
+        <!--            android:layout_alignBottom="@+id/textView"-->
+        <!--            android:layout_gravity="start"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:layout_marginTop="10dp"-->
+        <!--            android:paddingStart="16dp"-->
+        <!--            android:paddingEnd="16dp"-->
+        <!--            android:text="Wyślij"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:gravity="right|center_vertical"/>-->
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation_view"

@@ -1,4 +1,8 @@
-package com.example.myapp.monthly_report
+package com.example.myapp.doctor_view
+
+import com.example.myapp.monthly_report.RecycleViewAdapter
+import com.example.myapp.monthly_report.RecycleViewAdapterItem
+
 
 
 //import kotlinx.android.synthetic.main.contact_monthly.*
@@ -39,7 +43,7 @@ import java.util.*
 import kotlin.collections.*
 
 
-class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var adapterDate: RecycleViewAdapter
     private lateinit var adapter: RecycleViewAdapterItem
@@ -54,11 +58,17 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     //    private var pillList = arrayOf()
     private var monthsList = arrayOf("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień")
 
+    private var patientId: String? = null
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_monthly)
+        setContentView(R.layout.activity_main_monthly_doctor)
+
+        patientId = intent.getStringExtra("patientId")
+        Log.d("id", patientId.toString())
+
         getAllPillsFromDatabase()
 
 
@@ -96,7 +106,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         var spinnerMonths = findViewById<View>(R.id.spinnerMonths) as Spinner
         val adapterMonths: ArrayAdapter<String> = ArrayAdapter<String>(
-            this@MainActivityMonthlyReport,
+            this@MonthyReportDoctor,
             android.R.layout.simple_spinner_item, monthsList
         )
 
@@ -107,7 +117,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         var spinnerPills = findViewById<View>(R.id.spinnerPills) as Spinner
         val adapterPills: ArrayAdapter<String> = ArrayAdapter<String>(
-            this@MainActivityMonthlyReport,
+            this@MonthyReportDoctor,
             android.R.layout.simple_spinner_item, pillList
         )
 
@@ -121,7 +131,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         var spinner = findViewById<View>(R.id.spinner3) as Spinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            this@MainActivityMonthlyReport,
+            this@MonthyReportDoctor,
             android.R.layout.simple_spinner_item, paths
         )
 
@@ -131,26 +141,26 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
 
-        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        val navController = findNavController(R.id.navigation_home)
-        navView.menu.findItem(R.id.navigation_report).isChecked = true
-
-        navView.setOnNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.navigation_home -> {
-                    val intent =
-                        Intent(this@MainActivityMonthlyReport, UserScheduleActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.navigation_settings -> {
-                    val intent = Intent(this@MainActivityMonthlyReport, PatientSettingsActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
-            }
-        }
+//        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+////        val navController = findNavController(R.id.navigation_home)
+//        navView.menu.findItem(R.id.navigation_report).isChecked = true
+//
+//        navView.setOnNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.navigation_home -> {
+//                    val intent =
+//                        Intent(this@MainActivityMonthlyReport, UserScheduleActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//                R.id.navigation_settings -> {
+//                    val intent = Intent(this@MainActivityMonthlyReport, PatientSettingsActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
     }
 
@@ -158,8 +168,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
     private fun getDataFromDatabase(callback: (List<String>) -> Unit): MutableList<String> {
         val dbRef = FirebaseDatabase.getInstance().getReference("report")
-        val user = FirebaseAuth.getInstance().currentUser
-        val uid = user?.uid
+        val uid = patientId
 
 
 
@@ -194,8 +203,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getPillsDataFromDatabase(callback: (List<String>) -> Unit): MutableList<String> {
         val dbRef = FirebaseDatabase.getInstance().getReference("pills_status")
-        val user = FirebaseAuth.getInstance().currentUser
-        val uid = user?.uid
+        val uid = patientId
 
         val query = dbRef.orderByChild("user").equalTo(uid)
         val reportValuesList = mutableListOf<String>()
@@ -428,16 +436,18 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     }
 
     private fun getAllPillsFromDatabase(){
+
+
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
+        val uid = patientId
+
 
 //        val pillList: MutableList<String> = mutableListOf()
 
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                pillList.clear()
+                pillList.clear()
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
@@ -493,7 +503,15 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val selectedItem = parent?.getItemAtPosition(position) as String
         Log.d("selected", selectedItem.toString())
 
-        var selectedPill = pillList[0]
+        getAllPillsFromDatabase()
+
+        Log.d("date", pillList.toString())
+        var selectedPill = ""
+
+        if(pillList.size == 1){
+            selectedPill = pillList[0]
+
+        }
 
 
         val selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
@@ -515,9 +533,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 }
             }
 
-            }
-
         }
+
+    }
 
 
 
@@ -543,6 +561,10 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val yearMonthObject = YearMonth.of(year, month)
         val daysInMonth = yearMonthObject.lengthOfMonth()
         return daysInMonth
+    }
+
+    fun setPacient(pacientId: String){
+        this.patientId = patientId
     }
 }
 
