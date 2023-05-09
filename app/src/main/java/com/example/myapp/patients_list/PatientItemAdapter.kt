@@ -11,7 +11,7 @@ import com.example.myapp.doctor_view.PatientActionsActivity
 import com.example.myapp.R
 import com.example.myapp.login.UserModel
 
-class PatientItemAdapter(private val pacientList: MutableList<UserModel>?) :
+class PatientItemAdapter(private val patientList: MutableList<UserModel>?) :
     RecyclerView.Adapter<PatientItemAdapter.PatientItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PatientItemViewHolder {
@@ -20,22 +20,22 @@ class PatientItemAdapter(private val pacientList: MutableList<UserModel>?) :
     }
 
     override fun onBindViewHolder(holder: PatientItemViewHolder, position: Int) {
-        val currentItem = pacientList!![position]
-        holder.pacientTitle.text = currentItem.firstName + " " + currentItem.lastName
+        val currentItem = patientList!![position]
+        holder.patientTitle.text = currentItem.firstName + " " + currentItem.lastName
 
-        holder.pacientId = currentItem.id
-        holder.choosePacientButton.setOnClickListener {
+        holder.patientId = currentItem.id
+        holder.choosePatientButton.setOnClickListener {
             val intent = Intent(holder.itemView.context, PatientActionsActivity::class.java)
-            intent.putExtra("patientId", holder.pacientId)
+            intent.putExtra("patientId", holder.patientId)
             holder.itemView.context.startActivity(intent)
         }
     }
 
-    override fun getItemCount(): Int = pacientList!!.size
+    override fun getItemCount(): Int = patientList!!.size
 
     class PatientItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val pacientTitle: TextView = itemView.findViewById(R.id.pacientTitle)
-        val choosePacientButton: ImageButton = itemView.findViewById(R.id.choosePacient)
-        var pacientId: String? = null
+        val patientTitle: TextView = itemView.findViewById(R.id.pacientTitle)
+        val choosePatientButton: ImageButton = itemView.findViewById(R.id.choosePacient)
+        var patientId: String? = null
     }
 }

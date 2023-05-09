@@ -12,6 +12,8 @@ import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
@@ -73,8 +75,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 .addOnCompleteListener{task ->
 
                     if(task.isSuccessful){
-                        goToNextActivity()
-                        finish()
+                        // Call goToNextActivity() function as a suspend function inside a coroutine scope
+                        lifecycleScope.launch {
+                            goToNextActivity()
+                            finish()
+                        }
                     } else{
                         showErrorSnackBar(task.exception!!.message.toString(),true)
                     }
@@ -82,7 +87,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    open fun goToNextActivity() {
+    private suspend fun goToNextActivity() {
         val user = FirebaseAuth.getInstance().currentUser;
 
         dbRef = FirebaseDatabase.getInstance().getReference("Users").child(user?.uid.toString())

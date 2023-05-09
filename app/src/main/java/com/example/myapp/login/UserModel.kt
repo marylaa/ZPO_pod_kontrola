@@ -1,8 +1,10 @@
 package com.example.myapp.login
 
 data class UserModel(
-    var id: String = "",
-    var userType: String = "",
+    var email: String = "",
     var firstName: String = "",
-    var lastName: String = ""
+    var id: String = "",
+    var lastName: String = "",
+    var userType: String = ""
+
 )

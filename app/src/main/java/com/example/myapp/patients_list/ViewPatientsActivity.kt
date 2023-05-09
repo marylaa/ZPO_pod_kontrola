@@ -50,17 +50,17 @@ class ViewPatientsActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
 
-        val pacientList: MutableList<UserModel> = mutableListOf()
+        val patientList: MutableList<UserModel> = mutableListOf()
 
-        val doctorRef = FirebaseDatabase.getInstance().getReference("Pacients")
+        val doctorRef = FirebaseDatabase.getInstance().getReference("Patients")
         val query = doctorRef.orderByChild("doctor").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                pacientList.clear()
+                patientList.clear()
 
                 for (snapshot in dataSnapshot.children) {
-                    val pacientId = snapshot.child("pacient").value.toString()
-                    getDataFromDatabase(pacientId, pacientList)
+                    val patientId = snapshot.child("patient").value.toString()
+                    getDataFromDatabase(patientId, patientList)
                 }
             }
 
