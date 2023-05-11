@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
-import com.example.myapp.DoctorAddPatientsActivity
+import com.example.myapp.patients_list.DoctorAddPatientsActivity
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
 import com.example.myapp.patients_list.ViewPatientsActivity
@@ -21,12 +21,15 @@ class DoctorSettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_doctor)
 
+        val patientIds = intent.getStringArrayExtra("patientIds")
+
         logoutButton = findViewById(R.id.logoutButton)
         logoutButton?.setOnClickListener { logoutUser() }
 
         val addPatientButton = findViewById<ImageButton>(R.id.patientButton)
         addPatientButton.setOnClickListener {
             val intent = Intent(this@DoctorSettingsActivity, DoctorAddPatientsActivity::class.java)
+            intent.putExtra("patientIds", patientIds)
             startActivity(intent)
         }
 

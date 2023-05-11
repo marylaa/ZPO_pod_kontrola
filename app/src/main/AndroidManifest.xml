@@ -108,7 +108,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".DoctorAddPatientsActivity"
+            android:name=".patients_list.DoctorAddPatientsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

@@ -1,4 +1,4 @@
-package com.example.myapp
+package com.example.myapp.patients_list
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.AppCompatImageButton
+import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
 import com.example.myapp.login.UserModel
-import com.example.myapp.patients_list.PatientDoctorModel
-import com.example.myapp.pills_list.PillModel
 import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -27,10 +26,13 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
     private var backButton: AppCompatImageButton? = null
     private lateinit var dbRef: DatabaseReference
     private var patientId = ""
+    private lateinit var patientIds: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_patient)
+
+        patientIds = intent.getStringArrayExtra("patientIds")!!
 
         inputFirstName = findViewById(R.id.patientFirstName)
         inputLastName = findViewById(R.id.patientLastName)
@@ -70,13 +72,9 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
                     if (validateDetails()) {
                         ifUserExist().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                val exists = task.result
-                                Log.d("TAG", exists.toString())
-                                if (exists) {
+                                if (task.result) {
                                     val intent = Intent(this, DoctorSettingsActivity::class.java)
                                     startActivity(intent)
-                                } else {
-                                    showErrorSnackBar("Dane użytkownika nie są zgodne", true)
                                 }
                             }
                         }
@@ -92,23 +90,29 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun ifUserExist(): Task<Boolean> {
+        var exists = false
         dbRef = FirebaseDatabase.getInstance().getReference("Users")
 
         val query = dbRef.orderByChild("email").equalTo(inputEmail!!.text.toString())
         return query.get().continueWith { task ->
-            var exists = false
             if (task.isSuccessful) {
-
                 val snapshot = task.result
-                val user = snapshot.children.first().getValue(UserModel::class.java)
+                if (snapshot.exists()) {
+                    val user = snapshot.children.first().getValue(UserModel::class.java)
 
-                if (user!!.lastName.equals(inputLastName!!.text.toString()) && user!!.firstName.equals(
-                        inputFirstName!!.text.toString()
-                    )
-                ) {
-                    exists = true
-                    patientId = user.id
-                    addToDatabase()
+                    if (user!!.lastName.equals(inputLastName!!.text.toString()) && user!!.firstName.equals(inputFirstName!!.text.toString())) {
+                        exists = true
+                        patientId = user.id
+
+                        if (patientId in patientIds) {
+                            showErrorSnackBar("Dany użytkownik jest już zapisany", true)
+                            exists = false
+                        } else {
+                            addToDatabase()
+                        }
+                    } else {
+                        showErrorSnackBar("Dane użytkownika nie są zgodne", true)
+                    }
                 } else {
                     showErrorSnackBar("Dane użytkownika nie są zgodne", true)
                 }
@@ -118,6 +122,7 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
             exists
         }
     }
+
 
     private fun addToDatabase() {
         dbRef = FirebaseDatabase.getInstance().getReference("Patients")
