@@ -13,18 +13,22 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.EmptyActivity
 import com.example.myapp.R
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
-
+    private var dataExist: Boolean = false
     var report: Report = Report()
+    val valuesList = arrayListOf<Value>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val valuesName =
             arrayOf("Ciśnienie krwii", "Aktywność", "Waga", "Sen", "Temp. ciała", "Poziom cukru")
         val valuesUnit = arrayOf("mmHg", "godz.", "kg", "godz.", "°C", "mmol/L")
-        val valuesList = arrayListOf<Value>()
+
 
         for (i in valuesName.indices) {
             value = Value(valuesName[i], valuesUnit[i], i, " ")
@@ -102,8 +106,48 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         Log.d(TAG, report.printReport())
 //            report.saveToFirebase()
 
+
+
+//        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+////        val navController = findNavController(R.id.navigation_home)
+//        navView.menu.findItem(R.id.navigation_home).isChecked = true
+//
+//
+//        navView.setOnNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.navigation_home -> {
+//                    val intent = Intent(this@MainActivity, UserScheduleActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//                R.id.navigation_report -> {
+//                    val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//                R.id.navigation_settings -> {
+//                    val intent = Intent(this@MainActivity, PatientSettingsActivity::class.java)
+//                    startActivity(intent)
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
+
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        val navController = findNavController(R.id.navigation_home)
+
+        isCurrentUserPatientForPath { result ->
+            dataExist = result
+            Log.d("wynik", dataExist.toString())
+
+            // Sprawdź, czy użytkownik nie jest pacjentem
+            if (!dataExist) {
+                navView.menu.findItem(R.id.navigation_report).isChecked = false
+                val intent = Intent(this@MainActivity, EmptyActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
         navView.menu.findItem(R.id.navigation_home).isChecked = true
 
         navView.setOnNavigationItemSelectedListener { menuItem ->
@@ -114,9 +158,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     true
                 }
                 R.id.navigation_report -> {
-                    val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
-                    startActivity(intent)
-                    true
+                    // Dodatkowa logika, jeśli użytkownik nie jest pacjentem
+                    if (!dataExist) {
+                        val intent = Intent(this@MainActivity, EmptyActivity::class.java)
+                        startActivity(intent)
+                        true
+                    } else {
+                        val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
+                        startActivity(intent)
+                        true
+                    }
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@MainActivity, PatientSettingsActivity::class.java)
@@ -130,6 +181,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
 
+
     }
 
     override fun onClick(view: View?) {
@@ -137,15 +189,32 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         if (view != null) {
             when (view.id) {
                 R.id.button -> {
-                    // Create a new intent for the new activity
-                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
+
+                    if (valuesList.size == 6 && report.getMood() != "") {
+
+                        // Create a new intent for the new activity
+                        val intent = Intent(this, MainActivityMonthlyReport::class.java)
 
 
-                    // Save the report to Firebase
-                    this.report.saveToFirebase()
+                        // Save the report to Firebase
+                        this.report.saveToFirebase()
 
-                    // Start the new activity
-                    startActivity(intent)
+                        // Start the new activity
+                        startActivity(intent)
+
+                    } else {
+                        // Lista nie ma 6 elementów, wyświetl komunikat o błędzie lub wykonaj odpowiednie działania
+                        Toast.makeText(this@MainActivity, "Wypełnij wszystkie pola", Toast.LENGTH_SHORT).show()
+                    }
+//                    // Create a new intent for the new activity
+//                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
+//
+//
+//                    // Save the report to Firebase
+//                    this.report.saveToFirebase()
+//
+//                    // Start the new activity
+//                    startActivity(intent)
                 }
 
             }
@@ -164,43 +233,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-//    override fun onClick(view: View?) {
-////        val stringNotes = notes.text.toString()
-////        val report = Report(adapter.returnValuesArray(), checkedRadioButton, stringNotes)
-////        Log.d(TAG, report.printReport())
-////        report.saveToFirebase()
-//
-//        if (view != null) {
-//            when (view.id) {
-//
-//                R.id.button -> {
-//                    val intent = Intent(this, AddPillActivity::class.java)
-//                    startActivity(intent)
-//                }
-//            }
-//        }
-//
-//
-//    }
 
-//    override fun onClick(view: View?) {
-//
-//        if (view != null) {
-//            when (view.id) {
-//                R.id.button -> {
-//                    // Create a new intent for the new activity
-////                    val intent = Intent(this, UserScheduleActivity::class.java)
-//
-//
-//                    // Save the report to Firebase
-//                    this.report.saveToFirebase()
-//
-//                    // Start the new activity
-////                    startActivity(intent)
-//                }
-//            }
-//        }
-//    }
+    fun isCurrentUserPatientForPath(callback: (Boolean) -> Unit) {
+        val dbRefReport = FirebaseDatabase.getInstance().getReference("report")
+        val dbRefPills = FirebaseDatabase.getInstance().getReference("Pills")
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid
+
+        val queryReport = dbRefReport.orderByChild("user").equalTo(uid)
+        val queryPills = dbRefPills.orderByChild("user").equalTo(uid)
+
+        queryReport.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val isPatientForReport = dataSnapshot.exists()
+                if (isPatientForReport) {
+                    callback.invoke(true)
+                } else {
+                    queryPills.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            val isPatientForPills = dataSnapshot.exists()
+                            callback.invoke(isPatientForPills)
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Obsługa błędu odczytu danych z bazy Firebase
+                            callback.invoke(false)
+                        }
+                    })
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Obsługa błędu odczytu danych z bazy Firebase
+                callback.invoke(false)
+            }
+        })
+    }
+
+
+
 
 
 

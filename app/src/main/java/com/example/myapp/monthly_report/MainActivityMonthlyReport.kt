@@ -8,13 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.EmptyActivity
 import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
@@ -53,6 +52,12 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
     //    private var pillList = arrayOf()
     private var monthsList = arrayOf("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień")
+    private var dataExist: Boolean = false
+    val reportValuesList = mutableListOf<String>()
+    var resultDict = mutableMapOf<String, Float>()
+
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -131,6 +136,11 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
 
+
+
+
+
+
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
 //        val navController = findNavController(R.id.navigation_home)
         navView.menu.findItem(R.id.navigation_report).isChecked = true
@@ -164,7 +174,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         val query = dbRef.orderByChild("user").equalTo(uid)
-        val reportValuesList = mutableListOf<String>()
+//        val reportValuesList = mutableListOf<String>()
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -345,7 +355,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     fun createDict(data: List<Any>, param: String, wantedMonth: String): MutableList<Entry> {
         val dictionary = mapOf("Ciśnienie [mmHg]" to 0, "Aktywność [godz.]" to 1, "Waga [kg]" to 2, "Sen [godz.]" to 3, "Temp. ciała [oC]" to 4, "Cukier [mmol/L]" to 5, "mood" to 6, "notes" to 7)
         var index = dictionary[param]
-        var resultDict = mutableMapOf<String, Float>()
 
         val current = LocalDate.now()
         val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -388,6 +397,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 }
             }
         }
+
+
+
         val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
         val entries = resultDict.entries.map { entry ->
             val date = LocalDate.parse(entry.key, formatter)
@@ -422,6 +434,20 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         Log.d("dic", resultDict.keys.toString())
+
+        val noDataTextView = findViewById<TextView>(R.id.noDataTextView)
+
+        if (entries.isEmpty()) {
+            lineChart.visibility = View.GONE
+            noDataTextView.visibility = View.VISIBLE
+        } else {
+            lineChart.visibility = View.VISIBLE
+            noDataTextView.visibility = View.GONE
+
+            // Reszta kodu wykresu
+        }
+
+
         return entries
 
 
@@ -493,7 +519,19 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val selectedItem = parent?.getItemAtPosition(position) as String
         Log.d("selected", selectedItem.toString())
 
-        var selectedPill = pillList[0]
+        var selectedPill = ""
+
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+
+        if (pillList.size == 0) {
+                navView.menu.findItem(R.id.navigation_report).isChecked = false
+                val intent = Intent(this@MainActivityMonthlyReport, EmptyActivity::class.java)
+                startActivity(intent)
+            }
+
+        if (pillList.isNotEmpty()) {
+            selectedPill = pillList[0]
+        }
 
 
         val selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
@@ -544,6 +582,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val daysInMonth = yearMonthObject.lengthOfMonth()
         return daysInMonth
     }
+
 }
 
 
