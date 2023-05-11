@@ -13,6 +13,7 @@ import com.example.myapp.login.BaseActivity
 import com.example.myapp.login.UserModel
 import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.gms.tasks.Task
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.util.UUID
@@ -42,6 +43,26 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
 
         backButton = findViewById(R.id.close)
         backButton?.setOnClickListener(this)
+
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+        navView.menu.findItem(R.id.navigation_home).isChecked = true
+
+        navView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this@DoctorAddPatientsActivity, ViewPatientsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_settings -> {
+                    val intent = Intent(this@DoctorAddPatientsActivity, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", patientIds)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun validateDetails(): Boolean {
