@@ -28,7 +28,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_pill)
+        setContentView(R.layout.activity_edit_pill_patient)
 
         val backButton = findViewById<ImageButton>(R.id.close)
         backButton.setOnClickListener(this)

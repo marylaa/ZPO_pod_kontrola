@@ -31,7 +31,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_pill)
+        setContentView(R.layout.activity_edit_pill_doctor)
 
         patientId = intent.getStringExtra("patientId")
 

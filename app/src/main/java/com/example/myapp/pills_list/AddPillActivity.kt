@@ -28,7 +28,7 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_pill)
+        setContentView(R.layout.activity_add_pill_patient)
 
         val backButton = findViewById<ImageButton>(R.id.close)
         backButton.setOnClickListener(this)
@@ -146,7 +146,7 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         val uid = user?.uid
 
         val id = UUID.randomUUID().toString()
-        val newPill = PillModel(id, uid, name, amountLeft, amountBox, frequency, hour, minute)
+        val newPill = PillModel(id, uid, name, amountLeft, amountBox, frequency, hour, minute, false)
 
         dbRef.child(id).setValue(newPill)
     }

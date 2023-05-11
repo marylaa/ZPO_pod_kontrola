@@ -45,8 +45,6 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
         backButton?.setOnClickListener(this)
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-        navView.menu.findItem(R.id.navigation_home).isChecked = true
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {

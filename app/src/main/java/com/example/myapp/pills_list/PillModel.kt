@@ -3,7 +3,7 @@ package com.example.myapp.pills_list
 data class PillModel (
     var id: String? = null,
     var pacient: String? = null,
-    internal var name: String = "",
+    var name: String = "",
     var availability: Int? = null,
     var inBox: Int? = null,
     var frequency: String = "",
@@ -11,8 +11,4 @@ data class PillModel (
     var minute: Int? = null,
     var isChecked: Boolean = false // Define the isChecked property
 
-){
-    fun getName(): String {
-        return this.name
-    }
-}
+)

@@ -64,7 +64,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                 dbReference.child("pills_status").push().setValue(
                     mapOf(
                         "Status" to currentItem.isChecked.toString(),
-                        "Nazwa" to currentItem.getName().toString(),
+                        "Nazwa" to currentItem.name.toString(),
                         "Data" to dateTime.toString(),
                         "user" to uid
                     )

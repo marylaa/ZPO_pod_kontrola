@@ -441,7 +441,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
-                    pillList.add(pill!!.getName().toString())
+                    pillList.add(pill!!.name.toString())
                     Log.d("pils", pillList.toString())
                 }
 

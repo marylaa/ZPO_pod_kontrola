@@ -3,6 +3,7 @@ package com.example.myapp.doctor_view
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.example.myapp.R
@@ -30,7 +31,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_pill)
+        setContentView(R.layout.activity_add_pill_doctor)
 
         patientId = intent.getStringExtra("patientId")
 
@@ -66,13 +67,11 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             ) {
                 selectedFrequency = parent.getItemAtPosition(position) as String
             }
-
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
@@ -143,8 +142,9 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         val frequency = selectedFrequency
 
         val id = UUID.randomUUID().toString()
-        val newPill = PillModel(id, patientId, name, amountLeft, amountBox, frequency, hour, minute)
+        val newPill = PillModel(id, patientId, name, amountLeft, amountBox, frequency, hour, minute, false)
 
+        Log.d("LEK", newPill.toString())
         dbRef.child(id).setValue(newPill)
     }
 
