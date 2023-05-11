@@ -154,7 +154,6 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         if(view !=null){
             when (view.id){
-
                 R.id.close ->{
                     val intent = Intent(this, UserScheduleActivity::class.java)
                     startActivity(intent)

@@ -31,6 +31,9 @@ class PatientActionsActivity : AppCompatActivity(), View.OnClickListener {
         val pillsButton = findViewById<ImageButton>(R.id.choosePills)
         pillsButton.setOnClickListener(this)
 
+        val reportButton = findViewById<ImageButton>(R.id.chooseReport)
+        reportButton.setOnClickListener(this)
+
         patientId = intent.getStringExtra("patientId")
         val patientName = findViewById<TextView>(R.id.patientName)
 
@@ -67,6 +70,11 @@ class PatientActionsActivity : AppCompatActivity(), View.OnClickListener {
 
                 R.id.choosePills ->{
                     val intent = Intent(this, PatientPillsActivity::class.java)
+                    intent.putExtra("patientId", patientId)
+                    startActivity(intent)
+                }
+                R.id.chooseReport ->{
+                    val intent = Intent(this, MonthyReportDoctor::class.java)
                     intent.putExtra("patientId", patientId)
                     startActivity(intent)
                 }
