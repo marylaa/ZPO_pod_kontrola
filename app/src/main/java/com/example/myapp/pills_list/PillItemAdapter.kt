@@ -30,119 +30,111 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
-        var hour: String? = currentItem.hour.toString()
-        var minute: String? = currentItem.minute.toString()
 
-        if (currentItem.hour!! < 10) {
-            hour = "0" + currentItem.hour.toString()
-        }
-        if (currentItem.minute!! < 10) {
-            minute = "0" + currentItem.minute.toString()
-        }
-        holder.time.text = hour + ":" + minute
+        holder.time.text = currentItem.time_list!!.get(0).get(0).toString() //na razie na sztywno 0 pozniej trzeba bedzie to zmieniac
         holder.pillTitle.text = currentItem.name
 
 
 
-        holder.itemView.apply {
-            holder.checkBox.isChecked = currentItem.isChecked
-            holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-                currentItem.isChecked = isChecked
-
-                val dbFirebase = FirebaseDatabase.getInstance()
-                val dbReference = dbFirebase.getReference()
-
-                val user = FirebaseAuth.getInstance().currentUser;
-                val uid = user?.uid
-
-                val current = LocalDate.now()
-                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                val formattedDate = current.format(formatter)
-                val dateTime = LocalDate.parse(formattedDate, formatter)
-
-                if (isChecked) {
-                    val database = FirebaseDatabase.getInstance().getReference("Pills")
-                    val updateData = hashMapOf<String, Any>("checked" to true)
-
-                    database.child(currentItem.id!!).updateChildren(updateData)
-                        .addOnFailureListener {
-                            Log.d("TAG", "Błąd")
-                        }
-
-                    // Wyświetlenie powiadomienia o wzięciu tabletki
-                    val context = holder.itemView.context
-                    Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
-
-                    dbReference.child("pills_status").push().setValue(
-                        mapOf(
-                            "Status" to currentItem.isChecked.toString(),
-                            "Nazwa" to currentItem.name,
-                            "Data" to dateTime.toString(),
-                            "User" to uid
-                        )
-                    )
-                }
-
-                if (!isChecked) {
-                    val database = FirebaseDatabase.getInstance().getReference("Pills")
-                    val updateData = hashMapOf<String, Any>("checked" to false)
-
-                    database.child(currentItem.id!!).updateChildren(updateData)
-                        .addOnFailureListener {
-                            Log.d("TAG", "Błąd")
-                        }
-
-                    val dbReference = FirebaseDatabase.getInstance().getReference().child("pills_status")
-                    val query = dbReference.orderByChild("Nazwa").equalTo(currentItem.name)
-                    query.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            for (childSnapshot in snapshot.children) {
-                                val item = childSnapshot.getValue(PillStatusModel::class.java)
-                                if (item!!.Data.equals(dateTime.toString())) {
-                                    childSnapshot.ref.removeValue()
-                                    break
-                                }
-                            }
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            Log.d("TAG", "Błąd")
-                        }
-                    })
-                }
-            }
-
-            val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
-            pillActionsButton.setOnClickListener {
-                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
-
-                popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
-                popupMenu.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.title) {
-                        "Edytuj lek" -> {
-                            val intent =
-                                Intent(holder.itemView.context, EditPillActivity::class.java)
-                            intent.putExtra("pillId", currentItem.id)
-                            holder.itemView.context.startActivity(intent)
-                            true
-                        }
-                        "Usuń lek" -> {
-                            val pillModel = pillList?.get(position)
-                            val pillId = pillModel?.id
-                            if (pillId != null) {
-                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-                                    .child(pillId)
-                                dbRef.removeValue()
-                            }
-                            true
-                        }
-                        else -> false
-                    }
-                }
-                popupMenu.show()
-
-            }
-        }
+//        holder.itemView.apply {
+//            holder.checkBox.isChecked = currentItem.isChecked
+//            holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
+//                currentItem.isChecked = isChecked
+//
+//                val dbFirebase = FirebaseDatabase.getInstance()
+//                val dbReference = dbFirebase.getReference()
+//
+//                val user = FirebaseAuth.getInstance().currentUser;
+//                val uid = user?.uid
+//
+//                val current = LocalDate.now()
+//                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+//                val formattedDate = current.format(formatter)
+//                val dateTime = LocalDate.parse(formattedDate, formatter)
+//
+//                if (isChecked) {
+//                    val database = FirebaseDatabase.getInstance().getReference("Pills")
+//                    val updateData = hashMapOf<String, Any>("checked" to true)
+//
+//                    database.child(currentItem.id!!).updateChildren(updateData)
+//                        .addOnFailureListener {
+//                            Log.d("TAG", "Błąd")
+//                        }
+//
+//                    // Wyświetlenie powiadomienia o wzięciu tabletki
+//                    val context = holder.itemView.context
+//                    Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
+//
+//                    dbReference.child("pills_status").push().setValue(
+//                        mapOf(
+//                            "Status" to currentItem.isChecked.toString(),
+//                            "Nazwa" to currentItem.name,
+//                            "Data" to dateTime.toString(),
+//                            "User" to uid
+//                        )
+//                    )
+//                }
+//
+//                if (!isChecked) {
+//                    val database = FirebaseDatabase.getInstance().getReference("Pills")
+//                    val updateData = hashMapOf<String, Any>("checked" to false)
+//
+//                    database.child(currentItem.id!!).updateChildren(updateData)
+//                        .addOnFailureListener {
+//                            Log.d("TAG", "Błąd")
+//                        }
+//
+//                    val dbReference = FirebaseDatabase.getInstance().getReference().child("pills_status")
+//                    val query = dbReference.orderByChild("Nazwa").equalTo(currentItem.name)
+//                    query.addListenerForSingleValueEvent(object : ValueEventListener {
+//                        override fun onDataChange(snapshot: DataSnapshot) {
+//                            for (childSnapshot in snapshot.children) {
+//                                val item = childSnapshot.getValue(PillStatusModel::class.java)
+//                                if (item!!.Data.equals(dateTime.toString())) {
+//                                    childSnapshot.ref.removeValue()
+//                                    break
+//                                }
+//                            }
+//                        }
+//
+//                        override fun onCancelled(error: DatabaseError) {
+//                            Log.d("TAG", "Błąd")
+//                        }
+//                    })
+//                }
+//            }
+//
+//            val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
+//            pillActionsButton.setOnClickListener {
+//                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
+//
+//                popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
+//                popupMenu.setOnMenuItemClickListener { menuItem ->
+//                    when (menuItem.title) {
+//                        "Edytuj lek" -> {
+//                            val intent =
+//                                Intent(holder.itemView.context, EditPillActivity::class.java)
+//                            intent.putExtra("pillId", currentItem.id)
+//                            holder.itemView.context.startActivity(intent)
+//                            true
+//                        }
+//                        "Usuń lek" -> {
+//                            val pillModel = pillList?.get(position)
+//                            val pillId = pillModel?.id
+//                            if (pillId != null) {
+//                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills")
+//                                    .child(pillId)
+//                                dbRef.removeValue()
+//                            }
+//                            true
+//                        }
+//                        else -> false
+//                    }
+//                }
+//                popupMenu.show()
+//
+//            }
+//        }
     }
 
     override fun getItemCount(): Int = pillList?.size ?: 0

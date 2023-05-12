@@ -26,6 +26,17 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
     private var selectedFrequency: String = ""
 
     private lateinit var dbRef: DatabaseReference
+    private lateinit var inputHour1: EditText
+    private lateinit var inputMinute1: EditText
+    private lateinit var inputHour2: EditText
+    private lateinit var inputMinute2: EditText
+    private lateinit var inputHour3: EditText
+    private lateinit var inputMinute3: EditText
+
+    private lateinit var hours: Array<Int?>
+    private lateinit var minutes: Array<Int?>
+    private var amountLeft: Int? = 0
+    private var amountInBox: Int? = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +51,12 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
         inputName = findViewById(R.id.pillName)
         inputLeft = findViewById(R.id.amountLeft)
         inputPackage = findViewById(R.id.inBox)
-        val inputHour1 = findViewById<EditText>(R.id.hourTime1)
-        val inputMinute1 = findViewById<EditText>(R.id.minuteTime1)
-        val inputHour2 = findViewById<EditText>(R.id.hourTime2)
-        val inputMinute2 = findViewById<EditText>(R.id.minuteTime2)
-        val inputHour3 = findViewById<EditText>(R.id.hourTime3)
-        val inputMinute3 = findViewById<EditText>(R.id.minuteTime3)
+        inputHour1 = findViewById(R.id.hourTime1)
+        inputMinute1 = findViewById(R.id.minuteTime1)
+        inputHour2 = findViewById(R.id.hourTime2)
+        inputMinute2 = findViewById(R.id.minuteTime2)
+        inputHour3 = findViewById(R.id.hourTime3)
+        inputMinute3 = findViewById(R.id.minuteTime3)
         val text2 = findViewById<TextView>(R.id.textViewHour2)
         val text22 = findViewById<TextView>(R.id.textView2)
         val text3 = findViewById<TextView>(R.id.textViewHour3)
@@ -66,8 +77,8 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
                 pill?.let {
                     inputName?.setText(it.name)
-                    inputHour?.setText(it.hour.toString())
-                    inputMinute?.setText(it.minute.toString())
+//                    inputHour?.setText(it.hour.toString())
+//                    inputMinute?.setText(it.minute.toString())
                     inputLeft?.setText(it.availability.toString())
                     inputPackage?.setText(it.inBox.toString())
 
@@ -129,35 +140,41 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
     private fun validatePillDetails(): Boolean {
 
-        val hour = inputHour?.text.toString().toIntOrNull()
-        val minute = inputMinute?.text.toString().toIntOrNull()
-        val amountLeft = inputLeft?.text.toString().toIntOrNull()
-        val amountInBox = inputPackage?.text.toString().toIntOrNull()
+        hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
+        minutes = arrayOf(inputMinute1?.text.toString().toIntOrNull(), inputMinute2?.text.toString().toIntOrNull(), inputMinute3?.text.toString().toIntOrNull())
+        amountLeft = inputLeft?.text.toString().toIntOrNull()
+        amountInBox = inputPackage?.text.toString().toIntOrNull()
 
         return when {
             TextUtils.isEmpty(inputName?.text.toString().trim { it <= ' ' }) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
                 false
             }
-            hour == null || hour !in 1..24 -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
-                false
-            }
-            minute == null || minute !in 0..59 -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
-                false
-            }
-            amountLeft == null || amountLeft < 1 || amountLeft > amountInBox!!.toInt() -> {
+            !hours.all { hour ->
+                if (hour == null || hour !in 1..24) {
+                    showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                    false
+                } else {
+                    true
+                }
+            } -> false
+            !minutes.all { minute ->
+                if (minute == null || minute !in 0..59) {
+                    showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                    false
+                } else {
+                    true
+                }
+            } -> false
+            amountLeft == null || amountLeft!! < 1 || amountLeft!! > amountInBox!! -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_amount), true)
                 false
             }
-            amountInBox == null || amountInBox < 1  -> {
+            amountInBox == null || amountInBox!! < 1 -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_in_box), true)
                 false
             }
-            else -> {
-                true
-            }
+            else -> true
         }
     }
 
@@ -172,8 +189,8 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
         pill!!.name = inputName?.text.toString().trim() { it <= ' ' }
-        pill!!.hour = inputHour?.text.toString().toIntOrNull()
-        pill!!.minute = inputMinute?.text.toString().toIntOrNull()
+//        pill!!.hour = inputHour?.text.toString().toIntOrNull()
+//        pill!!.minute = inputMinute?.text.toString().toIntOrNull()
         pill!!.availability = inputLeft?.text.toString().toIntOrNull()
         pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
         pill!!.frequency = selectedFrequency
