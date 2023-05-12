@@ -2,6 +2,7 @@ package com.example.myapp.pills_list
 
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,10 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -41,9 +45,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
 
 
         holder.itemView.apply {
-            val checkBox = findViewById<CheckBox>(R.id.cbDone)
-            checkBox.isChecked = currentItem.isChecked
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
+            holder.checkBox.isChecked = currentItem.isChecked
+            holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
                 currentItem.isChecked = isChecked
 
                 val dbFirebase = FirebaseDatabase.getInstance()
@@ -57,30 +60,56 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                 val formattedDate = current.format(formatter)
                 val dateTime = LocalDate.parse(formattedDate, formatter)
 
-
-
-
-
-                dbReference.child("pills_status").push().setValue(
-                    mapOf(
-                        "Status" to currentItem.isChecked.toString(),
-                        "Nazwa" to currentItem.name.toString(),
-                        "Data" to dateTime.toString(),
-                        "user" to uid
-                    )
-                )
-
                 if (isChecked) {
-                    // Usunięcie obiektu z listy po zaznaczeniu CheckBoxa
-                    pillList.removeAt(position)
-                    notifyDataSetChanged()
+                    val database = FirebaseDatabase.getInstance().getReference("Pills")
+                    val updateData = hashMapOf<String, Any>("checked" to true)
+
+                    database.child(currentItem.id!!).updateChildren(updateData)
+                        .addOnFailureListener {
+                            Log.d("TAG", "Błąd")
+                        }
 
                     // Wyświetlenie powiadomienia o wzięciu tabletki
                     val context = holder.itemView.context
                     Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
 
+                    dbReference.child("pills_status").push().setValue(
+                        mapOf(
+                            "Status" to currentItem.isChecked.toString(),
+                            "Nazwa" to currentItem.name,
+                            "Data" to dateTime.toString(),
+                            "User" to uid
+                        )
+                    )
                 }
 
+                if (!isChecked) {
+                    val database = FirebaseDatabase.getInstance().getReference("Pills")
+                    val updateData = hashMapOf<String, Any>("checked" to false)
+
+                    database.child(currentItem.id!!).updateChildren(updateData)
+                        .addOnFailureListener {
+                            Log.d("TAG", "Błąd")
+                        }
+
+                    val dbReference = FirebaseDatabase.getInstance().getReference().child("pills_status")
+                    val query = dbReference.orderByChild("Nazwa").equalTo(currentItem.name)
+                    query.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (childSnapshot in snapshot.children) {
+                                val item = childSnapshot.getValue(PillStatusModel::class.java)
+                                if (item!!.Data.equals(dateTime.toString())) {
+                                    childSnapshot.ref.removeValue()
+                                    break
+                                }
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("TAG", "Błąd")
+                        }
+                    })
+                }
             }
 
             val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)

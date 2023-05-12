@@ -40,20 +40,28 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
         saveButton = findViewById(R.id.savePill)
         inputName = findViewById(R.id.pillName)
-        inputHour = findViewById(R.id.hourTime)
-        inputMinute = findViewById(R.id.minuteTime)
+        val inputHour1 = findViewById<EditText>(R.id.hourTime1)
+        val inputMinute1 = findViewById<EditText>(R.id.minuteTime1)
+        val inputHour2 = findViewById<EditText>(R.id.hourTime2)
+        val inputMinute2 = findViewById<EditText>(R.id.minuteTime2)
+        val inputHour3 = findViewById<EditText>(R.id.hourTime3)
+        val inputMinute3 = findViewById<EditText>(R.id.minuteTime3)
+        val text2 = findViewById<TextView>(R.id.textViewHour2)
+        val text22 = findViewById<TextView>(R.id.textView2)
+        val text3 = findViewById<TextView>(R.id.textViewHour3)
+        val text33 = findViewById<TextView>(R.id.textView3)
         inputLeft = findViewById(R.id.amountLeft)
         inputPackage = findViewById(R.id.inBox)
 
         saveButton?.setOnClickListener{
-            if (validatePillDetails()) {
-                savePill()
+            if (validatePillDetails(inputHour1, inputMinute1)) {
+                savePill(inputHour1, inputMinute1)
                 finish()
             }
         }
 
         val spinner = findViewById<Spinner>(R.id.spinner1)
-        val elements = arrayOf("Codziennie", "Co drugi dzień", "Raz w tygodniu")
+        val elements = arrayOf("Codziennie", "Dwa razy dziennie", "Trzy razy dziennie", "Co drugi dzień", "Raz w tygodniu")
         val adapter = ArrayAdapter(this, R.layout.list_item, elements)
 
         spinner.adapter = adapter
@@ -66,7 +74,29 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                 id: Long
             ) {
                 selectedFrequency = parent.getItemAtPosition(position) as String
+                if (selectedFrequency.equals("Dwa razy dziennie")) {
+                    inputHour2.setVisibility(View.VISIBLE);
+                    inputMinute2.setVisibility(View.VISIBLE);
+                    text2.setVisibility(View.VISIBLE);
+                    text22.setVisibility(View.VISIBLE);
+                } else if (selectedFrequency.equals("Trzy razy dziennie")) {
+                    inputHour3.setVisibility(View.VISIBLE);
+                    inputMinute3.setVisibility(View.VISIBLE);
+                    text3.setVisibility(View.VISIBLE);
+                    text33.setVisibility(View.VISIBLE);
+                } else {
+                    inputHour2.setVisibility(View.GONE);
+                    inputMinute2.setVisibility(View.GONE);
+                    text2.setVisibility(View.GONE);
+                    text22.setVisibility(View.GONE);
+
+                    inputHour3.setVisibility(View.GONE);
+                    inputMinute3.setVisibility(View.GONE);
+                    text3.setVisibility(View.GONE);
+                    text33.setVisibility(View.GONE);
+                }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
@@ -90,7 +120,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
     }
 
-    private fun validatePillDetails(): Boolean {
+    private fun validatePillDetails(inputHour1: EditText, inputMinute1: EditText): Boolean {
 
         val hour = inputHour?.text.toString().toIntOrNull()
         val minute = inputMinute?.text.toString().toIntOrNull()
@@ -131,7 +161,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         finish()
     }
 
-    private fun savePill() {
+    private fun savePill(inputHour1: EditText, inputMinute1: EditText) {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
         val name = inputName?.text.toString().trim() { it <= ' ' }

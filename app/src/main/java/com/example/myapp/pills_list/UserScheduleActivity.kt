@@ -54,9 +54,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        val navController = findNavController(R.id.navigation_home)
         navView.menu.findItem(R.id.navigation_home).isChecked = true
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {

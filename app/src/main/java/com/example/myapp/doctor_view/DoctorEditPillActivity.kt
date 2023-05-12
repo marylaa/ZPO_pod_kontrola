@@ -21,8 +21,6 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
     private var pill: PillModel? = null
     private var saveButton: Button? = null
     private var inputName: EditText? = null
-    private var inputHour: EditText? = null
-    private var inputMinute: EditText? = null
     private var inputLeft: EditText? = null
     private var inputPackage: EditText? = null
     private var selectedFrequency: String = ""
@@ -40,10 +38,18 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
         saveButton = findViewById(R.id.savePill)
         inputName = findViewById(R.id.pillName)
-        inputHour = findViewById(R.id.hourTime)
-        inputMinute = findViewById(R.id.minuteTime)
         inputLeft = findViewById(R.id.amountLeft)
         inputPackage = findViewById(R.id.inBox)
+        val inputHour1 = findViewById<EditText>(R.id.hourTime1)
+        val inputMinute1 = findViewById<EditText>(R.id.minuteTime1)
+        val inputHour2 = findViewById<EditText>(R.id.hourTime2)
+        val inputMinute2 = findViewById<EditText>(R.id.minuteTime2)
+        val inputHour3 = findViewById<EditText>(R.id.hourTime3)
+        val inputMinute3 = findViewById<EditText>(R.id.minuteTime3)
+        val text2 = findViewById<TextView>(R.id.textViewHour2)
+        val text22 = findViewById<TextView>(R.id.textView2)
+        val text3 = findViewById<TextView>(R.id.textViewHour3)
+        val text33 = findViewById<TextView>(R.id.textView3)
 
         saveButton?.setOnClickListener{
             if (validatePillDetails()) {
@@ -68,8 +74,10 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
                     val spinner = findViewById<Spinner>(R.id.spinner1)
                     when (it.frequency) {
                         "Codziennie" -> spinner.setSelection(0)
-                        "Co drugi dzień" -> spinner.setSelection(1)
-                        "Raz w tygodniu" -> spinner.setSelection(2)
+                        "Dwa razy dziennie" -> spinner.setSelection(1)
+                        "Trzy razy dziennie" -> spinner.setSelection(2)
+                        "Co drugi dzień" -> spinner.setSelection(3)
+                        "Raz w tygodniu" -> spinner.setSelection(4)
                     }
                 }
             }
@@ -80,7 +88,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
         })
 
         val spinner = findViewById<Spinner>(R.id.spinner1)
-        val elements = arrayOf("Codziennie", "Co drugi dzień", "Raz w tygodniu")
+        val elements = arrayOf("Codziennie", "Dwa razy dziennie", "Trzy razy dziennie", "Co drugi dzień", "Raz w tygodniu")
         val adapter = ArrayAdapter(this, R.layout.list_item, elements)
 
         spinner.adapter = adapter
