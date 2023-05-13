@@ -31,8 +31,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
 
-        holder.time.text = currentItem.time_list!!.get(0).get(0)
-            .toString() //na razie na sztywno 0 pozniej trzeba bedzie to zmieniac
+        holder.time.text = currentItem.time_list!!.get(0).get(0).toString() //na razie na sztywno 0 pozniej trzeba bedzie to zmieniac
         holder.pillTitle.text = currentItem.name
 
 

@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -128,6 +129,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun validatePillDetails(): Boolean {
         hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
         minutes = arrayOf(inputMinute1?.text.toString().toIntOrNull(), inputMinute2?.text.toString().toIntOrNull(), inputMinute3?.text.toString().toIntOrNull())
@@ -150,6 +152,23 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             if (minute !== null && minute !in 0..59) {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
                 return false
+            }
+        }
+
+        for (i in 0 until hours.size - 1) {
+            val hour1 = hours[i]
+            val minute1 = minutes[i]
+            val hour2 = hours[i + 1]
+            val minute2 = minutes[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
             }
         }
 

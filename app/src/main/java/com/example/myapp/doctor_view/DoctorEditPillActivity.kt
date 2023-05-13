@@ -16,6 +16,7 @@ import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
@@ -162,16 +163,6 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
                     inputMinute3.setVisibility(View.VISIBLE);
                     text3.setVisibility(View.VISIBLE);
                     text33.setVisibility(View.VISIBLE);
-                } else {
-                    inputHour2.setVisibility(View.GONE);
-                    inputMinute2.setVisibility(View.GONE);
-                    text2.setVisibility(View.GONE);
-                    text22.setVisibility(View.GONE);
-
-                    inputHour3.setVisibility(View.GONE);
-                    inputMinute3.setVisibility(View.GONE);
-                    text3.setVisibility(View.GONE);
-                    text33.setVisibility(View.GONE);
                 }
             }
 
@@ -180,7 +171,6 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
@@ -221,6 +211,23 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
             if (minute !== null && minute !in 0..59) {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
                 return false
+            }
+        }
+
+        for (i in 0 until hours.size - 1) {
+            val hour1 = hours[i]
+            val minute1 = minutes[i]
+            val hour2 = hours[i + 1]
+            val minute2 = minutes[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
             }
         }
 
