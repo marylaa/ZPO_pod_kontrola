@@ -17,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -31,10 +33,28 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
 
-        holder.time.text = currentItem.time_list!!.get(0).get(0).toString() //na razie na sztywno 0 pozniej trzeba bedzie to zmieniac
+        val timesADay = currentItem.time_list!!
+        if (timesADay.size === 2) {
+            holder.checkBox2.setVisibility(View.VISIBLE);
+        } else if (timesADay.size === 3) {
+            holder.checkBox2.setVisibility(View.VISIBLE);
+            holder.checkBox3.setVisibility(View.VISIBLE);
+        }
+
+        val zoneId = ZoneId.of("Europe/Warsaw")
+        val currentTime = LocalTime.now(zoneId)  //wyswietlenie najblizszej godziny przyjecia tabletki
+        for (i in 0 until timesADay.size) {
+            val timeInList = timesADay[i][0].toString().split(":")
+            val hour = LocalTime.of(timeInList[0].toInt(), timeInList[1].toInt())
+            if(!hour.isBefore(currentTime)) {
+                holder.time.text = timesADay[i][0].toString()
+                break
+            } else if (i == timesADay.size - 1) {
+                holder.time.text = timesADay[i][0].toString()
+            }
+        }
+
         holder.pillTitle.text = currentItem.name
-
-
 
         holder.itemView.apply {
 //            holder.checkBox.isChecked = currentItem.isChecked
@@ -142,6 +162,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
     class PillItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pillTitle: TextView = itemView.findViewById(R.id.pillTitle)
         val time: TextView = itemView.findViewById(R.id.pillHour)
-        val checkBox: CheckBox = itemView.findViewById(R.id.cbDone)
+        val checkBox1: CheckBox = itemView.findViewById(R.id.cbDone1)
+        val checkBox2: CheckBox = itemView.findViewById(R.id.cbDone2)
+        val checkBox3: CheckBox = itemView.findViewById(R.id.cbDone3)
     }
 }

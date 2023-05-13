@@ -15,8 +15,6 @@ import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.util.*
-import com.example.myapp.pills_list.TestAdapter.Callback
 
 
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
