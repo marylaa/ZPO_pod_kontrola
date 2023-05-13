@@ -7,7 +7,7 @@ data class PillModel(
     var availability: Int? = null,
     var inBox: Int? = null,
     var frequency: String = "",
-    var time_list: List<List<Any>>? = null,
+    var time_list: MutableList<MutableList<Any?>>? = null,
     var date: String = ""
 
 )

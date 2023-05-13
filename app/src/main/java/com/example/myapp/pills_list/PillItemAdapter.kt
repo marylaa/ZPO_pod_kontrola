@@ -33,7 +33,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
 
-        val timesADay = currentItem.time_list!!
+        var timesADay = currentItem.time_list!!
         if (timesADay.size === 2) {
             holder.checkBox2.setVisibility(View.VISIBLE);
         } else if (timesADay.size === 3) {
@@ -55,74 +55,157 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
         }
 
         holder.pillTitle.text = currentItem.name
+        val dbFirebase = FirebaseDatabase.getInstance()
+        val dbReference = dbFirebase.getReference()
+
+        val user = FirebaseAuth.getInstance().currentUser;
+        val uid = user?.uid
+
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val current = LocalDate.now().format(formatter)
 
         holder.itemView.apply {
-//            holder.checkBox.isChecked = currentItem.isChecked
-//            holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
-//                currentItem.isChecked = isChecked
-//
-//                val dbFirebase = FirebaseDatabase.getInstance()
-//                val dbReference = dbFirebase.getReference()
-//
-//                val user = FirebaseAuth.getInstance().currentUser;
-//                val uid = user?.uid
-//
-//                val current = LocalDate.now()
-//                val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-//                val formattedDate = current.format(formatter)
-//                val dateTime = LocalDate.parse(formattedDate, formatter)
-//
-//                if (isChecked) {
-//                    val database = FirebaseDatabase.getInstance().getReference("Pills")
-//                    val updateData = hashMapOf<String, Any>("checked" to true)
-//
-//                    database.child(currentItem.id!!).updateChildren(updateData)
-//                        .addOnFailureListener {
-//                            Log.d("TAG", "Błąd")
-//                        }
-//
-//                    // Wyświetlenie powiadomienia o wzięciu tabletki
-//                    val context = holder.itemView.context
-//                    Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
-//
-//                    dbReference.child("pills_status").push().setValue(
-//                        mapOf(
-//                            "Status" to currentItem.isChecked.toString(),
-//                            "Nazwa" to currentItem.name,
-//                            "Data" to dateTime.toString(),
-//                            "User" to uid
-//                        )
-//                    )
-//                }
-//
-//                if (!isChecked) {
-//                    val database = FirebaseDatabase.getInstance().getReference("Pills")
-//                    val updateData = hashMapOf<String, Any>("checked" to false)
-//
-//                    database.child(currentItem.id!!).updateChildren(updateData)
-//                        .addOnFailureListener {
-//                            Log.d("TAG", "Błąd")
-//                        }
-//
-//                    val dbReference = FirebaseDatabase.getInstance().getReference().child("pills_status")
-//                    val query = dbReference.orderByChild("Nazwa").equalTo(currentItem.name)
-//                    query.addListenerForSingleValueEvent(object : ValueEventListener {
-//                        override fun onDataChange(snapshot: DataSnapshot) {
-//                            for (childSnapshot in snapshot.children) {
-//                                val item = childSnapshot.getValue(PillStatusModel::class.java)
-//                                if (item!!.Data.equals(dateTime.toString())) {
-//                                    childSnapshot.ref.removeValue()
-//                                    break
-//                                }
-//                            }
-//                        }
-//
-//                        override fun onCancelled(error: DatabaseError) {
-//                            Log.d("TAG", "Błąd")
-//                        }
-//                    })
-//                }
-//            }
+            holder.checkBox1.isChecked = timesADay[0][1] as Boolean
+            holder.checkBox1.setOnCheckedChangeListener { _, isChecked ->
+                currentItem.time_list!![0][1] = isChecked
+
+                if (isChecked) {
+                    val database = FirebaseDatabase.getInstance().getReference("Pills")
+                    database.child(currentItem.id!!).setValue(currentItem)
+
+                    // Wyświetlenie powiadomienia o wzięciu tabletki
+                    val context = holder.itemView.context
+                    Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
+
+                    dbReference.child("Pills_status").push().setValue(
+                        mapOf(
+                            "status" to currentItem.time_list!![0][1].toString(),
+                            "name" to currentItem.name,
+                            "date" to current,
+                            "user" to uid
+                        )
+                    )
+                }
+
+                if (!isChecked) {
+                    val database = FirebaseDatabase.getInstance().getReference("Pills")
+                    database.child(currentItem.id!!).setValue(currentItem)
+
+                    // usunięcie z bazy danych odcheckowanej tabletki
+                    val dbReference = FirebaseDatabase.getInstance().getReference().child("Pills_status")
+                    val query = dbReference.orderByChild("name").equalTo(currentItem.name)
+                    query.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (childSnapshot in snapshot.children) {
+                                val item = childSnapshot.getValue(PillStatusModel::class.java)
+                                if (item!!.date.equals(current)) {
+                                    childSnapshot.ref.removeValue()
+                                    break
+                                }
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d("TAG", "Błąd")
+                        }
+                    })
+                }
+            }
+
+            if (timesADay.size >= 2) {
+                holder.checkBox2.isChecked = timesADay[1][1] as Boolean
+                holder.checkBox2.setOnCheckedChangeListener { _, isChecked ->
+                    currentItem.time_list!![1][1] = isChecked
+
+                    if (isChecked) {
+                        val database = FirebaseDatabase.getInstance().getReference("Pills")
+                        database.child(currentItem.id!!).setValue(currentItem)
+
+                        // Wyświetlenie powiadomienia o wzięciu tabletki
+                        val context = holder.itemView.context
+                        Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
+
+                        dbReference.child("Pills_status").push().setValue(
+                            mapOf(
+                                "status" to currentItem.time_list!![1][1].toString(),
+                                "name" to currentItem.name,
+                                "date" to current,
+                                "user" to uid
+                            )
+                        )
+                    }
+
+                    if (!isChecked) {
+                        val database = FirebaseDatabase.getInstance().getReference("Pills")
+                        database.child(currentItem.id!!).setValue(currentItem)
+
+                        // usunięcie z bazy danych odcheckowanej tabletki
+                        val dbReference = FirebaseDatabase.getInstance().getReference().child("Pills_status")
+                        val query = dbReference.orderByChild("name").equalTo(currentItem.name)
+                        query.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (childSnapshot in snapshot.children) {
+                                    val item = childSnapshot.getValue(PillStatusModel::class.java)
+                                    if (item!!.date.equals(current)) {
+                                        childSnapshot.ref.removeValue()
+                                        break
+                                    }
+                                }
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.d("TAG", "Błąd")
+                            }
+                        })
+                    }
+                }
+            }
+            if (timesADay.size === 3) {
+                holder.checkBox3.isChecked = timesADay[2][1] as Boolean
+                holder.checkBox3.setOnCheckedChangeListener { _, isChecked ->
+                    currentItem.time_list!![2][1] = isChecked
+
+                    if (isChecked) {
+                        val database = FirebaseDatabase.getInstance().getReference("Pills")
+                        database.child(currentItem.id!!).setValue(currentItem)
+
+                        // Wyświetlenie powiadomienia o wzięciu tabletki
+                        val context = holder.itemView.context
+                        Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
+
+                        dbReference.child("Pills_status").push().setValue(
+                            mapOf(
+                                "status" to currentItem.time_list!![2][1].toString(),
+                                "name" to currentItem.name,
+                                "date" to current,
+                                "user" to uid
+                            )
+                        )
+                    }
+
+                    if (!isChecked) {
+                        val database = FirebaseDatabase.getInstance().getReference("Pills")
+                        database.child(currentItem.id!!).setValue(currentItem)
+
+                        // usunięcie z bazy danych odcheckowanej tabletki
+                        val dbReference = FirebaseDatabase.getInstance().getReference().child("Pills_status")
+                        val query = dbReference.orderByChild("name").equalTo(currentItem.name)
+                        query.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (childSnapshot in snapshot.children) {
+                                    val item = childSnapshot.getValue(PillStatusModel::class.java)
+                                    if (item!!.date.equals(current)) {
+                                        childSnapshot.ref.removeValue()
+                                        break
+                                    }
+                                }
+                            }
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.d("TAG", "Błąd")
+                            }
+                        })
+                    }
+                }
+            }
 
             val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
             pillActionsButton.setOnClickListener {

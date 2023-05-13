@@ -183,7 +183,6 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
@@ -284,21 +283,21 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
 
         val time1 = timeToString(hours.get(0), minutes.get(0))
-        val times1 = listOf(time1, false)
-        var times: List<List<Any>>? = null
+        val times1 = mutableListOf<Any?>(time1, false)
+        var times: MutableList<MutableList<Any?>>? = null
 
         if (selectedFrequency.equals("Dwa razy dziennie")) {
             val time2 = timeToString(hours.get(1), minutes.get(1))
-            val times2 = listOf(time2, false)
-            times = listOf(times1, times2)
+            val times2 = mutableListOf<Any?>(time2, false)
+            times = mutableListOf(times1, times2)
         } else if (selectedFrequency.equals("Trzy razy dziennie")) {
             val time2 = timeToString(hours.get(1), minutes.get(1))
             val time3 = timeToString(hours.get(2), minutes.get(2))
-            val times2 = listOf(time2, false)
-            val times3 = listOf(time3, false)
-            times = listOf(times1, times2, times3)
+            val times2 = mutableListOf<Any?>(time2, false)
+            val times3 = mutableListOf<Any?>(time3, false)
+            times = mutableListOf(times1, times2, times3)
         } else {
-            times = listOf(times1)
+            times = mutableListOf(times1)
         }
 
         pill!!.time_list = times
