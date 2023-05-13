@@ -31,12 +31,13 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
 
-        holder.time.text = currentItem.time_list!!.get(0).get(0).toString() //na razie na sztywno 0 pozniej trzeba bedzie to zmieniac
+        holder.time.text = currentItem.time_list!!.get(0).get(0)
+            .toString() //na razie na sztywno 0 pozniej trzeba bedzie to zmieniac
         holder.pillTitle.text = currentItem.name
 
 
 
-//        holder.itemView.apply {
+        holder.itemView.apply {
 //            holder.checkBox.isChecked = currentItem.isChecked
 //            holder.checkBox.setOnCheckedChangeListener { _, isChecked ->
 //                currentItem.isChecked = isChecked
@@ -103,38 +104,38 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
 //                    })
 //                }
 //            }
-//
-//            val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
-//            pillActionsButton.setOnClickListener {
-//                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
-//
-//                popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
-//                popupMenu.setOnMenuItemClickListener { menuItem ->
-//                    when (menuItem.title) {
-//                        "Edytuj lek" -> {
-//                            val intent =
-//                                Intent(holder.itemView.context, EditPillActivity::class.java)
-//                            intent.putExtra("pillId", currentItem.id)
-//                            holder.itemView.context.startActivity(intent)
-//                            true
-//                        }
-//                        "Usuń lek" -> {
-//                            val pillModel = pillList?.get(position)
-//                            val pillId = pillModel?.id
-//                            if (pillId != null) {
-//                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-//                                    .child(pillId)
-//                                dbRef.removeValue()
-//                            }
-//                            true
-//                        }
-//                        else -> false
-//                    }
-//                }
-//                popupMenu.show()
-//
-//            }
-//        }
+
+            val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
+            pillActionsButton.setOnClickListener {
+                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
+
+                popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
+                popupMenu.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.title) {
+                        "Edytuj lek" -> {
+                            val intent =
+                                Intent(holder.itemView.context, EditPillActivity::class.java)
+                            intent.putExtra("pillId", currentItem.id)
+                            holder.itemView.context.startActivity(intent)
+                            true
+                        }
+                        "Usuń lek" -> {
+                            val pillModel = pillList?.get(position)
+                            val pillId = pillModel?.id
+                            if (pillId != null) {
+                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills")
+                                    .child(pillId)
+                                dbRef.removeValue()
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popupMenu.show()
+
+            }
+        }
     }
 
     override fun getItemCount(): Int = pillList?.size ?: 0

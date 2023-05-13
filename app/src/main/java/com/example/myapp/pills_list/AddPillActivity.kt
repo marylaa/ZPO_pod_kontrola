@@ -92,20 +92,14 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
                     text2.setVisibility(View.VISIBLE);
                     text22.setVisibility(View.VISIBLE);
                 } else if (selectedFrequency.equals("Trzy razy dziennie")) {
+                    inputHour2.setVisibility(View.VISIBLE);
+                    inputMinute2.setVisibility(View.VISIBLE);
+                    text2.setVisibility(View.VISIBLE);
+                    text22.setVisibility(View.VISIBLE);
                     inputHour3.setVisibility(View.VISIBLE);
                     inputMinute3.setVisibility(View.VISIBLE);
                     text3.setVisibility(View.VISIBLE);
                     text33.setVisibility(View.VISIBLE);
-                } else {
-                    inputHour2.setVisibility(View.GONE);
-                    inputMinute2.setVisibility(View.GONE);
-                    text2.setVisibility(View.GONE);
-                    text22.setVisibility(View.GONE);
-
-                    inputHour3.setVisibility(View.GONE);
-                    inputMinute3.setVisibility(View.GONE);
-                    text3.setVisibility(View.GONE);
-                    text33.setVisibility(View.GONE);
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}

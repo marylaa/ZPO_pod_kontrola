@@ -102,16 +102,6 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     inputMinute3.setVisibility(View.VISIBLE);
                     text3.setVisibility(View.VISIBLE);
                     text33.setVisibility(View.VISIBLE);
-                } else {
-                    inputHour2.setVisibility(View.GONE);
-                    inputMinute2.setVisibility(View.GONE);
-                    text2.setVisibility(View.GONE);
-                    text22.setVisibility(View.GONE);
-
-                    inputHour3.setVisibility(View.GONE);
-                    inputMinute3.setVisibility(View.GONE);
-                    text3.setVisibility(View.GONE);
-                    text33.setVisibility(View.GONE);
                 }
             }
 

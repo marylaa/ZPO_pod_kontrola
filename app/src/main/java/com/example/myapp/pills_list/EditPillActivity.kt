@@ -1,16 +1,23 @@
 package com.example.myapp.pills_list
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
+import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class EditPillActivity : BaseActivity(), View.OnClickListener {
 
@@ -35,6 +42,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
     private var amountLeft: Int? = 0
     private var amountInBox: Int? = 0
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_pill_patient)
@@ -72,18 +80,49 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
                 pill?.let {
                     inputName?.setText(it.name)
-//                    inputHour?.setText(it.hour.toString())
-//                    inputMinute?.setText(it.minute.toString())
                     inputLeft?.setText(it.availability.toString())
                     inputPackage?.setText(it.inBox.toString())
+                    val hour1 = it.time_list!!.get(0).get(0).toString().split(":")
+                    inputHour1?.setText(hour1.get(0))
+                    inputMinute1?.setText(hour1.get(1))
 
                     val spinner = findViewById<Spinner>(R.id.spinner1)
                     when (it.frequency) {
                         "Codziennie" -> spinner.setSelection(0)
-                        "Dwa razy dziennie" -> spinner.setSelection(1)
-                        "Trzy razy dziennie" -> spinner.setSelection(2)
+                        "Dwa razy dziennie" -> {
+                            spinner.setSelection(1)
+                            inputHour2.setVisibility(View.VISIBLE);
+                            inputMinute2.setVisibility(View.VISIBLE);
+                            text2.setVisibility(View.VISIBLE);
+                            text22.setVisibility(View.VISIBLE);
+
+                            val hour2 = it.time_list!!.get(1).get(0).toString().split(":")
+                            inputHour2?.setText(hour2.get(0))
+                            inputMinute2?.setText(hour2.get(1))
+                        }
+                        "Trzy razy dziennie" -> {
+                            spinner.setSelection(2)
+
+                            inputHour2.setVisibility(View.VISIBLE);
+                            inputMinute2.setVisibility(View.VISIBLE);
+                            text2.setVisibility(View.VISIBLE);
+                            text22.setVisibility(View.VISIBLE);
+                            inputHour3.setVisibility(View.VISIBLE);
+                            inputMinute3.setVisibility(View.VISIBLE);
+                            text3.setVisibility(View.VISIBLE);
+                            text33.setVisibility(View.VISIBLE);
+
+                            val hour2 = it.time_list!!.get(1).get(0).toString().split(":")
+                            inputHour2?.setText(hour2.get(0))
+                            inputMinute2?.setText(hour2.get(1))
+
+                            val hour3 = it.time_list!!.get(2).get(0).toString().split(":")
+                            inputHour3?.setText(hour3.get(0))
+                            inputMinute3?.setText(hour3.get(1))
+                        }
                         "Co drugi dzień" -> spinner.setSelection(3)
                         "Raz w tygodniu" -> spinner.setSelection(4)
+                        else -> {}
                     }
                 }
             }
@@ -107,6 +146,31 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 id: Long
             ) {
                 selectedFrequency = parent.getItemAtPosition(position) as String
+                if (selectedFrequency.equals("Dwa razy dziennie")) {
+                    inputHour2.setVisibility(View.VISIBLE);
+                    inputMinute2.setVisibility(View.VISIBLE);
+                    text2.setVisibility(View.VISIBLE);
+                    text22.setVisibility(View.VISIBLE);
+                } else if (selectedFrequency.equals("Trzy razy dziennie")) {
+                    inputHour2.setVisibility(View.VISIBLE);
+                    inputMinute2.setVisibility(View.VISIBLE);
+                    text2.setVisibility(View.VISIBLE);
+                    text22.setVisibility(View.VISIBLE);
+                    inputHour3.setVisibility(View.VISIBLE);
+                    inputMinute3.setVisibility(View.VISIBLE);
+                    text3.setVisibility(View.VISIBLE);
+                    text33.setVisibility(View.VISIBLE);
+                } else {
+                    inputHour2.setVisibility(View.GONE);
+                    inputMinute2.setVisibility(View.GONE);
+                    text2.setVisibility(View.GONE);
+                    text22.setVisibility(View.GONE);
+
+                    inputHour3.setVisibility(View.GONE);
+                    inputMinute3.setVisibility(View.GONE);
+                    text3.setVisibility(View.GONE);
+                    text33.setVisibility(View.GONE);
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
@@ -122,11 +186,11 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                     startActivity(intent)
                     true
                 }
-//                R.id.navigation_report -> {
-//                    val intent = Intent(this@AddPillActivity, MainActivityMonthlyReport::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
+                R.id.navigation_report -> {
+                    val intent = Intent(this@EditPillActivity, MainActivityMonthlyReport::class.java)
+                    startActivity(intent)
+                    true
+                }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@EditPillActivity, PatientSettingsActivity::class.java)
                     startActivity(intent)
@@ -139,43 +203,41 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun validatePillDetails(): Boolean {
-
         hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
         minutes = arrayOf(inputMinute1?.text.toString().toIntOrNull(), inputMinute2?.text.toString().toIntOrNull(), inputMinute3?.text.toString().toIntOrNull())
         amountLeft = inputLeft?.text.toString().toIntOrNull()
         amountInBox = inputPackage?.text.toString().toIntOrNull()
 
-        return when {
-            TextUtils.isEmpty(inputName?.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
-                false
-            }
-            !hours.all { hour ->
-                if (hour == null || hour !in 1..24) {
-                    showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
-                    false
-                } else {
-                    true
-                }
-            } -> false
-            !minutes.all { minute ->
-                if (minute == null || minute !in 0..59) {
-                    showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
-                    false
-                } else {
-                    true
-                }
-            } -> false
-            amountLeft == null || amountLeft!! < 1 || amountLeft!! > amountInBox!! -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_amount), true)
-                false
-            }
-            amountInBox == null || amountInBox!! < 1 -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_in_box), true)
-                false
-            }
-            else -> true
+        if (TextUtils.isEmpty(inputName?.text.toString().trim())) {
+            showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
+            return false
         }
+
+        for (hour in hours) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+
+        for (minute in minutes) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+
+        if (amountLeft == null || amountLeft!! < 1 || amountLeft!! > amountInBox!!) {
+            showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_amount), true)
+            return false
+        }
+
+        if (amountInBox == null || amountInBox!! < 1) {
+            showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_in_box), true)
+            return false
+        }
+
+        return true
     }
 
     fun goToSchedule(view: View) {
@@ -184,18 +246,43 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         finish()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun savePill() {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
+        val current = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = current.format(formatter)
+
         pill!!.name = inputName?.text.toString().trim() { it <= ' ' }
-//        pill!!.hour = inputHour?.text.toString().toIntOrNull()
-//        pill!!.minute = inputMinute?.text.toString().toIntOrNull()
+        pill!!.frequency = selectedFrequency
+        pill!!.date = date
         pill!!.availability = inputLeft?.text.toString().toIntOrNull()
         pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
-        pill!!.frequency = selectedFrequency
+
+        val time1 = timeToString(hours.get(0), minutes.get(0))
+        val times1 = listOf(time1, false)
+        var times: List<List<Any>>? = null
+
+        if (selectedFrequency.equals("Dwa razy dziennie")) {
+            val time2 = timeToString(hours.get(1), minutes.get(1))
+            val times2 = listOf(time2, false)
+            times = listOf(times1, times2)
+        } else if (selectedFrequency.equals("Trzy razy dziennie")) {
+            val time2 = timeToString(hours.get(1), minutes.get(1))
+            val time3 = timeToString(hours.get(2), minutes.get(2))
+            val times2 = listOf(time2, false)
+            val times3 = listOf(time3, false)
+            times = listOf(times1, times2, times3)
+        } else {
+            times = listOf(times1)
+        }
+
+        pill!!.time_list = times
 
         dbRef.child(pill!!.id.toString()).setValue(pill)
     }
+
 
     override fun onClick(view: View?) {
         if(view !=null){
@@ -207,5 +294,17 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 }
             }
         }
+    }
+
+    private fun timeToString(hour: Int?, minute: Int?): String {
+        var hour_new = hour.toString()
+        var minute_new = minute.toString()
+        if (hour!! < 10) {
+            hour_new = "0" + hour.toString()
+        }
+        if (minute!! < 10) {
+            minute_new = "0" + minute.toString()
+        }
+        return hour_new + ":" + minute_new
     }
 }
