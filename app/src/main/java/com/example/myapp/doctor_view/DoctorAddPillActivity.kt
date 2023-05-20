@@ -1,9 +1,12 @@
 package com.example.myapp.doctor_view
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -12,12 +15,17 @@ import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.AddPillActivity
+import com.example.myapp.pills_list.DownloadPillsTask
 import com.example.myapp.pills_list.PillModel
 import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.okhttp.OkHttpClient
+import com.squareup.okhttp.Request
+import org.json.JSONArray
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -27,9 +35,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
     private var patientId: String? = null
     private var saveButton: Button? = null
-    private var inputName: EditText? = null
-    private var inputHour: EditText? = null
-    private var inputMinute: EditText? = null
+    private lateinit var pillName: AutoCompleteTextView
     private var inputLeft: EditText? = null
     private var inputPackage: EditText? = null
     private var selectedFrequency: String = ""
@@ -58,7 +64,6 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         backButton.setOnClickListener(this)
 
         saveButton = findViewById(R.id.savePill)
-        inputName = findViewById(R.id.pillName)
         inputHour1 = findViewById(R.id.hourTime1)
         inputMinute1 = findViewById(R.id.minuteTime1)
         inputHour2 = findViewById(R.id.hourTime2)
@@ -71,6 +76,29 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         val text33 = findViewById<TextView>(R.id.textView3)
         inputLeft = findViewById(R.id.amountLeft)
         inputPackage = findViewById(R.id.inBox)
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        pillName = findViewById(R.id.pillName)
+        val adapter2 = ArrayAdapter<String>(
+            this, android.R.layout.simple_dropdown_item_1line, ArrayList<String>())
+        pillName.setAdapter(adapter2)
+
+        pillName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                val userInput = charSequence.toString()
+                if (!TextUtils.isEmpty(userInput)) {
+                    updateSuggestions()
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable) {}
+        })
+
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
 
         saveButton?.setOnClickListener{
             if (validatePillDetails()) {
@@ -143,6 +171,26 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
 
     }
 
+    //////////////////////////////////////////////////////////////////////////////////
+
+    private fun sendHttpRequest(): List<String>? {
+        val task = DownloadPillsTask(pillName.text.toString())
+        val suggestions: List<String>? = task.execute().get()
+        return suggestions
+    }
+
+    private fun updateSuggestions() {
+        val suggestions = sendHttpRequest()
+        val adapter = pillName.adapter as ArrayAdapter<String>
+        adapter.clear()
+        Log.d("SUGESTIE", suggestions.toString())
+        adapter.addAll(suggestions!!)
+        adapter.notifyDataSetChanged()
+    }
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun validatePillDetails(): Boolean {
         hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
@@ -150,7 +198,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         amountLeft = inputLeft?.text.toString().toIntOrNull()
         amountInBox = inputPackage?.text.toString().toIntOrNull()
 
-        if (TextUtils.isEmpty(inputName?.text.toString().trim())) {
+        if (TextUtils.isEmpty(pillName?.text.toString().trim())) {
             showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
             return false
         }
@@ -214,7 +262,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val date = current.format(formatter)
 
-        val name = inputName?.text.toString().trim() { it <= ' ' }
+        val name = pillName?.text.toString().trim() { it <= ' ' }
         val frequency = selectedFrequency
         val time1 = timeToString(hours.get(0), minutes.get(0))
         val times1 = mutableListOf<Any?>(time1, false)

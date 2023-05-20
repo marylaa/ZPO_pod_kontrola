@@ -1,9 +1,12 @@
 package com.example.myapp.pills_list
 
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -15,6 +18,10 @@ import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.okhttp.OkHttpClient
+import com.squareup.okhttp.Request
+import org.json.JSONArray
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -25,7 +32,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
     private var pillId: String? = null
     private var pill: PillModel? = null
     private var saveButton: Button? = null
-    private var inputName: EditText? = null
+    private lateinit var pillName: AutoCompleteTextView
     private var inputLeft: EditText? = null
     private var inputPackage: EditText? = null
     private var selectedFrequency: String = ""
@@ -52,7 +59,6 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         backButton.setOnClickListener(this)
 
         saveButton = findViewById(R.id.savePill)
-        inputName = findViewById(R.id.pillName)
         inputLeft = findViewById(R.id.amountLeft)
         inputPackage = findViewById(R.id.inBox)
         inputHour1 = findViewById(R.id.hourTime1)
@@ -65,6 +71,29 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         val text22 = findViewById<TextView>(R.id.textView2)
         val text3 = findViewById<TextView>(R.id.textViewHour3)
         val text33 = findViewById<TextView>(R.id.textView3)
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        pillName = findViewById(R.id.pillName)
+        val adapter2 = ArrayAdapter<String>(
+            this, android.R.layout.simple_dropdown_item_1line, ArrayList<String>())
+        pillName.setAdapter(adapter2)
+
+        pillName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                val userInput = charSequence.toString()
+                if (!TextUtils.isEmpty(userInput)) {
+                    updateSuggestions()
+                }
+            }
+
+            override fun afterTextChanged(editable: Editable) {}
+        })
+
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
 
         saveButton?.setOnClickListener{
             if (validatePillDetails()) {
@@ -80,7 +109,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 pill = snapshot.getValue(PillModel::class.java)
 
                 pill?.let {
-                    inputName?.setText(it.name)
+                    pillName?.setText(it.name)
                     inputLeft?.setText(it.availability.toString())
                     inputPackage?.setText(it.inBox.toString())
                     val hour1 = it.time_list!!.get(0).get(0).toString().split(":")
@@ -152,6 +181,13 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                     inputMinute2.setVisibility(View.VISIBLE);
                     text2.setVisibility(View.VISIBLE);
                     text22.setVisibility(View.VISIBLE);
+
+                    inputHour3.setVisibility(View.GONE);
+                    inputHour3.text = null
+                    inputMinute3.setVisibility(View.GONE);
+                    inputMinute3.text = null
+                    text3.setVisibility(View.GONE);
+                    text33.setVisibility(View.GONE);
                 } else if (selectedFrequency.equals("Trzy razy dziennie")) {
                     inputHour2.setVisibility(View.VISIBLE);
                     inputMinute2.setVisibility(View.VISIBLE);
@@ -206,6 +242,26 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
     }
 
+    //////////////////////////////////////////////////////////////////////////////////
+
+    private fun sendHttpRequest(): List<String>? {
+        val task = DownloadPillsTask(pillName.text.toString())
+        val suggestions: List<String>? = task.execute().get()
+        return suggestions
+    }
+
+    private fun updateSuggestions() {
+        val suggestions = sendHttpRequest()
+        val adapter = pillName.adapter as ArrayAdapter<String>
+        adapter.clear()
+        Log.d("SUGESTIE", suggestions.toString())
+        adapter.addAll(suggestions!!)
+        adapter.notifyDataSetChanged()
+    }
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun validatePillDetails(): Boolean {
         hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
@@ -213,7 +269,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         amountLeft = inputLeft?.text.toString().toIntOrNull()
         amountInBox = inputPackage?.text.toString().toIntOrNull()
 
-        if (TextUtils.isEmpty(inputName?.text.toString().trim())) {
+        if (TextUtils.isEmpty(pillName?.text.toString().trim())) {
             showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
             return false
         }
@@ -276,7 +332,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val date = current.format(formatter)
 
-        pill!!.name = inputName?.text.toString().trim() { it <= ' ' }
+        pill!!.name = pillName?.text.toString().trim() { it <= ' ' }
         pill!!.frequency = selectedFrequency
         pill!!.date = date
         pill!!.availability = inputLeft?.text.toString().toIntOrNull()

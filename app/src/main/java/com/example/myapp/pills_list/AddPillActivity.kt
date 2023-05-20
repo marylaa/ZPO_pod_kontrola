@@ -1,21 +1,16 @@
 package com.example.myapp.pills_list
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
@@ -24,13 +19,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.squareup.okhttp.MediaType
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
-import com.squareup.okhttp.RequestBody
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -67,7 +59,6 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         backButton.setOnClickListener(this)
 
         saveButton = findViewById(R.id.savePill)
-        //inputName = findViewById(R.id.pillName)
         inputHour1 = findViewById(R.id.hourTime1)
         inputMinute1 = findViewById(R.id.minuteTime1)
         inputHour2 = findViewById(R.id.hourTime2)
@@ -82,12 +73,9 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         inputPackage = findViewById(R.id.inBox)
 
         //////////////////////////////////////////////////////////////////////////////////////
-        pillName = findViewById<AutoCompleteTextView>(R.id.pillName)
+        pillName = findViewById(R.id.pillName)
         val adapter2 = ArrayAdapter<String>(
-            this,
-            android.R.layout.simple_dropdown_item_1line,
-            ArrayList<String>()
-        )
+            this, android.R.layout.simple_dropdown_item_1line, ArrayList<String>())
         pillName.setAdapter(adapter2)
 
         pillName.addTextChangedListener(object : TextWatcher {
@@ -95,10 +83,8 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 val userInput = charSequence.toString()
-//                // Aktualizuj adapter z nowymi sugestiami
-//                updateSuggestions(userInput)
                 if (!TextUtils.isEmpty(userInput)) {
-                    updateSuggestions(userInput)
+                    updateSuggestions()
                 }
             }
 
@@ -124,7 +110,6 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
             "Raz w tygodniu"
         )
         val adapter = ArrayAdapter(this, R.layout.list_item, elements)
-
         spinner.adapter = adapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -140,6 +125,13 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
                     inputMinute2.setVisibility(View.VISIBLE);
                     text2.setVisibility(View.VISIBLE);
                     text22.setVisibility(View.VISIBLE);
+
+                    inputHour3.setVisibility(View.GONE);
+                    inputHour3.text = null
+                    inputMinute3.setVisibility(View.GONE);
+                    inputMinute3.text = null
+                    text3.setVisibility(View.GONE);
+                    text33.setVisibility(View.GONE);
                 } else if (selectedFrequency.equals("Trzy razy dziennie")) {
                     inputHour2.setVisibility(View.VISIBLE);
                     inputMinute2.setVisibility(View.VISIBLE);
@@ -199,32 +191,16 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
     private fun sendHttpRequest(): List<String>? {
         val task = DownloadPillsTask(pillName.text.toString())
         val suggestions: List<String>? = task.execute().get()
-        Log.d("SUGESTIE", suggestions.toString())
         return suggestions
     }
 
-    private fun updateSuggestions(userInput: String) {
-        // Tutaj wykonaj zapytanie do API, aby otrzymać sugestie leków na podstawie wpisywanych liter
-        // Zaktualizuj adapter z nowymi sugestiami
-        val suggestions = getDrugSuggestionsFromAPI(userInput)
+    private fun updateSuggestions() {
+        val suggestions = sendHttpRequest()
         val adapter = pillName.adapter as ArrayAdapter<String>
         adapter.clear()
-        adapter.addAll(suggestions)
+        Log.d("SUGESTIE", suggestions.toString())
+        adapter.addAll(suggestions!!)
         adapter.notifyDataSetChanged()
-    }
-
-    private fun getDrugSuggestionsFromAPI(userInput: String): List<String> {
-        // Tutaj wykonaj zapytanie do API, aby otrzymać sugestie leków na podstawie wpisywanych liter
-        // Zwróć listę sugerowanych leków
-        var suggestions: List<String> = ArrayList()
-
-        val list = sendHttpRequest()
-        suggestions = list!!
-        // Tutaj zaimplementuj logikę, aby pobrać sugestie leków z odpowiedniego źródła (np. API)
-        // Możesz użyć wcześniej wspomnianych API, takich jak Algolia Places lub inne
-        // Pamiętaj, że musisz dostosować to do swoich potrzeb i zasobów danych
-        // Zwróć listę
-        return suggestions
     }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -331,8 +307,6 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         } else {
             times = mutableListOf(times1)
         }
-
-
         val id = UUID.randomUUID().toString()
         val newPill = PillModel(id, uid, name, amountLeft, amountInBox, frequency, times, date)
 
@@ -362,34 +336,3 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         return hour_new + ":" + minute_new
     }
 }
-
-//////////////////////////////////////////////////////////////////////////////////
-
-class DownloadPillsTask(private val pillName: String) :
-    AsyncTask<String, Void, ArrayList<String>>() {
-    override fun doInBackground(vararg urls: String): ArrayList<String> {
-        val client = OkHttpClient()
-        val url = "http://192.168.1.18:5000/search/" + pillName// IP na którym stoi serwer
-
-        val request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-
-        val response = client.newCall(request).execute()
-        val responseData = response.body()?.string()
-
-        val jsonObject = JSONObject(responseData)
-        val resultArray = jsonObject["result"] as JSONArray
-        var items: ArrayList<String> = arrayListOf()
-
-        for (i in 0 until resultArray.length()) {
-            val item = resultArray[i]
-            items.add(item.toString())
-        }
-        Log.d("ODP", items.toString())
-
-        return items
-    }
-}
-
