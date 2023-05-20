@@ -62,13 +62,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/pillName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
-        android:inputType="textPersonName"
         android:padding="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
