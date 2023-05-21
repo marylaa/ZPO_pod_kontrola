@@ -14,17 +14,15 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.EmptyActivityDoctor
 import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
-import com.example.myapp.pills_list.UserScheduleActivity
-import com.example.myapp.report.Report
-import com.example.myapp.settings.PatientSettingsActivity
+import com.example.myapp.report.TableActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -32,7 +30,6 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import java.time.LocalDate
@@ -43,7 +40,7 @@ import java.util.*
 import kotlin.collections.*
 
 
-class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private lateinit var adapterDate: RecycleViewAdapter
     private lateinit var adapter: RecycleViewAdapterItem
@@ -59,6 +56,10 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
     private var monthsList = arrayOf("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień")
 
     private var patientId: String? = null
+    private lateinit var adapterPills: ArrayAdapter<String>
+    private val dataToTable = mutableListOf<List<String>>()
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -72,36 +73,10 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         getAllPillsFromDatabase()
 
 
+        val button = findViewById<Button>(R.id.pills)
+        button.setOnClickListener(this)
 
 
-//        binding = ActivityMainMonthlyBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-
-        // data to populate the RecyclerView with
-        val viewColors = arrayListOf(
-            Color.BLUE,
-            Color.YELLOW,
-            Color.MAGENTA,
-            Color.YELLOW,
-            Color.MAGENTA
-        )
-
-//        val dates = arrayListOf(
-//            LocalDate.now().minusDays(2),
-//            LocalDate.now().minusDays(1),
-//            LocalDate.now(),
-//            LocalDate.now().plusDays(1),
-//            LocalDate.now().plusDays(2),
-//
-//        )
-//
-//        // set up the RecyclerView
-//        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-//        val horizontalLayoutManager =
-//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView1.layoutManager = horizontalLayoutManager
-//        adapterDate = RecycleViewAdapter(this, viewColors, dates)
-//        recyclerView1.adapter = adapterDate
 
 
         var spinnerMonths = findViewById<View>(R.id.spinnerMonths) as Spinner
@@ -116,7 +91,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
 
         var spinnerPills = findViewById<View>(R.id.spinnerPills) as Spinner
-        val adapterPills: ArrayAdapter<String> = ArrayAdapter<String>(
+        adapterPills = ArrayAdapter(
             this@MonthyReportDoctor,
             android.R.layout.simple_spinner_item, pillList
         )
@@ -127,6 +102,8 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
             spinnerPills.setSelection(0) // ustawienie pierwszego elementu jako aktualnie wybrany
         }
         spinnerPills.setOnItemSelectedListener(this)
+
+        adapterPills.notifyDataSetChanged();
 
 
         var spinner = findViewById<View>(R.id.spinner3) as Spinner
@@ -336,12 +313,12 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         }
 
         // set up the RecyclerView
-        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-        val horizontalLayoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView1.layoutManager = horizontalLayoutManager
-        adapterDate = RecycleViewAdapter(this, colors,dates )
-        recyclerView1.adapter = adapterDate
+//        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
+//        val horizontalLayoutManager =
+//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+//        recyclerView1.layoutManager = horizontalLayoutManager
+//        adapterDate = RecycleViewAdapter(this, colors,dates )
+//        recyclerView1.adapter = adapterDate
 
         Log.d("daty pils", resultDict.toString())
         return resultDict
@@ -508,6 +485,14 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         Log.d("date", pillList.toString())
         var selectedPill = ""
 
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+
+
+        if (pillList.size == 0) {
+            val intent = Intent(this@MonthyReportDoctor, EmptyActivityDoctor::class.java)
+            startActivity(intent)
+        }
+
         if(pillList.size == 1){
             selectedPill = pillList[0]
 
@@ -519,7 +504,33 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         getPillsDataFromDatabase { data ->
             Create(data, selectedMonth, selectedPill)
+            Log.d("callback", data.toString())
+
+             var index = 0
+
+                while (index < data.size) {
+                    val rowData = mutableListOf<String>()
+
+                    val date = data[index] as String
+                    val pill = data[index+1] as String
+                    val status = data[index+2] as String
+
+                    rowData.add(date)
+                    rowData.add(pill)
+                    rowData.add(status)
+
+                    dataToTable.add(rowData)
+                    index+=4
+
+
+                }
+
+//            val pillsTable = PillsTable()
+//            pillsTable.setData(dataToTable)
+//            TableActivity(dataToTable)
         }
+        adapterPills.notifyDataSetChanged()
+
 
         when (parent?.id) {
             R.id.spinner3 -> {
@@ -530,7 +541,13 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
             R.id.spinnerPills -> {
                 getPillsDataFromDatabase { data ->
                     Create(data, selectedMonth, selectedItem)
+                    adapterPills.notifyDataSetChanged()
+//                    Log.d("callback", data.toString())
+//                    val pillsTable = PillsTable()
+//                    pillsTable.setData(data)
                 }
+                adapterPills.notifyDataSetChanged()
+
             }
 
         }
@@ -565,6 +582,23 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
     fun setPacient(pacientId: String){
         this.patientId = patientId
+    }
+
+    override fun onClick(view: View?) {
+        if(view !=null){
+            when (view.id){
+                R.id.pills ->{
+
+//                    TableActivity(dataToTable)
+                    val intent = Intent(this, TableActivity::class.java)
+//                    intent.putExtra("key", dataToTable.joinToString(", ")) // Przekazanie wartości jako dodatkowy parametr
+                    val arrayList: ArrayList<String> = ArrayList(dataToTable.flatten())
+                    intent.putStringArrayListExtra("dataList", arrayList)
+
+                    startActivity(intent)
+                }
+            }
+        }
     }
 }
 

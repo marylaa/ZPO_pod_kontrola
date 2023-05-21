@@ -2,6 +2,7 @@ package com.example.myapp.pills_list
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.InputType
 import android.text.TextUtils
 import android.view.View
 import android.widget.*

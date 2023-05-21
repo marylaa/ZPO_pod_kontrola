@@ -2,6 +2,7 @@ package com.example.myapp.monthly_report
 
 
 //import kotlinx.android.synthetic.main.contact_monthly.*
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
@@ -18,7 +19,6 @@ import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
 import com.example.myapp.pills_list.UserScheduleActivity
-import com.example.myapp.report.Report
 import com.example.myapp.settings.PatientSettingsActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -55,11 +55,14 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     private var dataExist: Boolean = false
     val reportValuesList = mutableListOf<String>()
     var resultDict = mutableMapOf<String, Float>()
+    private lateinit var adapterPills: ArrayAdapter<String>
 
 
 
 
 
+
+    @SuppressLint("MissingInflatedId")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,36 +70,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         getAllPillsFromDatabase()
 
 
-
-
-//        binding = ActivityMainMonthlyBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-
-        // data to populate the RecyclerView with
-        val viewColors = arrayListOf(
-            Color.BLUE,
-            Color.YELLOW,
-            Color.MAGENTA,
-            Color.YELLOW,
-            Color.MAGENTA
-        )
-
-//        val dates = arrayListOf(
-//            LocalDate.now().minusDays(2),
-//            LocalDate.now().minusDays(1),
-//            LocalDate.now(),
-//            LocalDate.now().plusDays(1),
-//            LocalDate.now().plusDays(2),
-//
-//        )
-//
-//        // set up the RecyclerView
-//        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-//        val horizontalLayoutManager =
-//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView1.layoutManager = horizontalLayoutManager
-//        adapterDate = RecycleViewAdapter(this, viewColors, dates)
-//        recyclerView1.adapter = adapterDate
 
 
         var spinnerMonths = findViewById<View>(R.id.spinnerMonths) as Spinner
@@ -111,7 +84,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         var spinnerPills = findViewById<View>(R.id.spinnerPills) as Spinner
-        val adapterPills: ArrayAdapter<String> = ArrayAdapter<String>(
+
+        adapterPills = ArrayAdapter(
             this@MainActivityMonthlyReport,
             android.R.layout.simple_spinner_item, pillList
         )
@@ -123,6 +97,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         }
         spinnerPills.setOnItemSelectedListener(this)
 
+        adapterPills.notifyDataSetChanged();
+
 
         var spinner = findViewById<View>(R.id.spinner3) as Spinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
@@ -133,6 +109,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.setAdapter(adapter)
         spinner.setOnItemSelectedListener(this)
+
+
 
 
 
@@ -225,6 +203,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 }
 
                 Log.d("zczytanie pills", reportValuesList.toString())
+
+
+
 
                 // Zwracamy wartość przez callback
                 callback(reportValuesList)
@@ -468,6 +449,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
                     pillList.add(pill!!.name.toString())
+                    adapterPills.notifyDataSetChanged()
                     Log.d("pils", pillList.toString())
                 }
 
@@ -550,10 +532,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             R.id.spinnerPills -> {
                 getPillsDataFromDatabase { data ->
                     Create(data, selectedMonth, selectedItem)
+
                 }
+                adapterPills.notifyDataSetChanged()
             }
 
             }
+
 
         }
 
@@ -582,6 +567,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val daysInMonth = yearMonthObject.lengthOfMonth()
         return daysInMonth
     }
+
+
 
 }
 

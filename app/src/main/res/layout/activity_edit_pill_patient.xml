@@ -130,6 +130,7 @@
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
+        android:inputType="number"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
         android:padding="15dp"
@@ -157,6 +158,7 @@
         android:backgroundTint="#25000000"
         android:padding="15dp"
         android:hint="mm"
+        android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/spinner1" />
@@ -205,10 +207,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
-        android:inputType="textPersonName"
         android:padding="15dp"
         android:paddingLeft="30dp"
         android:hint="ilość"
+        android:inputType="number"
         app:layout_constraintEnd_toStartOf="@+id/textViewSlash"
         app:layout_constraintTop_toBottomOf="@+id/textViewState" />
 
@@ -229,10 +231,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
-        android:inputType="textPersonName"
         android:padding="15dp"
         android:layout_marginRight="20dp"
         android:hint="w opakowaniu"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewState" />
 

@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context=".doctor_view.MonthyReportDoctor">
+    tools:ignore="MissingConstraints">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,12 +45,20 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAnimals"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:paddingTop="0dp" />
 
+
+<!--        <androidx.recyclerview.widget.RecyclerView-->
+<!--            android:id="@+id/rvAnimals"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:paddingTop="0dp" />-->
+
+
+        <Button
+            android:id="@+id/pills"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tabletki" />
 
         <Spinner
             android:id="@+id/spinner3"
@@ -74,20 +89,6 @@
         <!--            android:textColor="@color/white"-->
         <!--            android:gravity="right|center_vertical"/>-->
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation_view"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="#3C000000"
-            android:paddingLeft="100dp"
-            android:paddingRight="100dp"
-            app:itemIconSize="35dp"
-            app:labelVisibilityMode="unlabeled"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/pacient_nav_menu"
-            android:layout_marginBottom="0dp"
-
-            />
 
 
 
@@ -95,3 +96,17 @@
     </LinearLayout>
 
 </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#3C000000"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/doctor_nav_menu"
+        app:itemIconSize="35dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
