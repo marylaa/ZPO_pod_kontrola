@@ -15,8 +15,6 @@ import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import java.util.*
-import com.example.myapp.pills_list.TestAdapter.Callback
 
 
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
@@ -54,9 +52,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-//        val navController = findNavController(R.id.navigation_home)
         navView.menu.findItem(R.id.navigation_home).isChecked = true
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
