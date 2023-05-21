@@ -141,12 +141,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             dataExist = result
             Log.d("wynik", dataExist.toString())
 
-            // Sprawdź, czy użytkownik nie jest pacjentem
-            if (!dataExist) {
-                navView.menu.findItem(R.id.navigation_report).isChecked = false
-                val intent = Intent(this@MainActivity, EmptyActivity::class.java)
-                startActivity(intent)
-            }
+//            // Sprawdź, czy użytkownik nie jest pacjentem
+//            if (!dataExist) {
+//                navView.menu.findItem(R.id.navigation_report).isChecked = false
+//                val intent = Intent(this@MainActivity, EmptyActivity::class.java)
+//                startActivity(intent)
+//            }
         }
 
         navView.menu.findItem(R.id.navigation_home).isChecked = true
@@ -160,15 +160,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.navigation_report -> {
                     // Dodatkowa logika, jeśli użytkownik nie jest pacjentem
-                    if (!dataExist) {
-                        val intent = Intent(this@MainActivity, EmptyActivity::class.java)
-                        startActivity(intent)
-                        true
-                    } else {
+//                    if (!dataExist) {
+//                        val intent = Intent(this@MainActivity, EmptyActivity::class.java)
+//                        startActivity(intent)
+//                        true
+//                    } else {
                         val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
                         startActivity(intent)
                         true
-                    }
+//                    }
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@MainActivity, PatientSettingsActivity::class.java)

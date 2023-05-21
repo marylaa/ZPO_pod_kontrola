@@ -586,11 +586,11 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
 
-        if (pillList.size == 0) {
-                navView.menu.findItem(R.id.navigation_report).isChecked = false
-                val intent = Intent(this@MainActivityMonthlyReport, EmptyActivity::class.java)
-                startActivity(intent)
-            }
+//        if (pillList.size == 0) {
+//                navView.menu.findItem(R.id.navigation_report).isChecked = false
+//                val intent = Intent(this@MainActivityMonthlyReport, EmptyActivity::class.java)
+//                startActivity(intent)
+//            }
 
         if (pillList.isNotEmpty()) {
             selectedPill = pillList[0]

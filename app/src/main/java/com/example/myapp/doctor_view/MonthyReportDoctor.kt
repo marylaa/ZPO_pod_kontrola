@@ -20,6 +20,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapp.EmptyActivityDoctor
 import com.example.myapp.R
+import com.example.myapp.SharedObject
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
 import com.example.myapp.report.TableActivity
@@ -51,6 +52,9 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
     private lateinit var dbRef: DatabaseReference
     private val paths = arrayOf("Ciśnienie [mmHg]", "Aktywność [godz.]", "Waga [kg]","Sen [godz.]","Cukier [mmol/L]","Temp. ciała [oC]"  )
     private var pillList = ArrayList<String>()
+    private var pillListAndCount = ArrayList<List<String>>()
+    private var sortedDates = mutableMapOf<String, String>()
+
 
     //    private var pillList = arrayOf()
     private var monthsList = arrayOf("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień")
@@ -69,7 +73,6 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         patientId = intent.getStringExtra("patientId")
         Log.d("id", patientId.toString())
-
         getAllPillsFromDatabase()
 
 
@@ -179,7 +182,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getPillsDataFromDatabase(callback: (List<String>) -> Unit): MutableList<String> {
-        val dbRef = FirebaseDatabase.getInstance().getReference("pills_status")
+        val dbRef = FirebaseDatabase.getInstance().getReference("Pills_status")
         val uid = patientId
 
         val query = dbRef.orderByChild("user").equalTo(uid)
@@ -216,6 +219,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
     @RequiresApi(Build.VERSION_CODES.O)
     private fun Create(data: List<Any>, wantedMonth: String, wantedPill: String): MutableMap<LocalDate, String> {
         Log.d("cos", data.toString())
+        SharedObject.setWantedPill(wantedPill)
 
 
 
@@ -243,34 +247,93 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
 
 
+
         val resultDict = mutableMapOf<LocalDate, String>()
         var daysInDataBase = mutableListOf<LocalDate>()
+        val newDict = mutableMapOf<String, String>()
+        var prevDate: LocalDate? = null
+        var prevName = ""
+        var count = 1
 
-        for (i in data.indices step 4) {
-            for (j in 1 until data.size step 4) {
-                if (data[i] is String) {
-                    try {
-                        var pillName = data[j] as String
-                        var dateTime = LocalDate.parse(data[i] as String, formatter)
-                        val month = dateTime.monthValue
-                        val monthFormatted = String.format("%02d", month)
-                        if (monthFormatted.equals(months[wantedMonth].toString()) && pillName.equals(wantedPill)) {
-                            daysInDataBase.add(dateTime)
+        for (i in 0 until data.size step 4) {
+//        for (i in data.indices step 4) {
+//            for (j in 1 until data.size step 4) {
+            if (data[i] is String) {
+                try {
+                    var pillName = data[i+1] as String
+                    Log.d("i",i.toString())
+                    Log.d("name", pillName)
+                    var dateTime = LocalDate.parse(data[i] as String, formatter)
+                    Log.d("datetime", dateTime.toString())
+                    val month = dateTime.monthValue
+                    val monthFormatted = String.format("%02d", month)
+                    if (monthFormatted == (months[wantedMonth].toString()) && pillName == wantedPill) {
+                        if(!daysInDataBase.isEmpty()) {
+                            if (dateTime.equals(daysInDataBase.last())) {
+                                count = count + 1
+                            }
+                        }
+                        if(i+3 == data.size - 1){
+                            var freq = getPillFrequency(wantedPill)
+                            var number = count.toString() + "/" + freq
+                            Log.d("prev", prevDate.toString())
+                            if(pillName == wantedPill){
+//                                if(prevName == wantedPill){
+                                newDict[dateTime.toString()] = number
+                                count = 0
+                            }
+                        }
+//                            }else{
+//                                var freq = getPillFrequency(wantedPill)
+//                                var number = count.toString() + "/" + freq
+//                                Log.d("prev", prevDate.toString())
+//                                if(prevDate!= null){
+//                                    newDict[prevDate.toString()] = number
+//                                    count = 0
+//                                }
+////                                newDict[prevDate.toString()] = number
+////                                count = 0
+//
+//                            }
+                        prevDate = dateTime
+                        daysInDataBase.add(dateTime)
+
+
+
+                    }else{
+//                            if(dateTime!=prevDate){
+                        var freq = getPillFrequency(wantedPill)
+                        var number = count.toString() + "/" + freq
+                        Log.d("prev", prevDate.toString())
+                        if(prevDate!= null && prevName == wantedPill){
+//                                if(prevName == wantedPill){
+                            newDict[prevDate.toString()] = number
+                            count = 0
                         }
 
+//                            }
 
-                    } catch (e: IndexOutOfBoundsException) {
-                        continue
                     }
+
+                    prevDate = dateTime
+                    prevName = pillName
+
+                } catch (e: IndexOutOfBoundsException) {
+                    continue
                 }
             }
+//            }
+
+
         }
+
+        Log.d("new dict", newDict.toString())
 
         Log.d("days", daysInDataBase.toString())
 
 
 
-        val dictionary = mutableMapOf<String, Boolean>()
+        val dictionary = mutableMapOf<String, String>()
 
 //        // Wszystkie dni miesiąca są inicjalizowane na false
         val year = Year.now().value // pobranie aktualnego roku
@@ -283,15 +346,15 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 //            val date = LocalDate.of(year, months[wantedMonth]!!.toInt() + 1, day)
             val dayFormatted = String.format("%02d", day)
             var date = year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
-            dictionary[date] = false
+            dictionary[date] = "0"
         }
 
         Log.d("slownik daty", dictionary.toString())
 
         for (key in dictionary.keys) {
-            for(i in daysInDataBase){
-                if(key.toString().equals(i.toString())){
-                    dictionary[key] = true
+            for((keyNewDict,valueNewDict) in newDict.entries){
+                if(key.toString().equals(keyNewDict)){
+                    dictionary[key] = valueNewDict
                 }
             }
         }
@@ -299,11 +362,11 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         Log.d("slownik daty zmiana", dictionary.toString())
 
 
+        sortedDates = dictionary.toSortedMap()
 
+        SharedObject.setSortedDates(sortedDates)
 
-        val sortedDates = dictionary.toSortedMap()
-
-        var colors = pillsColors(sortedDates)
+        var colors = pillsColors(sortedDates as SortedMap<String, String>)
         Log.d("colors", colors.toString())
 
         var dates = mutableListOf<String>()
@@ -324,6 +387,20 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         return resultDict
     }
 
+    fun getPillFrequency(name: String): String? {
+        Log.d("pill name", name)
+        Log.d("ccc", pillListAndCount.toString())
+        for (index in pillListAndCount.indices) {
+            val item = pillListAndCount[index]
+            if (item.isNotEmpty() && item[0] == name) {
+                return item[1]
+//                if (index < pillListAndCount.size - 1) {
+//                    return pillListAndCount[index + 1][0]
+//                }
+            }
+        }
+        return null
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -424,12 +501,16 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                pillList.clear()
+//                pillList.clear()
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
                     pillList.add(pill!!.name.toString())
+                    val onePill: List<String> = listOf(pill!!.name, pill!!.time_list?.size.toString())
+                    pillListAndCount.add(onePill)
+                    adapterPills.notifyDataSetChanged()
                     Log.d("pils", pillList.toString())
+                    Log.d("pills and count", pillListAndCount.toString())
                 }
 
             }
@@ -475,27 +556,103 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 //        })
 //    }
 
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//        val selectedItem = parent?.getItemAtPosition(position) as String
+//        Log.d("selected", selectedItem.toString())
+//
+//
+//        Log.d("date", pillList.toString())
+//        var selectedPill = ""
+//
+//        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+//
+//
+//        if (pillList.size == 0) {
+//            val intent = Intent(this@MonthyReportDoctor, EmptyActivityDoctor::class.java)
+//            startActivity(intent)
+//        }
+//
+//        if(pillList.size == 1){
+//            selectedPill = pillList[0]
+//
+//        }
+//
+//
+//        val selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
+//
+//
+//        SharedObject.setWantedPill(selectedPill)
+//
+//        getPillsDataFromDatabase { data ->
+//            Create(data, selectedMonth, selectedPill)
+//            Log.d("callback", data.toString())
+//
+//             var index = 0
+//
+//                while (index < data.size) {
+//                    val rowData = mutableListOf<String>()
+//
+//                    val date = data[index] as String
+//                    val pill = data[index+1] as String
+//                    val status = data[index+2] as String
+//
+//                    rowData.add(date)
+//                    rowData.add(pill)
+//                    rowData.add(status)
+//
+//                    dataToTable.add(rowData)
+//                    index+=4
+//
+//
+//                }
+//
+////            val pillsTable = PillsTable()
+////            pillsTable.setData(dataToTable)
+////            TableActivity(dataToTable)
+//        }
+//        adapterPills.notifyDataSetChanged()
+//
+//
+//        when (parent?.id) {
+//            R.id.spinner3 -> {
+//                getDataFromDatabase { data ->
+//                    createDict(data, selectedItem, selectedMonth)
+//                }
+//            }
+//            R.id.spinnerPills -> {
+//                getPillsDataFromDatabase { data ->
+//                    Create(data, selectedMonth, selectedItem)
+//                    adapterPills.notifyDataSetChanged()
+////                    Log.d("callback", data.toString())
+////                    val pillsTable = PillsTable()
+////                    pillsTable.setData(data)
+//                }
+//                adapterPills.notifyDataSetChanged()
+//
+//            }
+//
+//        }
+//
+//    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val selectedItem = parent?.getItemAtPosition(position) as String
         Log.d("selected", selectedItem.toString())
 
-        getAllPillsFromDatabase()
-
-        Log.d("date", pillList.toString())
         var selectedPill = ""
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
 
+//        if (pillList.size == 0) {
+//                navView.menu.findItem(R.id.navigation_report).isChecked = false
+//                val intent = Intent(this@MainActivityMonthlyReport, EmptyActivity::class.java)
+//                startActivity(intent)
+//            }
 
-        if (pillList.size == 0) {
-            val intent = Intent(this@MonthyReportDoctor, EmptyActivityDoctor::class.java)
-            startActivity(intent)
-        }
-
-        if(pillList.size == 1){
+        if (pillList.isNotEmpty()) {
             selectedPill = pillList[0]
-
         }
 
 
@@ -504,33 +661,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         getPillsDataFromDatabase { data ->
             Create(data, selectedMonth, selectedPill)
-            Log.d("callback", data.toString())
-
-             var index = 0
-
-                while (index < data.size) {
-                    val rowData = mutableListOf<String>()
-
-                    val date = data[index] as String
-                    val pill = data[index+1] as String
-                    val status = data[index+2] as String
-
-                    rowData.add(date)
-                    rowData.add(pill)
-                    rowData.add(status)
-
-                    dataToTable.add(rowData)
-                    index+=4
-
-
-                }
-
-//            val pillsTable = PillsTable()
-//            pillsTable.setData(dataToTable)
-//            TableActivity(dataToTable)
         }
-        adapterPills.notifyDataSetChanged()
-
 
         when (parent?.id) {
             R.id.spinner3 -> {
@@ -541,19 +672,15 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
             R.id.spinnerPills -> {
                 getPillsDataFromDatabase { data ->
                     Create(data, selectedMonth, selectedItem)
-                    adapterPills.notifyDataSetChanged()
-//                    Log.d("callback", data.toString())
-//                    val pillsTable = PillsTable()
-//                    pillsTable.setData(data)
+
                 }
                 adapterPills.notifyDataSetChanged()
-
             }
 
         }
 
-    }
 
+    }
 
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -561,12 +688,19 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
     }
 
 
-    fun pillsColors(list: SortedMap<String, Boolean>): ArrayList<Int> {
+    fun pillsColors(list: SortedMap<String, String>): ArrayList<Int> {
         var colors = arrayListOf<Int>()
         for ((key, value) in list.entries) {
-            if (value.equals(true)) {
+//            if (value.equals(true)) {
+//                colors.add(Color.GREEN)
+//            } else if (value.equals(false)) {
+//                colors.add(Color.RED)
+//            }
+            if(value.equals("1/3") or value.equals("2/3") or value.equals("1/2")){
+                colors.add(Color.YELLOW)
+            }else if(value.equals("1/1") or value.equals("3/3") or value.equals("2/2")){
                 colors.add(Color.GREEN)
-            } else if (value.equals(false)) {
+            }else{
                 colors.add(Color.RED)
             }
         }
@@ -590,10 +724,11 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                 R.id.pills ->{
 
 //                    TableActivity(dataToTable)
-                    val intent = Intent(this, TableActivity::class.java)
-//                    intent.putExtra("key", dataToTable.joinToString(", ")) // Przekazanie wartości jako dodatkowy parametr
-                    val arrayList: ArrayList<String> = ArrayList(dataToTable.flatten())
-                    intent.putStringArrayListExtra("dataList", arrayList)
+//                    val intent = Intent(this, TableActivity::class.java)
+////                    intent.putExtra("key", dataToTable.joinToString(", ")) // Przekazanie wartości jako dodatkowy parametr
+//                    val arrayList: ArrayList<String> = ArrayList(dataToTable.flatten())
+//                    intent.putStringArrayListExtra("dataList", arrayList)
+                    val intent = Intent(this,PillsStatusMain::class.java)
 
                     startActivity(intent)
                 }
