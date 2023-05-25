@@ -12,6 +12,7 @@
         android:paddingLeft="20dp"
         android:text="Lek"
         android:textSize="27sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintStart_toStartOf="parent"

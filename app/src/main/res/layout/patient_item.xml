@@ -12,6 +12,7 @@
         android:paddingLeft="20dp"
         android:text="Pacjent"
         android:textSize="27sp"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/choosePacient"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
         android:background="@drawable/baseline_arrow_forward_ios_24"
-        android:backgroundTint="#97222323"
+        android:backgroundTint="@color/black"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

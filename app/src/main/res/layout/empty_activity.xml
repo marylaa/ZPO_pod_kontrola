@@ -13,14 +13,14 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="415dp"
-        android:layout_height="94dp"
-        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:textStyle="bold"
         android:background="@color/blue_green_1"
         android:gravity="left|center_vertical"
         android:text=" Miesięczny raport"
         android:textColor="@color/white"
-        android:textSize="4.5mm"
+        android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,18 +28,16 @@
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
-            android:layout_height="94dp"
+            android:layout_height="70dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="100dp"
             android:background="@color/yellow"
             android:gravity="center"
             android:text=" Brak danych. Dodaj lek."
             android:textColor="@color/white"
-            android:textSize="4.5mm"
+            android:textSize="28sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

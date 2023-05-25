@@ -21,10 +21,11 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="415dp"
-            android:layout_height="94dp"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
             android:layout_marginTop="0dp"
             android:background="@color/blue_green_1"
+            android:textStyle="bold"
             android:gravity="left|center_vertical"
             android:text=" Miesięczny raport"
             android:textColor="@color/white"

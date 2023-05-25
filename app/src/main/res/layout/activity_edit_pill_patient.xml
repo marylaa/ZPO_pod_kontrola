@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -185,6 +184,7 @@
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
         android:hint="hh"
+        android:inputType="number"
         android:padding="15dp"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/textViewHour2"
@@ -212,6 +212,7 @@
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
         android:hint="mm"
+        android:inputType="number"
         android:padding="15dp"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/textView2"
@@ -240,6 +241,7 @@
         android:visibility="gone"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
+        android:inputType="number"
         android:hint="hh"
         android:padding="15dp"
         android:textAlignment="center"
@@ -269,6 +271,7 @@
         android:visibility="gone"
         android:hint="mm"
         android:padding="15dp"
+        android:inputType="number"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/textView3"
         app:layout_constraintStart_toEndOf="@+id/textView3"

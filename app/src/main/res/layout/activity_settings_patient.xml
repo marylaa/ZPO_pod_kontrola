@@ -30,7 +30,7 @@
         android:textSize="27sp"
         app:layout_constraintEnd_toStartOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsText" />
+        app:layout_constraintTop_toBottomOf="@+id/pacientPills" />
 
     <ImageButton
         android:id="@+id/logoutButton"
@@ -42,18 +42,7 @@
         android:translationX="-20dp"
         app:layout_constraintBottom_toBottomOf="@+id/textLogout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsText" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_margin="20dp"
-        android:background="#F2000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logoutButton" />
+        app:layout_constraintTop_toBottomOf="@+id/pacientPills" />
 
     <TextView
         android:id="@+id/pacientPills"
@@ -66,7 +55,7 @@
         android:textSize="27sp"
         app:layout_constraintEnd_toStartOf="@+id/showPills"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/settingsText" />
 
     <ImageButton
         android:id="@+id/showPills"
