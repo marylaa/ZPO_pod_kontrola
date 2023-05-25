@@ -8,6 +8,7 @@ data class PillModel(
     var inBox: Int? = null,
     var frequency: String = "",
     var time_list: MutableList<MutableList<Any?>>? = null,
-    var date: String = ""
+    var date_last: String = "",
+    var date_next: String = ""
 
 )

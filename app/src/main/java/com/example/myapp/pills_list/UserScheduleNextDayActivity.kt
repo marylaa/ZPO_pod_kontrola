@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,23 +17,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 
-class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
+class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var dbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user_pills_schedule)
+        setContentView(R.layout.activity_user_pills_schedule_next_day)
 
-        val addButton = findViewById<Button>(R.id.addPill)
-        addButton.setOnClickListener(this)
-
-        val nextDay = findViewById<ImageButton>(R.id.nextDay)
-        nextDay.setOnClickListener(this)
-
-        val addReport = findViewById<Button>(R.id.addRaport)
-        addReport.setOnClickListener(this)
+        val beforeDay = findViewById<ImageButton>(R.id.beforeDay)
+        beforeDay.setOnClickListener(this)
 
         newRecyclerView = findViewById(R.id.rvPills)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -42,19 +35,20 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         getDataFromDatabase()
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-        navView.menu.findItem(R.id.navigation_home).isChecked = true
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
+                    val intent = Intent(this@UserScheduleNextDayActivity, UserScheduleActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 R.id.navigation_report -> {
-                    val intent = Intent(this@UserScheduleActivity, MainActivityMonthlyReport::class.java)
+                    val intent = Intent(this@UserScheduleNextDayActivity, MainActivityMonthlyReport::class.java)
                     startActivity(intent)
                     true
                 }
                 R.id.navigation_settings -> {
-                    val intent = Intent(this@UserScheduleActivity, PatientSettingsActivity::class.java)
+                    val intent = Intent(this@UserScheduleNextDayActivity, PatientSettingsActivity::class.java)
                     startActivity(intent)
                     true
                 }
@@ -75,8 +69,8 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
-                R.id.nextDay -> {
-                    val intent = Intent(this, UserScheduleNextDayActivity::class.java)
+                R.id.beforeDay -> {
+                    val intent = Intent(this, UserScheduleActivity::class.java)
                     startActivity(intent)
                 }
             }

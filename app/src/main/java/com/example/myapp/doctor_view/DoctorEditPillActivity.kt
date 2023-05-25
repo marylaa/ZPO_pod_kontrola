@@ -321,7 +321,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
         pill!!.name = pillName?.text.toString().trim() { it <= ' ' }
         pill!!.frequency = selectedFrequency
-        pill!!.date = date
+        pill!!.date_last = date
         pill!!.availability = inputLeft?.text.toString().toIntOrNull()
         pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
 

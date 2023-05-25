@@ -307,8 +307,21 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         } else {
             times = mutableListOf(times1)
         }
+
+        var nextDay = ""
+        if (selectedFrequency.equals("Co drugi dzień")) {
+            val next = current.plusDays(2)
+            nextDay = next.format(formatter)
+        } else if (selectedFrequency.equals("Raz w tygodniu")) {
+            val next = current.plusDays(7)
+            nextDay = next.format(formatter)
+        } else {
+            val next = current.plusDays(1)
+            nextDay = next.format(formatter)
+        }
+
         val id = UUID.randomUUID().toString()
-        val newPill = PillModel(id, uid, name, amountLeft, amountInBox, frequency, times, date)
+        val newPill = PillModel(id, uid, name, amountLeft, amountInBox, frequency, times, date, nextDay)
 
         dbRef.child(id).setValue(newPill)
     }

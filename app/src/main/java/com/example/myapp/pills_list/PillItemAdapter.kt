@@ -34,25 +34,32 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
         val currentItem = pillList!![position]
 
         var timesADay = currentItem.time_list!!
+        holder.time1.text = timesADay[0][0].toString()
         if (timesADay.size === 2) {
             holder.checkBox2.setVisibility(View.VISIBLE);
+            holder.time2.setVisibility(View.VISIBLE);
+            holder.time2.text = timesADay[1][0].toString()
         } else if (timesADay.size === 3) {
             holder.checkBox2.setVisibility(View.VISIBLE);
+            holder.time2.setVisibility(View.VISIBLE);
+            holder.time2.text = timesADay[1][0].toString()
             holder.checkBox3.setVisibility(View.VISIBLE);
+            holder.time3.setVisibility(View.VISIBLE);
+            holder.time2.text = timesADay[2][0].toString()
         }
 
-        val zoneId = ZoneId.of("Europe/Warsaw")
-        val currentTime = LocalTime.now(zoneId)  //wyswietlenie najblizszej godziny przyjecia tabletki
-        for (i in 0 until timesADay.size) {
-            val timeInList = timesADay[i][0].toString().split(":")
-            val hour = LocalTime.of(timeInList[0].toInt(), timeInList[1].toInt())
-            if(!hour.isBefore(currentTime)) {
-                holder.time.text = timesADay[i][0].toString()
-                break
-            } else if (i == timesADay.size - 1) {
-                holder.time.text = timesADay[i][0].toString()
-            }
-        }
+//        val zoneId = ZoneId.of("Europe/Warsaw")
+//        val currentTime = LocalTime.now(zoneId)  //wyswietlenie najblizszej godziny przyjecia tabletki
+//        for (i in 0 until timesADay.size) {
+//            val timeInList = timesADay[i][0].toString().split(":")
+//            val hour = LocalTime.of(timeInList[0].toInt(), timeInList[1].toInt())
+//            if(!hour.isBefore(currentTime)) {
+//                holder.time.text = timesADay[i][0].toString()
+//                break
+//            } else if (i == timesADay.size - 1) {
+//                holder.time.text = timesADay[i][0].toString()
+//            }
+//        }
 
         holder.pillTitle.text = currentItem.name
         val dbFirebase = FirebaseDatabase.getInstance()
@@ -70,8 +77,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
             holder.checkBox1.setOnCheckedChangeListener { _, isChecked ->
                 currentItem.time_list!![0][1] = isChecked
 
-
-
                 if (isChecked) {
                     val database = FirebaseDatabase.getInstance().getReference("Pills")
                     database.child(currentItem.id!!).setValue(currentItem)
@@ -79,8 +84,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                     // Wyświetlenie powiadomienia o wzięciu tabletki
                     val context = holder.itemView.context
                     Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
-
-
 
                     dbReference.child("Pills_status").push().setValue(
                         mapOf(
@@ -116,9 +119,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                 }
             }
 
-            var count = 1
-
-
             if (timesADay.size >= 2) {
                 holder.checkBox2.isChecked = timesADay[1][1] as Boolean
                 holder.checkBox2.setOnCheckedChangeListener { _, isChecked ->
@@ -127,7 +127,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                     if (isChecked) {
                         val database = FirebaseDatabase.getInstance().getReference("Pills")
                         database.child(currentItem.id!!).setValue(currentItem)
-
 
                         // Wyświetlenie powiadomienia o wzięciu tabletki
                         val context = holder.itemView.context
@@ -142,50 +141,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                             )
                         )
                     }
-//
-//                    if (isChecked) {
-//                        val database = FirebaseDatabase.getInstance().getReference("Pills")
-//                        database.child(currentItem.id!!).setValue(currentItem)
-//
-//                        // Dodanie nowego wpisu lub aktualizacja wartości count w bazie danych
-//                        val dbReference = FirebaseDatabase.getInstance().getReference().child("Pills_status")
-//                        val query = dbReference.orderByChild("name").equalTo(currentItem.name)
-//                        query.get().addOnSuccessListener { snapshot ->
-//                            var foundEntry = false
-//                            for (childSnapshot in snapshot.children) {
-//                                val item = childSnapshot.getValue(PillStatusModel::class.java)
-//                                if (item!!.date == current) {
-//                                    foundEntry = true
-//                                    var count = item.count.toInt() + 1
-//                                    Log.d("count", count.toString())
-//                                    val updateFields: MutableMap<String, Any> = HashMap()
-//                                    updateFields["count"] = count.toString()
-//                                    childSnapshot.ref.updateChildren(updateFields)
-//                                    break
-//                                }
-//                            }
-//                            if (!foundEntry) {
-//                                val id = UUID.randomUUID().toString()
-//                                dbReference.push().setValue(
-//                                    mapOf(
-//                                        "status" to currentItem.time_list!![1][1].toString(),
-//                                        "name" to currentItem.name,
-//                                        "date" to current,
-//                                        "user" to uid,
-//                                        "count" to "1"
-//                                    )
-//                                )
-//                            }
-//                        }.addOnFailureListener { error ->
-//                            Log.d("TAG", "Error: $error")
-//                        }
-//
-//                        // Wyświetlenie powiadomienia o wzięciu tabletki
-//                        val context = holder.itemView.context
-//                        Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
-//                    }
-
-
 
                     if (!isChecked) {
                         val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -277,8 +232,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                             val pillModel = pillList?.get(position)
                             val pillId = pillModel?.id
                             if (pillId != null) {
-                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-                                    .child(pillId)
+                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
                                 dbRef.removeValue()
                             }
                             true
@@ -296,7 +250,9 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
 
     class PillItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val pillTitle: TextView = itemView.findViewById(R.id.pillTitle)
-        val time: TextView = itemView.findViewById(R.id.pillHour)
+        val time1: TextView = itemView.findViewById(R.id.pillHour1)
+        val time2: TextView = itemView.findViewById(R.id.pillHour2)
+        val time3: TextView = itemView.findViewById(R.id.pillHour3)
         val checkBox1: CheckBox = itemView.findViewById(R.id.cbDone1)
         val checkBox2: CheckBox = itemView.findViewById(R.id.cbDone2)
         val checkBox3: CheckBox = itemView.findViewById(R.id.cbDone3)
