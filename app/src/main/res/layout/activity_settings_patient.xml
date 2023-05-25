@@ -90,7 +90,7 @@
         android:paddingRight="100dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/doctor_nav_menu"
+        app:menu="@menu/pacient_nav_menu"
         app:itemIconSize="35dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

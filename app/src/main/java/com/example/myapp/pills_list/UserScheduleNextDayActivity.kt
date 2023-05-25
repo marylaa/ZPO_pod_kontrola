@@ -103,18 +103,10 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
 
                     // sprawdzenie czy jutro bedzie brana tabletka
                     if (pill!!.date_last.equals(tomorrow) || pill!!.date_next.equals(tomorrow)) {
-                        // odcheckowanie checkboxów
-                        pill.time_list!![0][1] = false
-                        if (pill.time_list!!.size >= 2) {
-                            pill.time_list!![1][1] = false
-                        }
-                        if (pill.time_list!!.size === 3) {
-                            pill.time_list!![2][1] = false
-                        }
                         pillList.add(pill!!)
                     }
                 }
-                newRecyclerView.adapter = PillItemAdapter(pillList)
+                newRecyclerView.adapter = PillNextDayItemAdapter(pillList)
             }
 
             override fun onCancelled(error: DatabaseError) {

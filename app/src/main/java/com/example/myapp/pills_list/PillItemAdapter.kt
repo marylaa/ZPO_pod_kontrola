@@ -45,7 +45,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
             holder.time2.text = timesADay[1][0].toString()
             holder.checkBox3.setVisibility(View.VISIBLE);
             holder.time3.setVisibility(View.VISIBLE);
-            holder.time2.text = timesADay[2][0].toString()
+            holder.time3.text = timesADay[2][0].toString()
         }
 
 //        val zoneId = ZoneId.of("Europe/Warsaw")

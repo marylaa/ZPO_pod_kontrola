@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
@@ -91,8 +92,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getDataFromDatabase(): MutableList<PillModel> {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         val current = LocalDate.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -107,8 +107,28 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
 
+                    val dateBefore = LocalDate.parse(pill!!.date_last, formatter)
+
+                    // przesuwanie dat, jesli zmienil sie dzien
+                    if(dateBefore.isBefore(current)) {
+                        val dateAfter = LocalDate.parse(pill!!.date_next, formatter)
+                        pill!!.date_last = pill!!.date_next
+                        val daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter)
+                        val newDate = dateAfter.plusDays(daysBetween)
+                        pill!!.date_next = newDate.format(formatter)
+                        // odcheckowanie checkboxów
+                        pill.time_list!![0][1] = false
+                        if (pill.time_list!!.size >= 2) {
+                            pill.time_list!![1][1] = false
+                        }
+                        if (pill.time_list!!.size === 3) {
+                            pill.time_list!![2][1] = false
+                        }
+                    }
+                    dbRef.child(pill!!.id.toString()).setValue(pill)
+
                     // sprawdzenie czy dziś bedzie brana tabletka
-                    if (pill!!.date_last.equals(today) || pill!!.date_next.equals(today)) {
+                    if (pill!!.date_last.equals(today)) {
                         pillList.add(pill!!)
                     }
                 }

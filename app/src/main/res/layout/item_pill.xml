@@ -20,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:text="15:00"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillTitle" />
@@ -43,7 +42,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:text="15:00"
         android:visibility="gone"
         android:textSize="25sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +67,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:text="15:00"
         android:textSize="25sp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
