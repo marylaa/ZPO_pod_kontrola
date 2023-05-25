@@ -60,8 +60,8 @@
 
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_width="407dp"
+        android:layout_height="211dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"

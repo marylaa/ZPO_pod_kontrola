@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
+import com.example.myapp.MainNotifications
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
 import com.example.myapp.pills_list.PatientAllPillsActivity
@@ -27,6 +29,9 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
         val showPills = findViewById<ImageButton>(R.id.showPills)
         showPills.setOnClickListener(this)
+
+        val notifications = findViewById<TextView>(R.id.notifications)
+        notifications.setOnClickListener(this)
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
         navView.menu.findItem(R.id.navigation_settings).isChecked = true
@@ -60,7 +65,12 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                     val intent = Intent(this, PatientAllPillsActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.notifications -> {
+                    val intent = Intent(this, MainNotifications::class.java)
+                    startActivity(intent)
+                }
             }
         }
     }
+
 }
