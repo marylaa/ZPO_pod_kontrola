@@ -11,7 +11,7 @@ class DownloadPillsTask(private val pillName: String) :
     AsyncTask<String, Void, ArrayList<String>>() {
     override fun doInBackground(vararg urls: String): ArrayList<String> {
         val client = OkHttpClient()
-        val url = "http://192.168.1.18:5000/search/" + pillName// IP na którym stoi serwer
+        val url = "http://192.168.1.23:5000/search/" + pillName// IP na którym stoi serwer
 
         val request = Request.Builder()
             .url(url)
