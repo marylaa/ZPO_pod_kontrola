@@ -1,10 +1,12 @@
 package com.example.myapp.pills_list
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,8 @@ import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
@@ -22,6 +26,7 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var dbRef: DatabaseReference
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_pills_schedule_next_day)
@@ -77,10 +82,15 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getDataFromDatabase(): MutableList<PillModel> {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
         val user = FirebaseAuth.getInstance().currentUser;
         val uid = user?.uid
+
+        val current = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val tomorrow = current.plusDays(1).format(formatter)
 
         val pillList: MutableList<PillModel> = mutableListOf()
 
@@ -90,7 +100,19 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
                 pillList.clear()
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
-                    pillList.add(pill!!)
+
+                    // sprawdzenie czy jutro bedzie brana tabletka
+                    if (pill!!.date_last.equals(tomorrow) || pill!!.date_next.equals(tomorrow)) {
+                        // odcheckowanie checkboxów
+                        pill.time_list!![0][1] = false
+                        if (pill.time_list!!.size >= 2) {
+                            pill.time_list!![1][1] = false
+                        }
+                        if (pill.time_list!!.size === 3) {
+                            pill.time_list!![2][1] = false
+                        }
+                        pillList.add(pill!!)
+                    }
                 }
                 newRecyclerView.adapter = PillItemAdapter(pillList)
             }
