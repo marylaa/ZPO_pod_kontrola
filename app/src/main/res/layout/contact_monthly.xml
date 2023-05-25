@@ -8,10 +8,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="20dp"
     android:paddingBottom="10dp"
-    android:paddingStart="8dp"
-
-
-    >
+    android:paddingStart="8dp" >
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"

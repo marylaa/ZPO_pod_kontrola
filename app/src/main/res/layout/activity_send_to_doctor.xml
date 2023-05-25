@@ -24,7 +24,7 @@
         android:id="@+id/button"
         android:layout_height="wrap_content"
         android:layout_width="110dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
         android:background="@color/yellow"
         android:text="Powrót"
         android:textColor="@color/white"
@@ -38,10 +38,11 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="415dp"
-        android:layout_height="94dp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         android:background="@color/blue_green_1"
         android:gravity="left|center_vertical"
+        android:textStyle="bold"
         android:text=" Wysłanie do lekarza"
         android:textColor="@color/white"
         android:textSize="4.3mm"

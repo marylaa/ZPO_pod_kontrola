@@ -5,11 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="20dp"
     android:paddingBottom="10dp"
-    android:paddingStart="8dp"
-
-
-    >
-
+    android:paddingStart="8dp" >
 
 <!--    <TextView-->
 <!--        android:id="@+id/datePill"-->
@@ -24,6 +20,7 @@
 <!--        android:id="@+id/countPill"-->
 <!--        android:layout_width="100dp"-->
 <!--        android:layout_height="61dp" />-->
+
     <TextView
         android:id="@+id/datePill"
         android:layout_width="177dp"
@@ -43,6 +40,5 @@
 <!--        android:layout_height="61dp"-->
 <!--        android:layout_marginStart="172dp"-->
 <!--        android:textSize="27sp" />-->
-
 
 </LinearLayout>

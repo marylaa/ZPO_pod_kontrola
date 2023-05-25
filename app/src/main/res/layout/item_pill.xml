@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:text="Lek"
-        android:textSize="28sp"
+        android:textColor="@color/black"
+        android:textSize="26sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:textSize="25sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillTitle" />
 
@@ -43,7 +44,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:visibility="gone"
-        android:textSize="25sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillHour1" />
 
@@ -67,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:textSize="25sp"
+        android:textSize="24sp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillHour2" />
@@ -92,8 +93,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/baseline_more_vert_24"
         android:backgroundTint="#97222323"
-        android:scaleX="0.9"
-        android:scaleY="0.9"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
         app:layout_constraintBottom_toTopOf="@+id/pillHour1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/pillTitle" />
