@@ -2,24 +2,23 @@ package com.example.myapp.monthly_report
 
 
 //import kotlinx.android.synthetic.main.contact_monthly.*
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.EmptyActivity
 import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
 import com.example.myapp.pills_list.UserScheduleActivity
-import com.example.myapp.report.Report
 import com.example.myapp.settings.PatientSettingsActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -50,11 +49,21 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     private lateinit var dbRef: DatabaseReference
     private val paths = arrayOf("Ciśnienie [mmHg]", "Aktywność [godz.]", "Waga [kg]","Sen [godz.]","Cukier [mmol/L]","Temp. ciała [oC]"  )
     private var pillList = ArrayList<String>()
+    private var pillListAndCount = ArrayList<List<String>>()
 
     //    private var pillList = arrayOf()
     private var monthsList = arrayOf("Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień")
+    private var dataExist: Boolean = false
+    val reportValuesList = mutableListOf<String>()
+    var resultDict = mutableMapOf<String, Float>()
+    private lateinit var adapterPills: ArrayAdapter<String>
 
 
+
+
+
+
+    @SuppressLint("MissingInflatedId")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,36 +71,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         getAllPillsFromDatabase()
 
 
-
-
-//        binding = ActivityMainMonthlyBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-
-        // data to populate the RecyclerView with
-        val viewColors = arrayListOf(
-            Color.BLUE,
-            Color.YELLOW,
-            Color.MAGENTA,
-            Color.YELLOW,
-            Color.MAGENTA
-        )
-
-//        val dates = arrayListOf(
-//            LocalDate.now().minusDays(2),
-//            LocalDate.now().minusDays(1),
-//            LocalDate.now(),
-//            LocalDate.now().plusDays(1),
-//            LocalDate.now().plusDays(2),
-//
-//        )
-//
-//        // set up the RecyclerView
-//        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-//        val horizontalLayoutManager =
-//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView1.layoutManager = horizontalLayoutManager
-//        adapterDate = RecycleViewAdapter(this, viewColors, dates)
-//        recyclerView1.adapter = adapterDate
 
 
         var spinnerMonths = findViewById<View>(R.id.spinnerMonths) as Spinner
@@ -106,7 +85,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         var spinnerPills = findViewById<View>(R.id.spinnerPills) as Spinner
-        val adapterPills: ArrayAdapter<String> = ArrayAdapter<String>(
+
+        adapterPills = ArrayAdapter(
             this@MainActivityMonthlyReport,
             android.R.layout.simple_spinner_item, pillList
         )
@@ -118,6 +98,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         }
         spinnerPills.setOnItemSelectedListener(this)
 
+        adapterPills.notifyDataSetChanged();
+
 
         var spinner = findViewById<View>(R.id.spinner3) as Spinner
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
@@ -128,6 +110,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.setAdapter(adapter)
         spinner.setOnItemSelectedListener(this)
+
+
+
+
+
+
+
 
 
 
@@ -164,7 +153,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         val query = dbRef.orderByChild("user").equalTo(uid)
-        val reportValuesList = mutableListOf<String>()
+//        val reportValuesList = mutableListOf<String>()
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -193,7 +182,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getPillsDataFromDatabase(callback: (List<String>) -> Unit): MutableList<String> {
-        val dbRef = FirebaseDatabase.getInstance().getReference("pills_status")
+        val dbRef = FirebaseDatabase.getInstance().getReference("Pills_status")
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
 
@@ -216,6 +205,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
                 Log.d("zczytanie pills", reportValuesList.toString())
 
+
+
+
                 // Zwracamy wartość przez callback
                 callback(reportValuesList)
             }
@@ -231,6 +223,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     @RequiresApi(Build.VERSION_CODES.O)
     private fun Create(data: List<Any>, wantedMonth: String, wantedPill: String): MutableMap<LocalDate, String> {
         Log.d("cos", data.toString())
+        Log.d("wanted pill", wantedPill)
 
 
 
@@ -260,32 +253,90 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         val resultDict = mutableMapOf<LocalDate, String>()
         var daysInDataBase = mutableListOf<LocalDate>()
+        val newDict = mutableMapOf<String, String>()
+        var prevDate: LocalDate? = null
+        var prevName = ""
+        var count = 1
 
-        for (i in data.indices step 4) {
-            for (j in 1 until data.size step 4) {
+        for (i in 0 until data.size step 4) {
+//        for (i in data.indices step 4) {
+//            for (j in 1 until data.size step 4) {
                 if (data[i] is String) {
                     try {
-                        var pillName = data[j] as String
+                        var pillName = data[i+1] as String
+                        Log.d("i",i.toString())
+                        Log.d("name", pillName)
                         var dateTime = LocalDate.parse(data[i] as String, formatter)
+                        Log.d("datetime", dateTime.toString())
                         val month = dateTime.monthValue
                         val monthFormatted = String.format("%02d", month)
-                        if (monthFormatted.equals(months[wantedMonth].toString()) && pillName.equals(wantedPill)) {
+                        if (monthFormatted == (months[wantedMonth].toString()) && pillName == wantedPill) {
+                            if(!daysInDataBase.isEmpty()) {
+                                if (dateTime.equals(daysInDataBase.last())) {
+                                    count = count + 1
+                                }
+                            }
+                            if(i+3 == data.size - 1){
+                                var freq = getPillFrequency(wantedPill)
+                                var number = count.toString() + "/" + freq
+                                Log.d("prev", prevDate.toString())
+                                if(pillName == wantedPill){
+//                                if(prevName == wantedPill){
+                                    newDict[dateTime.toString()] = number
+                                    count = 0
+                                }
+                            }
+//                            }else{
+//                                var freq = getPillFrequency(wantedPill)
+//                                var number = count.toString() + "/" + freq
+//                                Log.d("prev", prevDate.toString())
+//                                if(prevDate!= null){
+//                                    newDict[prevDate.toString()] = number
+//                                    count = 0
+//                                }
+////                                newDict[prevDate.toString()] = number
+////                                count = 0
+//
+//                            }
+                            prevDate = dateTime
                             daysInDataBase.add(dateTime)
+
+
+
+                        }else{
+//                            if(dateTime!=prevDate){
+                                var freq = getPillFrequency(wantedPill)
+                                var number = count.toString() + "/" + freq
+                                Log.d("prev", prevDate.toString())
+                                if(prevDate!= null && prevName == wantedPill){
+//                                if(prevName == wantedPill){
+                                    newDict[prevDate.toString()] = number
+                                    count = 0
+                                }
+
+//                            }
+
                         }
 
+                        prevDate = dateTime
+                        prevName = pillName
 
                     } catch (e: IndexOutOfBoundsException) {
                         continue
                     }
                 }
-            }
+//            }
+
+
         }
+
+        Log.d("new dict", newDict.toString())
 
         Log.d("days", daysInDataBase.toString())
 
 
 
-        val dictionary = mutableMapOf<String, Boolean>()
+        val dictionary = mutableMapOf<String, String>()
 
 //        // Wszystkie dni miesiąca są inicjalizowane na false
         val year = Year.now().value // pobranie aktualnego roku
@@ -298,15 +349,15 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 //            val date = LocalDate.of(year, months[wantedMonth]!!.toInt() + 1, day)
             val dayFormatted = String.format("%02d", day)
             var date = year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
-            dictionary[date] = false
+            dictionary[date] = "0"
         }
 
         Log.d("slownik daty", dictionary.toString())
 
         for (key in dictionary.keys) {
-            for(i in daysInDataBase){
-                if(key.toString().equals(i.toString())){
-                    dictionary[key] = true
+            for((keyNewDict,valueNewDict) in newDict.entries){
+                if(key.toString().equals(keyNewDict)){
+                    dictionary[key] = valueNewDict
                 }
             }
         }
@@ -314,9 +365,10 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         Log.d("slownik daty zmiana", dictionary.toString())
 
 
-
-
         val sortedDates = dictionary.toSortedMap()
+
+
+//        val sortedDates = dictionary.toSortedMap()
 
         var colors = pillsColors(sortedDates)
         Log.d("colors", colors.toString())
@@ -339,13 +391,29 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         return resultDict
     }
 
+    fun getPillFrequency(name: String): String? {
+        Log.d("pill name", name)
+        Log.d("ccc", pillListAndCount.toString())
+        for (index in pillListAndCount.indices) {
+            val item = pillListAndCount[index]
+            if (item.isNotEmpty() && item[0] == name) {
+                return item[1]
+//                if (index < pillListAndCount.size - 1) {
+//                    return pillListAndCount[index + 1][0]
+//                }
+            }
+        }
+        return null
+    }
+
+
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createDict(data: List<Any>, param: String, wantedMonth: String): MutableList<Entry> {
         val dictionary = mapOf("Ciśnienie [mmHg]" to 0, "Aktywność [godz.]" to 1, "Waga [kg]" to 2, "Sen [godz.]" to 3, "Temp. ciała [oC]" to 4, "Cukier [mmol/L]" to 5, "mood" to 6, "notes" to 7)
         var index = dictionary[param]
-        var resultDict = mutableMapOf<String, Float>()
 
         val current = LocalDate.now()
         val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -388,6 +456,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 }
             }
         }
+
+
+
         val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
         val entries = resultDict.entries.map { entry ->
             val date = LocalDate.parse(entry.key, formatter)
@@ -422,6 +493,20 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         Log.d("dic", resultDict.keys.toString())
+
+        val noDataTextView = findViewById<TextView>(R.id.noDataTextView)
+
+        if (entries.isEmpty()) {
+            lineChart.visibility = View.GONE
+            noDataTextView.visibility = View.VISIBLE
+        } else {
+            lineChart.visibility = View.VISIBLE
+            noDataTextView.visibility = View.GONE
+
+            // Reszta kodu wykresu
+        }
+
+
         return entries
 
 
@@ -442,7 +527,11 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
                     pillList.add(pill!!.name.toString())
+                    val onePill: List<String> = listOf(pill!!.name, pill!!.time_list?.size.toString())
+                    pillListAndCount.add(onePill)
+                    adapterPills.notifyDataSetChanged()
                     Log.d("pils", pillList.toString())
+                    Log.d("pills and count", pillListAndCount.toString())
                 }
 
             }
@@ -493,7 +582,19 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val selectedItem = parent?.getItemAtPosition(position) as String
         Log.d("selected", selectedItem.toString())
 
-        var selectedPill = pillList[0]
+        var selectedPill = ""
+
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+
+//        if (pillList.size == 0) {
+//                navView.menu.findItem(R.id.navigation_report).isChecked = false
+//                val intent = Intent(this@MainActivityMonthlyReport, EmptyActivity::class.java)
+//                startActivity(intent)
+//            }
+
+        if (pillList.isNotEmpty()) {
+            selectedPill = pillList[0]
+        }
 
 
         val selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
@@ -512,10 +613,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             R.id.spinnerPills -> {
                 getPillsDataFromDatabase { data ->
                     Create(data, selectedMonth, selectedItem)
+
                 }
+                adapterPills.notifyDataSetChanged()
             }
 
             }
+
 
         }
 
@@ -526,12 +630,19 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     }
 
 
-    fun pillsColors(list: SortedMap<String, Boolean>): ArrayList<Int> {
+    fun pillsColors(list: SortedMap<String, String>): ArrayList<Int> {
         var colors = arrayListOf<Int>()
         for ((key, value) in list.entries) {
-            if (value.equals(true)) {
+//            if (value.equals(true)) {
+//                colors.add(Color.GREEN)
+//            } else if (value.equals(false)) {
+//                colors.add(Color.RED)
+//            }
+            if(value.equals("1/3") or value.equals("2/3") or value.equals("1/2")){
+                colors.add(Color.YELLOW)
+            }else if(value.equals("1/1") or value.equals("3/3") or value.equals("2/2")){
                 colors.add(Color.GREEN)
-            } else if (value.equals(false)) {
+            }else{
                 colors.add(Color.RED)
             }
         }
@@ -544,6 +655,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val daysInMonth = yearMonthObject.lengthOfMonth()
         return daysInMonth
     }
+
+
+
 }
 
 

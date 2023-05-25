@@ -4,5 +4,6 @@ data class PillStatusModel (
     var status: String = "",
     var name: String = "",
     var date: String = "",
-    var user: String = ""
+    var user: String = "",
+    var count: String = ""
 )

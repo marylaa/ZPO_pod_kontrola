@@ -3,6 +3,7 @@ package com.example.myapp.report
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -76,6 +77,7 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
 
 
         val textView3 = viewHolder.nameTextView3
+        textView3.setInputType(InputType.TYPE_CLASS_NUMBER)
         textView3.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
             }
