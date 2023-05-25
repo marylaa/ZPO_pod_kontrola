@@ -2,16 +2,19 @@ package com.example.myapp.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
+import com.example.myapp.pills_list.PatientAllPillsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 
-class PatientSettingsActivity : AppCompatActivity() {
+class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
     private var logoutButton: AppCompatImageButton? = null
 
@@ -21,6 +24,9 @@ class PatientSettingsActivity : AppCompatActivity() {
 
         logoutButton = findViewById(R.id.logoutButton)
         logoutButton?.setOnClickListener { logoutUser() }
+
+        val showPills = findViewById<ImageButton>(R.id.showPills)
+        showPills.setOnClickListener(this)
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
         navView.menu.findItem(R.id.navigation_settings).isChecked = true
@@ -45,5 +51,16 @@ class PatientSettingsActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finishAffinity()
+    }
+
+    override fun onClick(view: View?) {
+        if (view != null) {
+            when (view.id) {
+                R.id.showPills -> {
+                    val intent = Intent(this, PatientAllPillsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
     }
 }

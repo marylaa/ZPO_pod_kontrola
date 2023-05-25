@@ -355,8 +355,20 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         } else {
             times = mutableListOf(times1)
         }
-
         pill!!.time_list = times
+
+        var nextDay = ""
+        if (selectedFrequency.equals("Co drugi dzień")) {
+            val next = current.plusDays(2)
+            nextDay = next.format(formatter)
+        } else if (selectedFrequency.equals("Raz w tygodniu")) {
+            val next = current.plusDays(7)
+            nextDay = next.format(formatter)
+        } else {
+            val next = current.plusDays(1)
+            nextDay = next.format(formatter)
+        }
+        pill!!.date_next = nextDay
 
         dbRef.child(pill!!.id.toString()).setValue(pill)
     }
