@@ -300,6 +300,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 //                            }
                             prevDate = dateTime
                             daysInDataBase.add(dateTime)
+                            prevName = pillName
 
 
 
@@ -311,7 +312,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                                 if(prevDate!= null && prevName == wantedPill){
 //                                if(prevName == wantedPill){
                                     newDict[prevDate.toString()] = number
-                                    count = 0
+                                    count = 1
                                 }
 
 //                            }

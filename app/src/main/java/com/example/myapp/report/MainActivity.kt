@@ -18,6 +18,7 @@ import com.example.myapp.EmptyActivity
 import com.example.myapp.R
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.pills_list.UserScheduleActivity
+import com.example.myapp.remainder.PillReminderManager
 import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -33,6 +34,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//
+//        val pillReminderManager2 = PillReminderManager(this)
+//        pillReminderManager2.setReminder(11, 30, 1) // Ustawienie przypomnienia na godzinę 9:00, co dzień
+//
 
         setContentView(R.layout.activity_main)
 

@@ -1,7 +1,6 @@
 package com.example.myapp.pills_list
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -15,11 +14,11 @@ import com.example.myapp.settings.PatientSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
+import com.example.myapp.remainder.PillReminderManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import org.json.JSONArray
 import org.json.JSONObject
@@ -298,6 +297,12 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
             val time2 = timeToString(hours.get(1), minutes.get(1))
             val times2 = mutableListOf<Any?>(time2, false)
             times = mutableListOf(times1, times2)
+            val pillReminderManager = PillReminderManager(this)
+            pillReminderManager.setReminder(hours.get(0), minutes.get(0), 1) // Ustawienie przypomnienia na godzinę 9:00, co dzień
+
+            val pillReminderManager2 = PillReminderManager(this)
+            pillReminderManager2.setReminder(hours.get(1), minutes.get(1), 1) // Ustawienie przypomnienia na godzinę 9:00, co dzień
+
         } else if (selectedFrequency.equals("Trzy razy dziennie")) {
             val time2 = timeToString(hours.get(1), minutes.get(1))
             val time3 = timeToString(hours.get(2), minutes.get(2))

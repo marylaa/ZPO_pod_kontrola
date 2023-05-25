@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".settings.DoctorSettingsActivity">
 
     <TextView
@@ -23,8 +23,8 @@
         android:id="@+id/textLogout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:paddingLeft="20dp"
         android:gravity="center_vertical"
+        android:paddingLeft="20dp"
         android:text="Wyloguj"
         android:textColor="@color/black"
         android:textSize="27sp"
@@ -32,14 +32,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
 
+    <TextView
+        android:id="@+id/textRemainder"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="Dodaj przypomnienie"
+        android:textColor="@color/black"
+        android:textSize="27sp"
+        app:layout_constraintTop_toBottomOf="@+id/textLogout" />
+
     <ImageButton
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/baseline_logout_24"
-        android:translationX="-20dp"
         android:scaleX="1.5"
         android:scaleY="1.5"
+        android:translationX="-20dp"
         app:layout_constraintBottom_toBottomOf="@+id/textLogout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
@@ -51,9 +62,9 @@
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
+        app:itemIconSize="35dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/doctor_nav_menu"
-        app:itemIconSize="35dp"/>
+        app:menu="@menu/doctor_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
