@@ -3,111 +3,66 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fillViewport="true"
-    tools:ignore="MissingConstraints">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:orientation="vertical" >
+        android:layout_height="60dp"
+        android:background="@color/blue_green_1"
+        android:gravity="left|center_vertical"
+        android:text=" Miesięczny raport"
+        android:textColor="@color/white"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="0dp"
-            android:background="@color/blue_green_1"
-            android:textStyle="bold"
-            android:gravity="left|center_vertical"
-            android:text=" Miesięczny raport"
-            android:textColor="@color/white"
-            android:textSize="4.5mm"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <Spinner
+        android:id="@+id/spinnerMonths"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <Spinner
-            android:id="@+id/spinnerMonths"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
-        <Spinner
-            android:id="@+id/spinnerPills"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
+    <Spinner
+        android:id="@+id/spinnerPills"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerMonths" />
 
+    <Button
+        android:id="@+id/pills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tabletki"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPills" />
 
+    <Spinner
+        android:id="@+id/spinner3"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/pills" />
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvAnimals"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:paddingTop="0dp" />-->
-
-
-        <Button
-            android:id="@+id/pills"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tabletki" />
-
-        <Spinner
-            android:id="@+id/spinner3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="320dp" >
-
-        </com.github.mikephil.charting.charts.LineChart>
-
-        <!--        <Button-->
-        <!--            android:id="@+id/button"-->
-        <!--            android:layout_width="100dp"-->
-        <!--            android:layout_height="37dp"-->
-        <!--            android:layout_alignTop="@+id/textView"-->
-        <!--            android:layout_alignBottom="@+id/textView"-->
-        <!--            android:layout_gravity="start"-->
-        <!--            android:layout_marginStart="16dp"-->
-        <!--            android:layout_marginTop="10dp"-->
-        <!--            android:paddingStart="16dp"-->
-        <!--            android:paddingEnd="16dp"-->
-        <!--            android:text="Wyślij"-->
-        <!--            android:textColor="@color/white"-->
-        <!--            android:gravity="right|center_vertical"/>-->
-
-
-
-
-
-    </LinearLayout>
-
-</ScrollView>
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        app:layout_constraintTop_toBottomOf="@+id/spinner3">
+    </com.github.mikephil.charting.charts.LineChart>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
+        app:itemIconSize="30dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/doctor_nav_menu"
-        app:itemIconSize="35dp"/>
+        app:menu="@menu/doctor_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

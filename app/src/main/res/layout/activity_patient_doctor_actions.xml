@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:background="#DC00BCD4"
         android:gravity="center"
         android:orientation="horizontal"
@@ -27,14 +27,14 @@
         <TextView
             android:id="@+id/patientName"
             android:layout_width="350dp"
-            android:layout_height="70dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:background="#DC00BCD4"
             android:gravity="center_vertical"
             android:text="Pacjent"
             android:paddingLeft="10dp"
             android:textColor="@color/white"
-            android:textSize="30sp"
+            android:textSize="27sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -42,11 +42,12 @@
     <TextView
         android:id="@+id/pacientReport"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="Miesięczny raport"
-        android:textSize="27sp"
+        android:textSize="24sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/chooseReport"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +68,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="#F2000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -77,12 +78,13 @@
     <TextView
         android:id="@+id/pacientPills"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="Leki"
+        android:layout_marginTop="5dp"
         android:textColor="@color/black"
-        android:textSize="27sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/choosePills"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -102,7 +104,7 @@
         android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="#F2000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -112,11 +114,11 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
-        app:itemIconSize="35dp"
+        app:itemIconSize="30dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/doctor_nav_menu" />

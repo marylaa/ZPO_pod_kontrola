@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.MainNotifications
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
+import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.pills_list.PatientAllPillsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -40,6 +41,11 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
                     val intent = Intent(this@PatientSettingsActivity, UserScheduleActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_report -> {
+                    val intent = Intent(this@PatientSettingsActivity, MainActivityMonthlyReport::class.java)
                     startActivity(intent)
                     true
                 }
