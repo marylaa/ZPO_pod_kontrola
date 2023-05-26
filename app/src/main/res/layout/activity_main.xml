@@ -5,35 +5,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".report.MainActivity" >
+    tools:context=".report.MainActivity">
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Wprowadź dane o swoim zdrowiu"
-        android:textSize="18sp"
         android:padding="8dp"
-        android:textColor="@color/black"
+        android:text="Wprowadź dane o swoim zdrowiu"
         android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvItems"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="375dp"
         android:paddingTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvItems" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/yellow"
         android:backgroundTint="@color/yellow"
         android:text="Zapisz"
         android:textColor="@color/white"
@@ -51,100 +68,89 @@
         android:gravity="left|center_vertical"
         android:text=" Stan zdrowia"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="27sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ScrollView
-        android:layout_width="407dp"
-        android:layout_height="211dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
+    <TextView
+        android:id="@+id/contact_name3"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:text="Samopoczucie"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvItems">
+        app:layout_constraintTop_toBottomOf="@+id/rvItems" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical">
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/contact_name3">
 
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Dobre"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/radioButton2"
+            app:layout_constraintTop_toBottomOf="@+id/contact_name3" />
 
-            <TextView
-                android:id="@+id/contact_name3"
-                android:layout_width="160dp"
-                android:layout_height="40dp"
-                android:textColor="@color/black"
-                android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:text="Samopoczucie"
-                android:textSize="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvItems" />
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:text="Neutralne"
+            app:layout_constraintStart_toEndOf="@+id/radioButton3"
+            app:layout_constraintTop_toBottomOf="@+id/contact_name3" />
 
-            <RadioGroup
-                android:id="@+id/radio_group"
-                android:layout_width="400dp"
-                android:layout_height="52dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/contact_name4"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_name3">
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:text="Negatywne"
+            app:layout_constraintBottom_toTopOf="@+id/contact_name4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contact_name3"
+            app:layout_constraintVertical_bias="0.0" />
 
-                <RadioButton
-                    android:id="@+id/radioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:text="Dobre"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/radioButton2"
-                    app:layout_constraintTop_toBottomOf="@+id/contact_name3" />
+    </RadioGroup>
 
-                <RadioButton
-                    android:id="@+id/radioButton2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:text="Neutralne"
-                    app:layout_constraintStart_toEndOf="@+id/radioButton3"
-                    app:layout_constraintTop_toBottomOf="@+id/contact_name3" />
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
-                <RadioButton
-                    android:id="@+id/radioButton3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="36dp"
-                    android:text="Negatywne"
-                    app:layout_constraintBottom_toTopOf="@+id/contact_name4"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contact_name3"
-                    app:layout_constraintVertical_bias="0.0" />
-
-            </RadioGroup>
-
-
-            <EditText
-                android:id="@+id/contact_name6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:height="48dp"
-                android:hint="Notatki"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.324"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_name4"
-                app:layout_constraintVertical_bias="0.0" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    <EditText
+        android:id="@+id/contact_name6"
+        android:layout_width="match_parent"
+        android:inputType="textLongMessage"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_corner"
+        android:backgroundTint="#25000000"
+        android:padding="8dp"
+        android:hint="Notatki"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/view4" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
@@ -153,10 +159,10 @@
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
+        app:itemIconSize="30dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/pacient_nav_menu"
-        app:itemIconSize="30dp"/>
+        app:menu="@menu/pacient_nav_menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
