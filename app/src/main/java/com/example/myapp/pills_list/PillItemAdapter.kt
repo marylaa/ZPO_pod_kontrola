@@ -1,5 +1,6 @@
 package com.example.myapp.pills_list
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.util.Log
@@ -8,30 +9,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.chrono.Chronology
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>() {
+
+    private var isUpdateExecuted = false // Dodana zmienna
+    private var oldAvailability: Int = 0
+    private var pillId : String = ""
+    private var counter : Int = 1
+    private var pillName : String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PillItemViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_pill, parent, false)
         return PillItemViewHolder(itemView)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
         val currentItem = pillList!![position]
+        oldAvailability = currentItem.availability!!
+        pillId = currentItem.id!!
+        counter = 1
+        pillName = currentItem.name
+        Log.d("pill name", pillName)
 
         var timesADay = currentItem.time_list!!
         holder.time1.text = timesADay[0][0].toString()
@@ -72,28 +84,49 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val current = LocalDate.now().format(formatter)
 
+
+
         holder.itemView.apply {
             holder.checkBox1.isChecked = timesADay[0][1] as Boolean
             holder.checkBox1.setOnCheckedChangeListener { _, isChecked ->
                 currentItem.time_list!![0][1] = isChecked
 
-                if (isChecked) {
-                    val database = FirebaseDatabase.getInstance().getReference("Pills")
-                    database.child(currentItem.id!!).setValue(currentItem)
+                    if (isChecked) {
+                        val database = FirebaseDatabase.getInstance().getReference("Pills")
+                        database.child(currentItem.id!!).setValue(currentItem)
 
-                    // Wyświetlenie powiadomienia o wzięciu tabletki
-                    val context = holder.itemView.context
-                    Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
+                        // Wyświetlenie powiadomienia o wzięciu tabletki
+                        val context = holder.itemView.context
+                        Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT)
+                            .show()
 
-                    dbReference.child("Pills_status").push().setValue(
-                        mapOf(
-                            "status" to currentItem.time_list!![0][1].toString(),
-                            "name" to currentItem.name,
-                            "date" to current,
-                            "user" to uid
+                        changeDataBase("minus")
+
+                        dbReference.child("Pills_status").push().setValue(
+                            mapOf(
+                                "status" to currentItem.time_list!![0][1].toString(),
+                                "name" to currentItem.name,
+                                "date" to current,
+                                "user" to uid
+                            )
                         )
-                    )
-                }
+
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+
+                                    Log.d("git", "git")
+//                                    changeDataBase("minus")
+
+
+                                } else {
+                                    val exception = task.exception
+                                }
+                            }
+
+
+
+                    }
+
 
                 if (!isChecked) {
                     val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -108,6 +141,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                                 val item = childSnapshot.getValue(PillStatusModel::class.java)
                                 if (item!!.date.equals(current)) {
                                     childSnapshot.ref.removeValue()
+                                    changeDataBase("plus")
                                     break
                                 }
                             }
@@ -124,23 +158,43 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                 holder.checkBox2.setOnCheckedChangeListener { _, isChecked ->
                     currentItem.time_list!![1][1] = isChecked
 
-                    if (isChecked) {
-                        val database = FirebaseDatabase.getInstance().getReference("Pills")
-                        database.child(currentItem.id!!).setValue(currentItem)
+                        if (isChecked) {
+                            val database = FirebaseDatabase.getInstance().getReference("Pills")
+                            database.child(currentItem.id!!).setValue(currentItem)
 
-                        // Wyświetlenie powiadomienia o wzięciu tabletki
-                        val context = holder.itemView.context
-                        Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
+                            // Wyświetlenie powiadomienia o wzięciu tabletki
+                            val context = holder.itemView.context
+                            Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT)
+                                .show()
 
-                        dbReference.child("Pills_status").push().setValue(
-                            mapOf(
-                                "status" to currentItem.time_list!![1][1].toString(),
-                                "name" to currentItem.name,
-                                "date" to current,
-                                "user" to uid
+                            changeDataBase("minus")
+
+
+
+                            dbReference.child("Pills_status").push().setValue(
+                                mapOf(
+                                    "status" to currentItem.time_list!![1][1].toString(),
+                                    "name" to currentItem.name,
+                                    "date" to current,
+                                    "user" to uid
+                                )
                             )
-                        )
-                    }
+
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+
+                                        Log.d("git", "git")
+//                                        changeDataBase("minus")
+
+
+                                    } else {
+                                        val exception = task.exception
+                                    }
+                                }
+
+
+                        }
+
 
                     if (!isChecked) {
                         val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -155,6 +209,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                                     val item = childSnapshot.getValue(PillStatusModel::class.java)
                                     if (item!!.date.equals(current)) {
                                         childSnapshot.ref.removeValue()
+                                        changeDataBase("plus")
                                         break
                                     }
                                 }
@@ -171,23 +226,40 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                 holder.checkBox3.setOnCheckedChangeListener { _, isChecked ->
                     currentItem.time_list!![2][1] = isChecked
 
-                    if (isChecked) {
-                        val database = FirebaseDatabase.getInstance().getReference("Pills")
-                        database.child(currentItem.id!!).setValue(currentItem)
+                        if (isChecked) {
 
-                        // Wyświetlenie powiadomienia o wzięciu tabletki
-                        val context = holder.itemView.context
-                        Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT).show()
 
-                        dbReference.child("Pills_status").push().setValue(
-                            mapOf(
-                                "status" to currentItem.time_list!![2][1].toString(),
-                                "name" to currentItem.name,
-                                "date" to current,
-                                "user" to uid
+                            // Wyświetlenie powiadomienia o wzięciu tabletki
+                            val context = holder.itemView.context
+                            Toast.makeText(context, "Tabletka została wzięta", Toast.LENGTH_SHORT)
+                                .show()
+
+                            changeDataBase("minus")
+
+                            dbReference.child("Pills_status").push().setValue(
+                                mapOf(
+                                    "status" to currentItem.time_list!![2][1].toString(),
+                                    "name" to currentItem.name,
+                                    "date" to current,
+                                    "user" to uid
+                                )
                             )
-                        )
-                    }
+
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+
+                                        Log.d("git", "git")
+//                                        changeDataBase("minus")
+
+
+                                    } else {
+                                        val exception = task.exception
+                                    }
+                                }
+
+
+                        }
+
 
                     if (!isChecked) {
                         val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -202,6 +274,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
                                     val item = childSnapshot.getValue(PillStatusModel::class.java)
                                     if (item!!.date.equals(current)) {
                                         childSnapshot.ref.removeValue()
+                                        changeDataBase("plus")
                                         break
                                     }
                                 }
@@ -245,6 +318,146 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
             }
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun changeDataBase(change: String){
+
+        while(counter == 1) {
+
+            var newAvailability = 0
+
+
+            if (change == "minus") {
+                Log.d("minus", "minus")
+                newAvailability = oldAvailability?.minus(1)
+                    ?: 0 // Jeśli oldAvailability jest null, przyjmujemy wartość 0
+
+            } else if (change == "plus") {
+                Log.d("plus", "plus")
+                newAvailability = oldAvailability?.plus(1)
+                    ?: 0 // Jeśli oldAvailability jest null, przyjmujemy wartość 0
+
+            }
+
+            if(newAvailability < 5){
+                AvailabilityAlert()
+            }
+
+            val ref = FirebaseDatabase.getInstance().getReference("Pills")
+
+            val updateFields: MutableMap<String, Any> = HashMap()
+            updateFields["availability"] = newAvailability
+
+            ref.child(pillId!!).updateChildren(updateFields)
+
+            counter += 1
+        }
+
+    }
+
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    private fun AvailabilityAlert() {
+//
+//        val dbFirebase = FirebaseDatabase.getInstance()
+//        val dbReference = dbFirebase.getReference()
+//
+//        val user = FirebaseAuth.getInstance().currentUser
+//        val uid = user?.uid
+//
+//        val id = UUID.randomUUID().toString()
+//
+//        val pillName = "Nazwa leku" // Zmień na odpowiednie źródło nazwy leku
+//
+//        val message = "Uwaga, kończą się tabletki w opakowaniu dla leku " + pillName + "!"
+//
+//        val currentDate = LocalDate.now().toString()
+//
+//        dbReference.child("Notifications").push().setValue(
+//            mapOf(
+//                "message" to message,
+//                "pill" to pillName,
+//                "date" to currentDate.toString(),
+//                "pacient" to uid as Any,
+//                "id" to id as Any
+//            )
+//        )
+//            .addOnCompleteListener { task ->
+//                if (task.isSuccessful) {
+//
+//                    Log.d("git", "git")
+//
+//                } else {
+//                    val exception = task.exception
+//                }
+//            }
+//
+//    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun AvailabilityAlert() {
+
+        val dbFirebase = FirebaseDatabase.getInstance()
+        val dbReference = dbFirebase.getReference()
+
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid
+
+        val id = UUID.randomUUID().toString()
+
+
+
+        val message = "Uwaga, kończą się tabletki w opakowaniu dla leku $pillName!"
+
+        val currentDate = LocalDate.now().toString()
+
+        // Sprawdź, czy powiadomienie dla tego leku w bieżącym dniu już zostało wysłane
+        val notificationsQuery = dbReference.child("Notifications")
+            .orderByChild("pill")
+            .equalTo(pillName)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var shouldSendNotification = true
+
+                    for (snapshot in dataSnapshot.children) {
+                        val notificationDate = snapshot.child("date").getValue(String::class.java)
+
+                        if (notificationDate == currentDate) {
+                            shouldSendNotification = false
+                            break
+                        }
+                    }
+
+                    if (shouldSendNotification) {
+                        // Wyślij powiadomienie
+                        dbReference.child("Notifications").push().setValue(
+                            mapOf(
+                                "message" to message,
+                                "pill" to pillName,
+                                "date" to currentDate,
+                                "pacient" to uid as Any,
+                                "id" to id as Any
+                            )
+                        )
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d("git", "git")
+                                } else {
+                                    val exception = task.exception
+                                }
+                            }
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Obsłuż błąd odczytu danych
+                }
+            })
+    }
+
+
+
+
+
 
     override fun getItemCount(): Int = pillList?.size ?: 0
 

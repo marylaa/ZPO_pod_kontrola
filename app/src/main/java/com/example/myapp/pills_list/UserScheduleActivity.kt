@@ -132,6 +132,8 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                         pillList.add(pill!!)
                     }
                 }
+
+                Log.d("pill list", pillList.toString())
                 newRecyclerView.adapter = PillItemAdapter(pillList)
             }
 
