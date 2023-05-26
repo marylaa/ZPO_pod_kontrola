@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".settings.DoctorSettingsActivity">
 
     <TextView
@@ -23,26 +23,26 @@
         android:id="@+id/textLogout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:paddingLeft="20dp"
         android:gravity="center_vertical"
+        android:paddingLeft="20dp"
         android:text="Wyloguj"
         android:textColor="@color/black"
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pacientPills" />
+        app:layout_constraintTop_toBottomOf="@+id/notifications" />
 
     <ImageButton
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/baseline_logout_24"
-        android:translationX="-20dp"
         android:scaleX="1.3"
         android:scaleY="1.3"
+        android:translationX="-20dp"
         app:layout_constraintBottom_toBottomOf="@+id/textLogout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pacientPills" />
+        app:layout_constraintTop_toBottomOf="@+id/notifications" />
 
     <TextView
         android:id="@+id/pacientPills"
@@ -62,13 +62,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="20dp"
-        android:scaleX="1.3"
-        android:scaleY="1.3"
         android:background="@drawable/baseline_medication_24"
         android:backgroundTint="@color/black"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
         app:layout_constraintBottom_toBottomOf="@+id/pacientPills"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/pacientPills" />
+
+    <TextView
+        android:id="@+id/notifications"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="Powiadomienia"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/pacientPills"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <ImageButton
+        android:id="@+id/showNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/baseline_announcement_24"
+        android:backgroundTint="@color/black"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        app:layout_constraintBottom_toBottomOf="@+id/notifications"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/notifications" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
@@ -77,9 +103,9 @@
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
+        app:itemIconSize="30dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/pacient_nav_menu"
-        app:itemIconSize="30dp"/>
+        app:menu="@menu/pacient_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
