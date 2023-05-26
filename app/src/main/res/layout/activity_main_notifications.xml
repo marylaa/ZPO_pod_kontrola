@@ -8,8 +8,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvNotifications"
-        android:layout_width="412dp"
-        android:layout_height="581dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -19,7 +19,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:background="#DC00BCD4"
         android:gravity="center"
         android:orientation="horizontal"
@@ -31,20 +31,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/baseline_arrow_back_24"
-            android:scaleX="2"
-            android:scaleY="2" />
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
 
         <TextView
             android:id="@+id/title"
-            android:layout_width="350dp"
-            android:layout_height="70dp"
+            android:layout_width="330dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:background="#DC00BCD4"
             android:gravity="center_vertical"
             android:text="Powiadomienia"
             android:paddingLeft="10dp"
             android:textColor="@color/white"
-            android:textSize="30sp"
+            android:textSize="27sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -54,13 +54,13 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/doctor_nav_menu"
-        app:itemIconSize="35dp"/>
+        app:itemIconSize="30dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

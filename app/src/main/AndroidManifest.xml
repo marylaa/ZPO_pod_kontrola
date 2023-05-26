@@ -178,7 +178,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainNotifications"
+            android:name=".patient_notifications.MainNotifications"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

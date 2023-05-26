@@ -60,19 +60,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
             holder.time3.text = timesADay[2][0].toString()
         }
 
-//        val zoneId = ZoneId.of("Europe/Warsaw")
-//        val currentTime = LocalTime.now(zoneId)  //wyswietlenie najblizszej godziny przyjecia tabletki
-//        for (i in 0 until timesADay.size) {
-//            val timeInList = timesADay[i][0].toString().split(":")
-//            val hour = LocalTime.of(timeInList[0].toInt(), timeInList[1].toInt())
-//            if(!hour.isBefore(currentTime)) {
-//                holder.time.text = timesADay[i][0].toString()
-//                break
-//            } else if (i == timesADay.size - 1) {
-//                holder.time.text = timesADay[i][0].toString()
-//            }
-//        }
-
         holder.pillTitle.text = currentItem.name
         val dbFirebase = FirebaseDatabase.getInstance()
         val dbReference = dbFirebase.getReference()
@@ -80,11 +67,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerVi
         val user = FirebaseAuth.getInstance().currentUser;
         val uid = user?.uid
 
-
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val current = LocalDate.now().format(formatter)
-
-
 
         holder.itemView.apply {
             holder.checkBox1.isChecked = timesADay[0][1] as Boolean

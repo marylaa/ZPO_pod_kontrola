@@ -11,7 +11,7 @@
         android:layout_height="35dp"
         android:paddingLeft="20dp"
         android:text="Data"
-        android:textSize="20sp"
+        android:textSize="19sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.459"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:text="Temat wiadomości"
-        android:textSize="18sp"
+        android:textSize="17sp"
         app:layout_constraintTop_toBottomOf="@+id/messageDate"
         tools:layout_editor_absoluteX="17dp"
         tools:ignore="MissingConstraints" />
@@ -35,11 +35,21 @@
         android:layout_height="2dp"
         android:layout_margin="10dp"
         android:layout_marginTop="12dp"
-        android:background="#F2000000"
+        android:background="@color/background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.425"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message" />
+
+    <ImageButton
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/baseline_delete_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
