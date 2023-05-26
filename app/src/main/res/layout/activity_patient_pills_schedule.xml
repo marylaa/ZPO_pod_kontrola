@@ -20,7 +20,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:background="#DC00BCD4"
         android:gravity="center"
         android:orientation="horizontal"
@@ -38,14 +38,14 @@
         <TextView
             android:id="@+id/title"
             android:layout_width="350dp"
-            android:layout_height="70dp"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:background="#DC00BCD4"
             android:gravity="center_vertical"
             android:text="Leki"
             android:paddingLeft="10dp"
             android:textColor="@color/white"
-            android:textSize="30sp"
+            android:textSize="27sp"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -53,7 +53,7 @@
     <Button
         android:id="@+id/addPill"
         android:layout_width="120dp"
-        android:layout_height="55dp"
+        android:layout_height="50dp"
         android:layout_marginRight="30dp"
         android:backgroundTint="@color/yellow"
         android:enabled="true"
@@ -66,13 +66,13 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/doctor_nav_menu"
-        app:itemIconSize="35dp"/>
+        app:itemIconSize="30dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

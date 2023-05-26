@@ -1,114 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".settings.DoctorSettingsActivity">
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:fillViewport="true"
-    tools:context=".monthly_report.MainActivityMonthlyReport">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:orientation="vertical" >
+        android:layout_height="60dp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_marginTop="0dp"
+            android:layout_height="match_parent"
             android:background="@color/background"
             android:gravity="left|center_vertical"
             android:text=" Miesięczny raport"
             android:textColor="@color/white"
-            android:textStyle="bold"
             android:textSize="28sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <Spinner
-            android:id="@+id/spinnerMonths"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
-        <Spinner
-            android:id="@+id/spinnerPills"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAnimals"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:paddingTop="0dp" />
-
-
-        <Spinner
-            android:id="@+id/spinner3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="240dp" >
-
-        </com.github.mikephil.charting.charts.LineChart>
-
-        <TextView
-            android:id="@+id/noDataTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="240dp"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:text="Brak danych do wyświetlenia"
-            android:textSize="30sp"
-            android:textColor="@android:color/black"
-            android:visibility="gone" />
-
-
-<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--            android:id="@+id/bottom_navigation_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="60dp"-->
-<!--            android:background="#3C000000"-->
-<!--            android:paddingLeft="100dp"-->
-<!--            android:paddingRight="100dp"-->
-<!--            app:itemIconSize="35dp"-->
-<!--            app:labelVisibilityMode="unlabeled"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:menu="@menu/pacient_nav_menu"-->
-<!--            android:layout_marginBottom="0dp"/>-->
-
     </LinearLayout>
 
+    <Spinner
+        android:id="@+id/spinnerMonths"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
+    <Spinner
+        android:id="@+id/spinnerPills"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerMonths" />
 
-</ScrollView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAnimals"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerPills" />
+
+    <Spinner
+        android:id="@+id/spinner3"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/rvAnimals" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="240dp"
+        app:layout_constraintTop_toBottomOf="@+id/spinner3">
+
+    </com.github.mikephil.charting.charts.LineChart>
+
+    <TextView
+        android:id="@+id/noDataTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="240dp"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:text="Brak danych do wyświetlenia"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner3" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
+        app:itemIconSize="30dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/pacient_nav_menu"
-        app:itemIconSize="35dp"/>
+        app:menu="@menu/pacient_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
