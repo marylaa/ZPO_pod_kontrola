@@ -3,45 +3,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="20dp"
-    android:paddingBottom="10dp"
+    android:layout_height="60dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
     android:paddingStart="8dp">
 
     <TextView
         android:id="@+id/contact_name1"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="20dp"
-        android:gravity="center_horizontal"
+        android:textSize="18dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical|right"
+        android:textColor="@color/black"
         android:ellipsize="end" />
 
     <EditText
         android:id="@+id/contact_name3"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
+        android:inputType="number"
         android:layout_height="wrap_content"
-        android:height="48dp"
-        android:hint=" "
-        android:backgroundTint="@color/gray"
         android:background="@drawable/rounded_corner"
-        android:textAlignment="center" />
+        android:backgroundTint="#25000000"
+        android:padding="5dp"
+        android:textSize="18dp"
+        android:hint=" "
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/contact_name2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
         android:layout_weight="1"
-        android:textSize="20dp"
-        android:gravity="center_horizontal" />
-    
-    <!--    <Button-->
-<!--        android:id="@+id/message_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:paddingLeft="16dp"-->
-<!--        android:paddingRight="16dp"-->
-<!--        android:textSize="10sp"-->
-<!--        />-->
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:gravity="center_vertical" />
 </LinearLayout>
 

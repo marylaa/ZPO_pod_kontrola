@@ -12,7 +12,7 @@
         android:paddingLeft="20dp"
         android:text="Lek"
         android:textColor="@color/black"
-        android:textSize="26sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:textSize="24sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillTitle" />
 
@@ -32,8 +32,6 @@
         android:layout_marginLeft="10dp"
         android:minWidth="0dp"
         android:minHeight="0dp"
-        android:scaleX="1.1"
-        android:scaleY="1.1"
         app:layout_constraintBottom_toTopOf="@+id/pillHour2"
         app:layout_constraintStart_toEndOf="@+id/pillHour1"
         app:layout_constraintTop_toBottomOf="@+id/pillTitle" />
@@ -44,7 +42,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:visibility="gone"
-        android:textSize="24sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillHour1" />
 
@@ -55,8 +53,6 @@
         android:layout_marginLeft="10dp"
         android:minWidth="0dp"
         android:minHeight="0dp"
-        android:scaleX="1.1"
-        android:scaleY="1.1"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/pillHour2"
         app:layout_constraintStart_toEndOf="@+id/pillHour2"
@@ -68,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
-        android:textSize="24sp"
+        android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pillHour2" />
@@ -80,8 +76,6 @@
         android:layout_marginLeft="10dp"
         android:minWidth="0dp"
         android:minHeight="0dp"
-        android:scaleX="1.1"
-        android:scaleY="1.1"
         app:layout_constraintBottom_toBottomOf="@+id/pillHour3"
         app:layout_constraintStart_toEndOf="@+id/pillHour3"
         app:layout_constraintTop_toBottomOf="@+id/pillHour2"
@@ -92,9 +86,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/baseline_more_vert_24"
-        android:backgroundTint="#97222323"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
+        android:backgroundTint="@color/black"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
         app:layout_constraintBottom_toTopOf="@+id/pillHour1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/pillTitle" />

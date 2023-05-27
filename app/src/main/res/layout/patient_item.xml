@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="60dp">
 
     <TextView
         android:id="@+id/pacientTitle"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
         android:text="Pacjent"
-        android:textSize="27sp"
+        android:textSize="24sp"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/choosePacient"
@@ -25,7 +25,6 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/baseline_arrow_forward_ios_24"
         android:backgroundTint="@color/black"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +33,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:background="#F2000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -320,7 +320,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             hour_new = "0" + hour.toString()
         }
         if (minute!! < 10) {
-            minute_new = minute.toString()
+            minute_new = "0" + minute.toString()
         }
         return hour_new + ":" + minute_new
     }

@@ -9,25 +9,25 @@
     <TextView
         android:id="@+id/settingsText"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:background="@color/background"
         android:gravity="center_vertical"
         android:paddingLeft="10dp"
         android:text="Ustawienia"
         android:textColor="@color/white"
-        android:textSize="30dp"
+        android:textSize="27dp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textPatient"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingLeft="20dp"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
         android:gravity="center_vertical"
         android:text="Dodaj pacjenta"
         android:textColor="@color/black"
-        android:textSize="27sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/patientButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
@@ -38,8 +38,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/baseline_add_circle_outline_24"
         android:translationX="-20dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
         app:layout_constraintBottom_toBottomOf="@+id/textPatient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
@@ -47,12 +47,12 @@
     <TextView
         android:id="@+id/textLogout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:paddingLeft="20dp"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
         android:gravity="center_vertical"
         android:text="Wyloguj"
         android:textColor="@color/black"
-        android:textSize="27sp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textPatient" />
@@ -63,8 +63,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/baseline_logout_24"
         android:translationX="-20dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
         app:layout_constraintBottom_toBottomOf="@+id/textLogout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textPatient" />
@@ -72,13 +72,13 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="#3C000000"
         android:paddingLeft="100dp"
         android:paddingRight="100dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/doctor_nav_menu"
-        app:itemIconSize="35dp"/>
+        app:itemIconSize="30dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
