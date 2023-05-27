@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.NotificationModel
 import com.example.myapp.R
 import com.example.myapp.report.MainActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -859,6 +860,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
         val dbFirebase = FirebaseDatabase.getInstance()
         val dbReference = dbFirebase.getReference()
 
+        dbRef = FirebaseDatabase.getInstance().getReference("Notifications")
+
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
 
@@ -895,15 +898,20 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                     if (shouldSendNotification) {
                         // Wyślij powiadomienie
-                        dbReference.child("Notifications").push().setValue(
-                            mapOf(
-                                "message" to message,
-                                "pill" to pillName,
-                                "date" to currentDate,
-                                "pacient" to uid as Any,
-                                "id" to id as Any
-                            )
-                        )
+
+                        var notification = NotificationModel(message,pillName,currentDate,
+                            uid.toString(),id)
+                        dbRef.child(id).setValue(notification)
+
+//                        dbReference.child("Notifications").push().setValue(
+//                            mapOf(
+//                                "message" to message,
+//                                "pill" to pillName,
+//                                "date" to currentDate,
+//                                "pacient" to uid as Any,
+//                                "id" to id as Any
+//                            )
+//                        )
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Log.d("git", "git")
