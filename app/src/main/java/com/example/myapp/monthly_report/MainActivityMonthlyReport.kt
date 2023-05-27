@@ -492,6 +492,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val lineDataSet = LineDataSet(entries, param)
         val lineData = LineData(lineDataSet)
         val lineChart = findViewById<LineChart>(R.id.lineChart)
+        lineChart.description.text = "Dni miesiąca"
         lineChart.data = lineData
 
 // Ustawienie ValueFormatter do etykiet osi X

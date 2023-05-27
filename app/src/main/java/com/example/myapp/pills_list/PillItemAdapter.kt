@@ -12,7 +12,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.NotificationModel
+import com.example.myapp.patient_notifications.NotificationModel
 import com.example.myapp.R
 import com.example.myapp.report.MainActivity
 import com.google.firebase.auth.FirebaseAuth
