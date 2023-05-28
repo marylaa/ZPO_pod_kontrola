@@ -271,48 +271,49 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                         val month = dateTime.monthValue
                         val monthFormatted = String.format("%02d", month)
                         if (monthFormatted == (months[wantedMonth].toString()) && pillName == wantedPill) {
-                            if(!daysInDataBase.isEmpty()) {
-                                if (dateTime.equals(daysInDataBase.last())) {
-                                    count = count + 1
-                                }
-                            }
-                            if(i+3 == data.size - 1){
-                                var freq = getPillFrequency(wantedPill)
-                                var number = count.toString() + "/" + freq
-                                Log.d("prev", prevDate.toString())
-                                if(pillName == wantedPill){
-//                                if(prevName == wantedPill){
-                                    newDict[dateTime.toString()] = number
-                                    count = 0
-                                }
-                            }
-//                            }else{
+                            daysInDataBase.add(dateTime)
+//                            if(!daysInDataBase.isEmpty()) {
+//                                if (dateTime.equals(daysInDataBase.last())) {
+//                                    count = count + 1
+//                                }
+//                            }
+//                            if(i+3 == data.size - 1){
 //                                var freq = getPillFrequency(wantedPill)
 //                                var number = count.toString() + "/" + freq
 //                                Log.d("prev", prevDate.toString())
-//                                if(prevDate!= null){
+//                                if(pillName == wantedPill){
+////                                if(prevName == wantedPill){
+//                                    newDict[dateTime.toString()] = number
+//                                    count = 0
+//                                }
+//                            }
+////                            }else{
+////                                var freq = getPillFrequency(wantedPill)
+////                                var number = count.toString() + "/" + freq
+////                                Log.d("prev", prevDate.toString())
+////                                if(prevDate!= null){
+////                                    newDict[prevDate.toString()] = number
+////                                    count = 0
+////                                }
+//////                                newDict[prevDate.toString()] = number
+//////                                count = 0
+////
+////                            }
+//                            prevDate = dateTime
+//                            daysInDataBase.add(dateTime)
+
+
+
+//                        }else{
+////                            if(dateTime!=prevDate){
+//                                var freq = getPillFrequency(wantedPill)
+//                                var number = count.toString() + "/" + freq
+//                                Log.d("prev", prevDate.toString())
+//                                if(prevDate!= null && prevName == wantedPill){
+////                                if(prevName == wantedPill){
 //                                    newDict[prevDate.toString()] = number
 //                                    count = 0
 //                                }
-////                                newDict[prevDate.toString()] = number
-////                                count = 0
-//
-//                            }
-                            prevDate = dateTime
-                            daysInDataBase.add(dateTime)
-
-
-
-                        }else{
-//                            if(dateTime!=prevDate){
-                                var freq = getPillFrequency(wantedPill)
-                                var number = count.toString() + "/" + freq
-                                Log.d("prev", prevDate.toString())
-                                if(prevDate!= null && prevName == wantedPill){
-//                                if(prevName == wantedPill){
-                                    newDict[prevDate.toString()] = number
-                                    count = 0
-                                }
 
 //                            }
 
@@ -328,6 +329,24 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 //            }
 
 
+        }
+
+        val elementCountMap = mutableMapOf<Any, Int>()
+
+        for (element in daysInDataBase) {
+            val numberOfElems = elementCountMap[element]
+            if (numberOfElems != null) {
+                elementCountMap[element] = numberOfElems + 1
+            } else {
+                elementCountMap[element] = 1
+            }
+        }
+
+        for ((element, numberOfElems) in elementCountMap) {
+            println("Element: $element, Count: $numberOfElems")
+            var freq = getPillFrequency(wantedPill)
+            var number = numberOfElems.toString() + "/" + freq
+            newDict[element.toString()] = number
         }
 
         Log.d("new dict", newDict.toString())
@@ -473,6 +492,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val lineDataSet = LineDataSet(entries, param)
         val lineData = LineData(lineDataSet)
         val lineChart = findViewById<LineChart>(R.id.lineChart)
+        lineChart.description.text = "Dni miesiąca"
         lineChart.data = lineData
 
 // Ustawienie ValueFormatter do etykiet osi X

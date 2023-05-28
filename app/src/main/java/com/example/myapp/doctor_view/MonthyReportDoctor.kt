@@ -12,18 +12,17 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapp.EmptyActivityDoctor
 import com.example.myapp.R
 import com.example.myapp.SharedObject
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
+import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.PillModel
 import com.example.myapp.report.TableActivity
+import com.example.myapp.settings.DoctorSettingsActivity
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -121,27 +120,22 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
 
 
-//        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-////        val navController = findNavController(R.id.navigation_home)
-//        navView.menu.findItem(R.id.navigation_report).isChecked = true
-//
-//        navView.setOnNavigationItemSelectedListener { menuItem ->
-//            when (menuItem.itemId) {
-//                R.id.navigation_home -> {
-//                    val intent =
-//                        Intent(this@MainActivityMonthlyReport, UserScheduleActivity::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
-//                R.id.navigation_settings -> {
-//                    val intent = Intent(this@MainActivityMonthlyReport, PatientSettingsActivity::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
-
+        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
+        navView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.navigation_home -> {
+                    val intent = Intent(this@MonthyReportDoctor, ViewPatientsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.navigation_settings -> {
+                    val intent = Intent(this@MonthyReportDoctor, DoctorSettingsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
 
@@ -268,48 +262,49 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                     val month = dateTime.monthValue
                     val monthFormatted = String.format("%02d", month)
                     if (monthFormatted == (months[wantedMonth].toString()) && pillName == wantedPill) {
-                        if(!daysInDataBase.isEmpty()) {
-                            if (dateTime.equals(daysInDataBase.last())) {
-                                count = count + 1
-                            }
-                        }
-                        if(i+3 == data.size - 1){
-                            var freq = getPillFrequency(wantedPill)
-                            var number = count.toString() + "/" + freq
-                            Log.d("prev", prevDate.toString())
-                            if(pillName == wantedPill){
-//                                if(prevName == wantedPill){
-                                newDict[dateTime.toString()] = number
-                                count = 0
-                            }
-                        }
-//                            }else{
+                        daysInDataBase.add(dateTime)
+//                            if(!daysInDataBase.isEmpty()) {
+//                                if (dateTime.equals(daysInDataBase.last())) {
+//                                    count = count + 1
+//                                }
+//                            }
+//                            if(i+3 == data.size - 1){
 //                                var freq = getPillFrequency(wantedPill)
 //                                var number = count.toString() + "/" + freq
 //                                Log.d("prev", prevDate.toString())
-//                                if(prevDate!= null){
+//                                if(pillName == wantedPill){
+////                                if(prevName == wantedPill){
+//                                    newDict[dateTime.toString()] = number
+//                                    count = 0
+//                                }
+//                            }
+////                            }else{
+////                                var freq = getPillFrequency(wantedPill)
+////                                var number = count.toString() + "/" + freq
+////                                Log.d("prev", prevDate.toString())
+////                                if(prevDate!= null){
+////                                    newDict[prevDate.toString()] = number
+////                                    count = 0
+////                                }
+//////                                newDict[prevDate.toString()] = number
+//////                                count = 0
+////
+////                            }
+//                            prevDate = dateTime
+//                            daysInDataBase.add(dateTime)
+
+
+
+//                        }else{
+////                            if(dateTime!=prevDate){
+//                                var freq = getPillFrequency(wantedPill)
+//                                var number = count.toString() + "/" + freq
+//                                Log.d("prev", prevDate.toString())
+//                                if(prevDate!= null && prevName == wantedPill){
+////                                if(prevName == wantedPill){
 //                                    newDict[prevDate.toString()] = number
 //                                    count = 0
 //                                }
-////                                newDict[prevDate.toString()] = number
-////                                count = 0
-//
-//                            }
-                        prevDate = dateTime
-                        daysInDataBase.add(dateTime)
-
-
-
-                    }else{
-//                            if(dateTime!=prevDate){
-                        var freq = getPillFrequency(wantedPill)
-                        var number = count.toString() + "/" + freq
-                        Log.d("prev", prevDate.toString())
-                        if(prevDate!= null && prevName == wantedPill){
-//                                if(prevName == wantedPill){
-                            newDict[prevDate.toString()] = number
-                            count = 0
-                        }
 
 //                            }
 
@@ -325,6 +320,24 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 //            }
 
 
+        }
+
+        val elementCountMap = mutableMapOf<Any, Int>()
+
+        for (element in daysInDataBase) {
+            val numberOfElems = elementCountMap[element]
+            if (numberOfElems != null) {
+                elementCountMap[element] = numberOfElems + 1
+            } else {
+                elementCountMap[element] = 1
+            }
+        }
+
+        for ((element, numberOfElems) in elementCountMap) {
+            println("Element: $element, Count: $numberOfElems")
+            var freq = getPillFrequency(wantedPill)
+            var number = numberOfElems.toString() + "/" + freq
+            newDict[element.toString()] = number
         }
 
         Log.d("new dict", newDict.toString())
@@ -460,10 +473,10 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         }.sortedBy { it.x }.toMutableList()
 
 
-
         val lineDataSet = LineDataSet(entries, param)
         val lineData = LineData(lineDataSet)
         val lineChart = findViewById<LineChart>(R.id.lineChart)
+        lineChart.description.text = "Dni miesiąca"
         lineChart.data = lineData
 
 // Ustawienie ValueFormatter do etykiet osi X
@@ -484,6 +497,20 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
 
         Log.d("dic", resultDict.keys.toString())
+
+        val noDataTextView = findViewById<TextView>(R.id.noDataTextView)
+
+        if (entries.isEmpty()) {
+            lineChart.visibility = View.GONE
+            noDataTextView.visibility = View.VISIBLE
+        } else {
+            lineChart.visibility = View.VISIBLE
+            noDataTextView.visibility = View.GONE
+
+            // Reszta kodu wykresu
+        }
+
+
         return entries
 
 

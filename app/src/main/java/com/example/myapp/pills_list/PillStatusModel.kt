@@ -1,9 +1,8 @@
 package com.example.myapp.pills_list
 
-data class PillStatusModel (
-    var status: String = "",
-    var name: String = "",
+data class PillStatusModel(
     var date: String = "",
-    var user: String = "",
-    var count: String = ""
+    var name: String = "",
+    var status: String = "",
+    var user: String = ""
 )
