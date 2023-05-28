@@ -6,22 +6,31 @@ import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.util.concurrent.TimeUnit
 
 class DownloadPillsTask(private val pillName: String) :
     AsyncTask<String, Void, ArrayList<String>>() {
     override fun doInBackground(vararg urls: String): ArrayList<String> {
-        val client = OkHttpClient()
-        val url = "http://192.168.1.4:5000/search/" + pillName// IP na którym stoi serwer
-
-        val request = Request.Builder()
-            .url(url)
-            .get()
-            .build()
-
         var items: ArrayList<String> = arrayListOf()
 
         try {
+            val client = OkHttpClient()
+            client.setConnectTimeout(300, TimeUnit.MILLISECONDS) // Ustawienie limitu czasu połączenia
+            client.setReadTimeout(300, TimeUnit.MILLISECONDS) // Ustawienie limitu czasu odczytu
+
+            val url = "http://192.168.1.4:5000/search/" + pillName// IP na którym stoi serwer
+
+            val request = Request.Builder()
+                .url(url)
+                .get()
+                .build()
+
             val response = client.newCall(request).execute()
+
+            if (response.isSuccessful) {
             val responseData = response.body()?.string()
 
             val jsonObject = JSONObject(responseData)
@@ -31,8 +40,11 @@ class DownloadPillsTask(private val pillName: String) :
                 val item = resultArray[i]
                 items.add(item.toString())
             }
-        } catch (e: RuntimeException) {
-            Log.d("Błąd", e.stackTrace.toString())
+            } else {
+                Log.d("Błąd", "Błąd połączenia: ${response.code()}")
+            }
+        } catch (e: IOException) {
+            Log.d("Błąd", "Błąd połączenia: ${e.message}")
         }
         return items
     }

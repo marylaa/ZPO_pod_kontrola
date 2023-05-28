@@ -16,7 +16,6 @@
         android:text="Ustawienia"
         android:textColor="@color/white"
         android:textSize="27dp"
-        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
