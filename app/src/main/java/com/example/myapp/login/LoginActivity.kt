@@ -57,7 +57,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
                 false
             } else -> {
-                showErrorSnackBar("Wprowadzono poprawne dane",false)
+                showErrorSnackBar("Wprowadzono poprawnie dane",false)
                 true
             }
         }
@@ -69,17 +69,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             val email = inputEmail?.text.toString().trim(){ it<= ' '}
             val password = inputPassword?.text.toString().trim(){ it<= ' '}
 
-            //Log-in using FirebaseAuth
-
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener{task ->
 
                     if(task.isSuccessful){
-                        // Call goToNextActivity() function as a suspend function inside a coroutine scope
-                        lifecycleScope.launch {
                             goToNextActivity()
-                            finish()
-                        }
                     } else{
                         showErrorSnackBar(task.exception!!.message.toString(),true)
                     }
@@ -87,7 +81,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private suspend fun goToNextActivity() {
+    private fun goToNextActivity() {
         val user = FirebaseAuth.getInstance().currentUser;
 
         dbRef = FirebaseDatabase.getInstance().getReference("Users").child(user?.uid.toString())

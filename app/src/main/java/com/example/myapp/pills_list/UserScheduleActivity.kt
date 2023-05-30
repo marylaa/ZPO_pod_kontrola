@@ -33,9 +33,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_pills_schedule)
 
-
-
-
         val addButton = findViewById<Button>(R.id.addPill)
         addButton.setOnClickListener(this)
 
@@ -49,8 +46,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
         getDataFromDatabase()
-
-
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
         navView.menu.findItem(R.id.navigation_home).isChecked = true
@@ -141,7 +136,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
                 Log.d("pill list", pillList.toString())
                 newRecyclerView.adapter = PillItemAdapter(pillList,this@UserScheduleActivity)
-
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -150,8 +144,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         })
         return pillList
     }
-
-
 }
 
 
