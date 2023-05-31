@@ -29,7 +29,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notifications" />
+        app:layout_constraintTop_toBottomOf="@+id/healthAlert" />
 
     <ImageButton
         android:id="@+id/logoutButton"
@@ -41,7 +41,7 @@
         android:translationX="-20dp"
         app:layout_constraintBottom_toBottomOf="@+id/textLogout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notifications" />
+        app:layout_constraintTop_toBottomOf="@+id/healthAlert" />
 
     <TextView
         android:id="@+id/pacientPills"
@@ -94,6 +94,32 @@
         app:layout_constraintBottom_toBottomOf="@+id/notifications"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/notifications" />
+
+    <TextView
+        android:id="@+id/healthAlert"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Zgłoś pogorszenie zdrowia"
+        android:textColor="@color/red"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/notifications"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <ImageButton
+        android:id="@+id/healthAlertImage"
+        android:layout_width="88dp"
+        android:layout_height="94dp"
+        android:layout_marginRight="1dp"
+        android:background="@drawable/alert_foreground"
+        android:backgroundTint="@color/red"
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        app:layout_constraintBottom_toBottomOf="@+id/healthAlert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/healthAlert" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"

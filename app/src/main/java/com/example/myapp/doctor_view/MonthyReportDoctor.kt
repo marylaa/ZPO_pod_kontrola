@@ -89,6 +89,11 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         adapterMonths.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMonths.setAdapter(adapterMonths)
+
+// Ustawienie bieżącego miesiąca jako wartości domyślnej
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        spinnerMonths.setSelection(currentMonth)
+
         spinnerMonths.setOnItemSelectedListener(this)
 
 
