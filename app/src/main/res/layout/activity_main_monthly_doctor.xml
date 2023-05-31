@@ -9,12 +9,11 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/blue_green_1"
+        android:background="@color/background"
         android:gravity="left|center_vertical"
         android:text=" Miesięczny raport"
         android:textColor="@color/white"
         android:textSize="27sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

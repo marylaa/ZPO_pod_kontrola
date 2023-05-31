@@ -24,7 +24,6 @@
         android:text="Pacjenci"
         android:textColor="@color/white"
         android:textSize="27dp"
-        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="185dp" />
 
