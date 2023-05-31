@@ -73,6 +73,16 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
 
+//        var spinnerMonths = findViewById<View>(R.id.spinnerMonths) as Spinner
+//        val adapterMonths: ArrayAdapter<String> = ArrayAdapter<String>(
+//            this@MainActivityMonthlyReport,
+//            android.R.layout.simple_spinner_item, monthsList
+//        )
+//
+//        adapterMonths.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        spinnerMonths.setAdapter(adapterMonths)
+//        spinnerMonths.setOnItemSelectedListener(this)
+
         var spinnerMonths = findViewById<View>(R.id.spinnerMonths) as Spinner
         val adapterMonths: ArrayAdapter<String> = ArrayAdapter<String>(
             this@MainActivityMonthlyReport,
@@ -81,7 +91,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         adapterMonths.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMonths.setAdapter(adapterMonths)
+
+// Ustawienie bieżącego miesiąca jako wartości domyślnej
+        val currentMonth = Calendar.getInstance().get(Calendar.MONTH)
+        spinnerMonths.setSelection(currentMonth)
+
         spinnerMonths.setOnItemSelectedListener(this)
+
 
 
         var spinnerPills = findViewById<View>(R.id.spinnerPills) as Spinner

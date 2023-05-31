@@ -649,6 +649,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                             if (pillId != null) {
                                 val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
                                 dbRef.removeValue()
+                                val intent = Intent(context, UserScheduleActivity::class.java)
+                                context.startActivity(intent)
                             }
                             true
                         }
