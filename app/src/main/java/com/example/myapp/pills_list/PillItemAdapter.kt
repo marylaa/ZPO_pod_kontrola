@@ -127,10 +127,16 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                                 Log.d("new av minus", newAvailability.toString())
 
+                                if(newAvailability < 0 ){
+                                    newAvailability = 0
+                                }
+
                                 if(newAvailability < 5){
                                     Log.d("mnijesze od 5", newAvailability.toString())
                                     AvailabilityAlert(currentItem.name)
                                 }
+
+
 
                                 val ref = FirebaseDatabase.getInstance().getReference("Pills")
 
@@ -315,6 +321,10 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                                     Log.d("new av minus", newAvailability.toString())
 
+                                    if(newAvailability < 0 ){
+                                        newAvailability = 0
+                                    }
+
                                     if(newAvailability < 5){
                                         Log.d("mnijesze od 5", newAvailability.toString())
                                         AvailabilityAlert(currentItem.name)
@@ -495,6 +505,10 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                     newAvailability = oldAvailability.toInt()?.minus(1)!!
 
                                     Log.d("new av minus", newAvailability.toString())
+
+                                    if(newAvailability < 0 ){
+                                        newAvailability = 0
+                                    }
 
                                     if(newAvailability < 5){
                                         Log.d("mnijesze od 5", newAvailability.toString())
