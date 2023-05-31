@@ -1,5 +1,6 @@
 package com.example.myapp.patient_notifications
 
+import NotificationModel
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle

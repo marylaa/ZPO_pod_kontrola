@@ -1,5 +1,6 @@
 package com.example.myapp.patient_notifications
 
+import NotificationModel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
