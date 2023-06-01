@@ -30,22 +30,23 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
-        sendNotification(remoteMessage.from, remoteMessage.notification!!.body)
-        sendNotification(remoteMessage.notification!!.body)
+//        sendNotification(remoteMessage.from, remoteMessage.notification!!.body)
+//        sendNotification(remoteMessage.notification!!.body)
     }
 
     private fun sendNotification(from: String?, body: String?) {
         Handler(Looper.getMainLooper()).post {
-            Toast.makeText(this@MyFirebaseMessagingService, "$from -> $body", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MyFirebaseMessagingService, "$from -> $body", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
-    private fun sendNotification(messageBody: String?) {
-        val intent = Intent(this, UserScheduleActivity::class.java)
+    fun sendNotification(context: Context, messageBody: String?) {
+        val intent = Intent(context, UserScheduleActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val requestCode = 0
         val pendingIntent = PendingIntent.getActivity(
-            this,
+            context,
             requestCode,
             intent,
             PendingIntent.FLAG_IMMUTABLE,
@@ -61,7 +62,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Since android Oreo notification channel is needed.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

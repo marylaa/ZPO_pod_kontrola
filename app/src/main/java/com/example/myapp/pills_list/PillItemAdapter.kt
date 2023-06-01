@@ -1,8 +1,12 @@
 package com.example.myapp.pills_list
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,25 +14,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.patient_notifications.NotificationModel
 import com.example.myapp.R
-import com.example.myapp.report.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-
-//class PillItemAdapter(private val pillList: MutableList<PillModel>?): RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>() {
 class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val context: Context,) : RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>() {
 
 
-
     private var isUpdateExecuted = false // Dodana zmienna
-//    private var oldAvailability: Int = 0
     private var pillId : String = ""
     private var counter : Int = 1
     private var pillName : String = ""
@@ -127,9 +126,11 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                                 Log.d("new av minus", newAvailability.toString())
 
-                                if(newAvailability < 5){
+                                if(newAvailability <= 5){
                                     Log.d("mnijesze od 5", newAvailability.toString())
                                     AvailabilityAlert(currentItem.name)
+                                    ///////////////////////////////////////////////
+                                    sendNotification(newAvailability, currentItem.name)
                                 }
 
                                 val ref = FirebaseDatabase.getInstance().getReference("Pills")
@@ -228,8 +229,10 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                             Log.d("new av plus", newAvailability.toString())
 
 
-                                            if(newAvailability < 5){
+                                            if(newAvailability <= 5){
                                                 AvailabilityAlert(currentItem.name)
+                                                ///////////////////////////////////////////////
+                                                sendNotification(newAvailability, currentItem.name)
                                             }
 
                                             val ref = FirebaseDatabase.getInstance().getReference("Pills")
@@ -315,9 +318,11 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                                     Log.d("new av minus", newAvailability.toString())
 
-                                    if(newAvailability < 5){
+                                    if(newAvailability <= 5){
                                         Log.d("mnijesze od 5", newAvailability.toString())
                                         AvailabilityAlert(currentItem.name)
+                                        ///////////////////////////////////////////////
+                                        sendNotification(newAvailability, currentItem.name)
                                     }
 
                                     val ref = FirebaseDatabase.getInstance().getReference("Pills")
@@ -412,8 +417,10 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                 Log.d("new av plus", newAvailability.toString())
 
 
-                                                if(newAvailability < 5){
+                                                if(newAvailability <= 5){
                                                     AvailabilityAlert(currentItem.name)
+                                                    ///////////////////////////////////////////////
+                                                    sendNotification(newAvailability, currentItem.name)
                                                 }
 
                                                 val ref = FirebaseDatabase.getInstance().getReference("Pills")
@@ -496,9 +503,13 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                                     Log.d("new av minus", newAvailability.toString())
 
-                                    if(newAvailability < 5){
+                                    if(newAvailability <= 5){
                                         Log.d("mnijesze od 5", newAvailability.toString())
                                         AvailabilityAlert(currentItem.name)
+                                        ///////////////////////////////////////////////
+                                        //sendPushNotification()
+
+                                        sendNotification(newAvailability, currentItem.name)
                                     }
 
                                     val ref = FirebaseDatabase.getInstance().getReference("Pills")
@@ -593,8 +604,11 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                 Log.d("new av plus", newAvailability.toString())
 
 
-                                                if(newAvailability < 5){
+                                                if(newAvailability <= 5){
                                                     AvailabilityAlert(currentItem.name)
+                                                    ///////////////////////////////////////////////
+                                                    sendNotification(newAvailability, currentItem.name)
+
                                                 }
 
                                                 val ref = FirebaseDatabase.getInstance().getReference("Pills")
@@ -687,87 +701,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
         })
     }
 
-//    private fun getAvailabilityFromDb(currentPillName: String, basicAvailability: String) {
-//        dbRef = FirebaseDatabase.getInstance().getReference("Pills_status")
-//        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-//
-//        val pillStatusList: MutableList<PillStatusModel> = mutableListOf()
-//
-//        Log.d("current pill", currentPillName)
-//
-//        val query = dbRef.orderByChild("user").equalTo(userId)
-//        query.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                pillStatusList.clear()
-//                for (snapshot in dataSnapshot.children) {
-//                    val pillStatus = snapshot.getValue(PillStatusModel::class.java)
-//                    if (pillStatus!!.name == currentPillName) {
-//                        pillStatusList.add(pillStatus!!)
-//                    }
-//                }
-//
-//                Log.d("pills status list", pillStatusList.toString())
-//
-//                // Sprawdź, czy lista nie jest pusta, a następnie pobierz ostatni element
-//                if (pillStatusList.isNotEmpty()) {
-//                    val lastPillStatus = pillStatusList.last()
-//                    availabilityPill = lastPillStatus.availability
-//                    Log.d("Ostatni element", lastPillStatus.toString())
-//                } else {
-//                    // Użyj przekazanej wartości basicAvailability
-//                    availabilityPill = basicAvailability
-//                }
-//
-//                Log.d("availabilioty pill", availabilityPill)
-//
-//            }
-//
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.d("TAG", "Błąd")
-//            }
-//        })
-//    }
-
-
-//    private fun getAvailabilityFromDb(currentPillName: String) {
-//        dbRef = FirebaseDatabase.getInstance().getReference("Pills_status")
-//        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-//
-//        val pillStatusList: MutableList<PillStatusModel> = mutableListOf()
-//
-//        Log.d("current pill", currentPillName)
-//
-//        val query = dbRef.orderByChild("user").equalTo(userId)
-//        query.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                pillStatusList.clear()
-//                for (snapshot in dataSnapshot.children) {
-//                    val pillStatus = snapshot.getValue(PillStatusModel::class.java)
-//                    if(pillStatus!!.name == currentPillName){
-//                        pillStatusList.add(pillStatus!!)
-//
-//                    }
-//                }
-//
-//                Log.d("pills status list", pillStatusList.toString())
-//
-//                // Sprawdź, czy lista nie jest pusta, a następnie pobierz ostatni element
-//                if (pillStatusList.isNotEmpty()) {
-//                    val lastPillStatus = pillStatusList.last()
-//                    availability = lastPillStatus.availability
-//                    Log.d("Ostatni element", lastPillStatus.toString())
-//                }else{
-//                    availability = basicAvailability.toString()
-//                }
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                Log.d("TAG", "Błąd")
-//            }
-//        })
-//    }
-//
     private fun getBasicAmoutFromDb(currentPillName: String) {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -795,49 +728,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
     }
 
 
-
-//
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    public fun changeDataBase(change: String){
-//
-//        while(counter == 1) {
-//
-//            var newAvailability = 0
-//
-//
-//            if (change == "minus") {
-//                Log.d("minus", "minus")
-//                newAvailability = oldAvailability?.minus(1)
-//                    ?: 0 // Jeśli oldAvailability jest null, przyjmujemy wartość 0
-//
-//            } else if (change == "plus") {
-//                Log.d("plus", "plus")
-//                newAvailability = oldAvailability?.plus(1)
-//                    ?: 0 // Jeśli oldAvailability jest null, przyjmujemy wartość 0
-//
-//            }
-//
-//            if(newAvailability < 5){
-//                AvailabilityAlert()
-//            }
-//
-//            val ref = FirebaseDatabase.getInstance().getReference("Pills")
-//
-//            val updateFields: MutableMap<String, Any> = HashMap()
-//            updateFields["availability"] = newAvailability
-//
-////            ref.child(pillId!!).updateChildren(updateFields)
-//            ref.child(pillId).updateChildren(updateFields)
-//
-//
-//            counter += 1
-//        }
-//
-//    }
-
-
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun AvailabilityAlert(pillName: String) {
 
@@ -848,13 +738,9 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
-
         val id = UUID.randomUUID().toString()
 
-
-
         Log.d("alert to pilll name", pillName)
-
 
         val message = "Uwaga, kończą się tabletki w opakowaniu dla leku $pillName!"
 
@@ -887,15 +773,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                             uid.toString(),id)
                         dbRef.child(id).setValue(notification)
 
-//                        dbReference.child("Notifications").push().setValue(
-//                            mapOf(
-//                                "message" to message,
-//                                "pill" to pillName,
-//                                "date" to currentDate,
-//                                "pacient" to uid as Any,
-//                                "id" to id as Any
-//                            )
-//                        )
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Log.d("git", "git")
@@ -912,10 +789,50 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
             })
     }
 
+    private fun sendNotification(pillAmount: Int, pillName: String?) {
+        val intent = Intent(context, UserScheduleActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val requestCode = 0
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE,
+        )
 
+        var messageBody = ""
+        if (pillAmount == 0) {
+            messageBody = "Uwaga, tabletki w opakowaniu dla leku $pillName skończyły się!"
+        } else {
+            messageBody = "Uwaga, w opakowaniu dla leku $pillName zostało $pillAmount sztuk tabletek!"
+        }
 
+        val channelId = "My channel ID"
+        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notificationBuilder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_stat_notification)
+            .setContentTitle("Przypomnienie")
+            .setContentText(messageBody)
+            .setAutoCancel(true)
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent)
 
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Channel human readable title",
+                NotificationManager.IMPORTANCE_DEFAULT,
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notificationId = 0
+        notificationManager.notify(notificationId, notificationBuilder.build())
+    }
 
     override fun getItemCount(): Int = pillList?.size ?: 0
 
@@ -928,7 +845,5 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
         val checkBox2: CheckBox = itemView.findViewById(R.id.cbDone2)
         val checkBox3: CheckBox = itemView.findViewById(R.id.cbDone3)
     }
-
-
 
 }

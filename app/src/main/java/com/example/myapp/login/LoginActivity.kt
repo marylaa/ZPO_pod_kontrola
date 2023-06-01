@@ -35,19 +35,21 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
         loginButton?.setOnClickListener{ logInRegisteredUser() }
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.d("TOKEN", "Fetching FCM registration token failed")
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            // Log and toast
-            Log.d("TOKEN POZNIEJ", token)
-            Toast.makeText(baseContext, "Twój token: " + token, Toast.LENGTH_SHORT).show()
-        })
+        //////////////////////////////////////////////////////////////////////////////////////////
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.d("TOKEN", "Fetching FCM registration token failed")
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            val token = task.result
+//
+//            // Log and toast
+//            Log.d("TOKEN POZNIEJ", token)
+//            Toast.makeText(baseContext, "Twój token: " + token, Toast.LENGTH_SHORT).show()
+//        })
+        ///////////////////////////////////////////////////////////////////////////////////////////
     }
 
     override fun onClick(view: View?) {
