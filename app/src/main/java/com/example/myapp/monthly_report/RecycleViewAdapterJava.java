@@ -50,49 +50,46 @@
 //        holder.myView.setBackgroundColor(color);
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", new Locale("pl"));
 //        String formattedDate = date.format(formatter);
-//
-////        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM");
-////        String formattedDate = date.format(formatter);
-//        holder.myTextView.setText(formattedDate);
-//    }
-//
-//
-//    // total number of rows
-//    @Override
-//    public int getItemCount() {
-//        return mdate.size();
-//    }
-//
-//    // stores and recycles views as they are scrolled off screen
-//    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-//        View myView;
-//        TextView myTextView;
-//
-//        ViewHolder(View itemView) {
-//            super(itemView);
-//            myView = itemView.findViewById(R.id.colorView);
-//            myTextView = itemView.findViewById(R.id.tvAnimalName);
-//            itemView.setOnClickListener(this);
-//        }
-//
-//        @Override
-//        public void onClick(View view) {
-//            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-//        }
-//    }
-//
-//    // convenience method for getting data at click position
-//    public String getItem(int id) {
-//        return String.valueOf(mdate.get(id));
-//    }
-//
-//    // allows clicks events to be caught
-//    public void setClickListener(ItemClickListener itemClickListener) {
-//        this.mClickListener = itemClickListener;
-//    }
-//
-//    // parent activity will implement this method to respond to click events
-//    public interface ItemClickListener {
-//        void onItemClick(View view, int position);
-//    }
-//}
+        holder.myTextView.setText(formattedDate);
+    }
+
+
+    // total number of rows
+    @Override
+    public int getItemCount() {
+        return mdate.size();
+    }
+
+    // stores and recycles views as they are scrolled off screen
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        View myView;
+        TextView myTextView;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            myView = itemView.findViewById(R.id.colorView);
+            myTextView = itemView.findViewById(R.id.tvAnimalName);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+        }
+    }
+
+    // convenience method for getting data at click position
+    public String getItem(int id) {
+        return String.valueOf(mdate.get(id));
+    }
+
+    // allows clicks events to be caught
+    public void setClickListener(ItemClickListener itemClickListener) {
+        this.mClickListener = itemClickListener;
+    }
+
+    // parent activity will implement this method to respond to click events
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
+    }
+}

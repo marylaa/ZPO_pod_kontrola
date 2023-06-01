@@ -7,12 +7,15 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.example.myapp.R
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
@@ -31,6 +34,22 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         loginButton = findViewById(R.id.loginButton)
 
         loginButton?.setOnClickListener{ logInRegisteredUser() }
+
+        //////////////////////////////////////////////////////////////////////////////////////////
+//        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+//            if (!task.isSuccessful) {
+//                Log.d("TOKEN", "Fetching FCM registration token failed")
+//                return@OnCompleteListener
+//            }
+//
+//            // Get new FCM registration token
+//            val token = task.result
+//
+//            // Log and toast
+//            Log.d("TOKEN POZNIEJ", token)
+//            Toast.makeText(baseContext, "Twój token: " + token, Toast.LENGTH_SHORT).show()
+//        })
+        ///////////////////////////////////////////////////////////////////////////////////////////
     }
 
     override fun onClick(view: View?) {
@@ -57,7 +76,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_password),true)
                 false
             } else -> {
-                showErrorSnackBar("Wprowadzono poprawne dane",false)
+                showErrorSnackBar("Wprowadzono poprawnie dane",false)
                 true
             }
         }
@@ -69,17 +88,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             val email = inputEmail?.text.toString().trim(){ it<= ' '}
             val password = inputPassword?.text.toString().trim(){ it<= ' '}
 
-            //Log-in using FirebaseAuth
-
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener{task ->
 
                     if(task.isSuccessful){
-                        // Call goToNextActivity() function as a suspend function inside a coroutine scope
-                        lifecycleScope.launch {
-                            goToNextActivity()
-                            finish()
-                        }
+                        showErrorSnackBar("Zalogowano pomyślnie",false)
+                        goToNextActivity()
                     } else{
                         showErrorSnackBar(task.exception!!.message.toString(),true)
                     }
@@ -87,7 +101,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    private suspend fun goToNextActivity() {
+    private fun goToNextActivity() {
         val user = FirebaseAuth.getInstance().currentUser;
 
         dbRef = FirebaseDatabase.getInstance().getReference("Users").child(user?.uid.toString())
