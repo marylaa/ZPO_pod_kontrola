@@ -1,4 +1,3 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FF0000" /> <!-- Kolor wypełnienia koła -->
     <corners android:radius="250dp" /> <!-- Promień koła, możesz dostosować wartość według swoich preferencji -->
 </shape>

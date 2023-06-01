@@ -91,5 +91,4 @@ class MainNotifications : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
 }

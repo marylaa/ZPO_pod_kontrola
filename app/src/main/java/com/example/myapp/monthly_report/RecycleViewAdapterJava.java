@@ -1,14 +1,21 @@
 package com.example.myapp.monthly_report;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.style.DrawableMarginSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp.R;
@@ -17,6 +24,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RecycleViewAdapterJava extends RecyclerView.Adapter<RecycleViewAdapterJava.ViewHolder> {
 
@@ -47,7 +56,8 @@ public class RecycleViewAdapterJava extends RecyclerView.Adapter<RecycleViewAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int color = mViewColors.get(position);
         LocalDate date = mdate.get(position);
-        holder.myView.setBackgroundColor(color);
+        holder.myView.setColorFilter(color);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM", new Locale("pl"));
         String formattedDate = date.format(formatter);
 
@@ -65,7 +75,7 @@ public class RecycleViewAdapterJava extends RecyclerView.Adapter<RecycleViewAdap
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        View myView;
+        ImageView myView;
         TextView myTextView;
 
         ViewHolder(View itemView) {
