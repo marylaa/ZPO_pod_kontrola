@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.R
 import com.example.myapp.login.BaseActivity
@@ -91,6 +92,7 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
                     if (validateDetails()) {
                         ifUserExist().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
+                                Toast.makeText(this@DoctorAddPatientsActivity, "Pacjent został dodany", Toast.LENGTH_SHORT).show()
                                 if (task.result) {
                                     val intent = Intent(this, DoctorSettingsActivity::class.java)
                                     startActivity(intent)
@@ -148,6 +150,5 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
         val new = PatientDoctorModel(FirebaseAuth.getInstance().uid.toString(), patientId)
 
         dbRef.child(UUID.randomUUID().toString()).setValue(new)
-        showErrorSnackBar("Pomyślnie dodano pacjenta", false)
     }
 }

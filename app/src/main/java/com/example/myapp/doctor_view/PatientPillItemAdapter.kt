@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.example.myapp.pills_list.PillModel
@@ -44,6 +45,7 @@ class PatientPillItemAdapter(private val pillList: MutableList<PillModel>?): Rec
                             if (pillId != null) {
                                 val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
                                 dbRef.removeValue()
+                                Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
                             }
                             true
                         }

@@ -110,13 +110,13 @@
 
     <ImageButton
         android:id="@+id/healthAlertImage"
-        android:layout_width="88dp"
-        android:layout_height="94dp"
-        android:layout_marginRight="1dp"
-        android:background="@drawable/alert_foreground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/baseline_gpp_maybe_24"
         android:backgroundTint="@color/red"
-        android:scaleX="0.6"
-        android:scaleY="0.6"
+        android:scaleX="1.4"
+        android:scaleY="1.4"
         app:layout_constraintBottom_toBottomOf="@+id/healthAlert"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/healthAlert" />

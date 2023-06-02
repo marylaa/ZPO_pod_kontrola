@@ -70,7 +70,7 @@ class MainNotifications : AppCompatActivity(), View.OnClickListener {
                     val notification = snapshot.getValue(NotificationModelAlert::class.java)
                     messagesList.add(notification!!)
                 }
-                newRecyclerView.adapter = NotificationsAdapter(messagesList)
+                newRecyclerView.adapter = NotificationsAdapter(messagesList, this@MainNotifications)
             }
 
             override fun onCancelled(error: DatabaseError) {

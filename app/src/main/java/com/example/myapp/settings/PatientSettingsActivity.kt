@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -43,8 +44,6 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
         val notifications = findViewById<ImageButton>(R.id.showNotifications)
         notifications.setOnClickListener(this)
-
-
 
         val healthAlertButton = findViewById<ImageButton>(R.id.healthAlertImage)
         healthAlertButton.setOnClickListener {
@@ -120,7 +119,6 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
 
-
         val id = UUID.randomUUID().toString()
 
         var firstName = ""
@@ -156,7 +154,7 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 dbRef.child(id).setValue(notification)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Log.d("git", "git")
+                            Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
                         } else {
                             val exception = task.exception
                             Log.e("Error", exception?.message ?: "Unknown error")

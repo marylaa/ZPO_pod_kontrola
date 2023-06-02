@@ -96,6 +96,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
         saveButton?.setOnClickListener{
             if (validatePillDetails()) {
                 savePill()
+                Toast.makeText(this@DoctorEditPillActivity, "Tabletka została edytowana", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

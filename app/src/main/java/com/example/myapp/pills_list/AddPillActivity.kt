@@ -97,6 +97,7 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         saveButton?.setOnClickListener {
             if (validatePillDetails()) {
                 savePill()
+                Toast.makeText(this@AddPillActivity, "Tabletka została dodana", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

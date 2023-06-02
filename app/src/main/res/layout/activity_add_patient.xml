@@ -26,7 +26,7 @@
             android:scaleY="2" />
 
         <TextView
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
@@ -36,17 +36,31 @@
             android:textSize="27sp" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/accountImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/baseline_account_circle_24"
+        android:scaleX="3"
+        android:layout_marginTop="70dp"
+        android:scaleY="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
     <TextView
         android:id="@+id/textViewFirstName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Podaj imię"
+        android:layout_marginTop="60dp"
+        android:textAlignment="center"
         android:padding="5dp"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/accountImage" />
 
     <EditText
         android:id="@+id/patientFirstName"
@@ -54,10 +68,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:hint="Imię pacjenta"
+        android:textSize="14sp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewFirstName" />
@@ -78,9 +94,10 @@
         android:layout_height="wrap_content"
         android:text="Podaj nazwisko"
         android:padding="5dp"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
@@ -90,10 +107,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:hint="Nazwisko pacjenta"
+        android:textAlignment="center"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewLastName" />
@@ -115,8 +134,9 @@
         android:layout_height="wrap_content"
         android:text="Podaj email"
         android:padding="5dp"
-        android:textSize="22sp"
+        android:textSize="18sp"
         android:textColor="@color/black"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -127,10 +147,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
-        android:padding="10dp"
+        android:padding="8dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:hint="Email pacjenta"
+        android:textSize="14sp"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
