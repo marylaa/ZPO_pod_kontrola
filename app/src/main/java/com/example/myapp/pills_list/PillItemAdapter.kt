@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
@@ -27,13 +28,9 @@ import java.util.*
 class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val context: Context) :
     RecyclerView.Adapter<PillItemAdapter.PillItemViewHolder>() {
 
-    private var isUpdateExecuted = false // Dodana zmienna
     private var pillId: String = ""
     private var counter: Int = 1
-    private var pillName: String = ""
     private lateinit var dbRef: DatabaseReference
-    private var availabilityPill: String = ""
-    private var basicAvailability: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PillItemViewHolder {
         val itemView =
@@ -75,7 +72,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
             holder.checkBox1.isChecked = timesADay[0][1] as Boolean
             holder.checkBox1.setOnCheckedChangeListener { _, isChecked ->
                 currentItem.time_list!![0][1] = isChecked
-                //Log.d("tutaj", "tutaj")
 
                 if (isChecked) {
                     val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -85,7 +81,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                     var newAvailability = 0
                     var oldAvailability = 0
-                    //Log.d("old av", oldAvailability.toString())
 
                     pillId = currentItem.id!!
 
@@ -99,22 +94,16 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                 val pillModel = snapshot.getValue(PillModel::class.java)
                                 if (pillModel!!.id == pillId) {
                                     oldAvailability = pillModel.availability!!
-                                    //Log.d("old av", oldAvailability.toString())
                                     break;
                                 }
                             }
 
-                            //Log.d("old av", oldAvailability.toString())
-                            //Log.d("pill",pillId )
                             newAvailability = oldAvailability?.minus(1)!!
-
-                            //Log.d("new av minus", newAvailability.toString())
 
                             if (newAvailability < 0) {
                                 newAvailability = 0
                             }
                             if (newAvailability <= 5) {
-                                //Log.d("mnijesze od 5", newAvailability.toString())
                                 AvailabilityAlert(currentItem.name)
                                 sendNotification(newAvailability, currentItem.name)
                             }
@@ -142,18 +131,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                         )
                     )
-                    /////////////////////////////////////////////////////////////////////////////
-//                            .addOnCompleteListener { task ->
-//                                if (task.isSuccessful) {
-//                                    //Log.d("git", "git")
-//                                    val intent = Intent(context, UserScheduleActivity::class.java)
-//                                    context.startActivity(intent)
-//                                    notifyDataSetChanged()
-//
-//                                } else {
-//                                    val exception = task.exception
-//                                }
-//                            }
                 }
 
                 if (!isChecked) {
@@ -181,7 +158,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
 
                                     val query = dbRef.orderByChild("pacient").equalTo(userId)
-//                                    query.addValueEventListener(object : ValueEventListener {
                                     query.addListenerForSingleValueEvent(object :
                                         ValueEventListener {
                                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -196,12 +172,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                 }
                                             }
 
-
-                                            //Log.d("old av", oldAvailability.toString())
-                                            //Log.d("pill",pillId )
-
                                             newAvailability = oldAvailability?.plus(1)!!
-                                            //Log.d("new av plus", newAvailability.toString())
 
                                             if (newAvailability < 0) {
                                                 newAvailability = 0
@@ -218,10 +189,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                             updateFields["availability"] = newAvailability
 
                                             ref.child(pillId).updateChildren(updateFields)
-
-                                            //////////////////////////////////////////////////////////////////
-//                                            val intent = Intent(context, UserScheduleActivity::class.java)
-//                                            context.startActivity(intent)
                                             notifyDataSetChanged()
 
                                         }
@@ -255,7 +222,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                         var newAvailability = 0
                         var oldAvailability = 0
-                        //.d("old av", oldAvailability.toString())
 
                         pillId = currentItem.id!!
                         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
@@ -273,17 +239,12 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                     }
                                 }
 
-                                //Log.d("old av", oldAvailability.toString())
-                                //Log.d("pill",pillId )
                                 newAvailability = oldAvailability?.minus(1)!!
-
-                                //Log.d("new av minus", newAvailability.toString())
 
                                 if (newAvailability < 0) {
                                     newAvailability = 0
                                 }
                                 if (newAvailability <= 5) {
-                                    //Log.d("mnijesze od 5", newAvailability.toString())
                                     AvailabilityAlert(currentItem.name)
                                     sendNotification(newAvailability, currentItem.name)
                                 }
@@ -311,13 +272,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-////////////////////////////////////////////////////////////////////////////////////////////////
-//                                        Log.d("git", "git")
-//                                        val intent = Intent(context, UserScheduleActivity::class.java)
-//                                        context.startActivity(intent)
                                     notifyDataSetChanged()
-                                } else {
-                                    val exception = task.exception
                                 }
                             }
                     }
@@ -346,7 +301,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                         val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
                                         val query = dbRef.orderByChild("pacient").equalTo(userId)
-//                                    query.addValueEventListener(object : ValueEventListener {
                                         query.addListenerForSingleValueEvent(object :
                                             ValueEventListener {
                                             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -358,12 +312,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                         break;
                                                     }
                                                 }
-//                                                Log.d("old av", oldAvailability.toString())
-//                                                Log.d("pill",pillId )
 
                                                 newAvailability = oldAvailability?.plus(1)!!
-
-                                                //Log.d("new av plus", newAvailability.toString())
 
                                                 if (newAvailability < 0) {
                                                     newAvailability = 0
@@ -384,9 +334,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                 updateFields["availability"] = newAvailability
 
                                                 ref.child(pillId).updateChildren(updateFields)
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                val intent = Intent(context, UserScheduleActivity::class.java)
-//                                                context.startActivity(intent)
                                                 notifyDataSetChanged()
 
                                             }
@@ -436,18 +383,12 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                     }
                                 }
 
-//                                    Log.d("old av", oldAvailability.toString())
-//                                    Log.d("pill",pillId )
-
                                 newAvailability = oldAvailability?.minus(1)!!
-
-                                //Log.d("new av minus", newAvailability.toString())
 
                                 if (newAvailability < 0) {
                                     newAvailability = 0
                                 }
                                 if (newAvailability <= 5) {
-                                    //Log.d("mnijesze od 5", newAvailability.toString())
                                     AvailabilityAlert(currentItem.name)
                                     sendNotification(newAvailability, currentItem.name)
                                 }
@@ -475,12 +416,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                        Log.d("git", "git")
-//                                        val intent = Intent(context, UserScheduleActivity::class.java)
-//                                        context.startActivity(intent)
                                     notifyDataSetChanged()
-//                                    changeDataBase("minus")
                                 }
                             }
                     }
@@ -510,7 +446,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
 
                                         val query = dbRef.orderByChild("pacient").equalTo(userId)
-//                                    query.addValueEventListener(object : ValueEventListener {
                                         query.addListenerForSingleValueEvent(object :
                                             ValueEventListener {
                                             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -523,12 +458,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                     }
                                                 }
 
-//                                                Log.d("old av", oldAvailability.toString())
-//                                                Log.d("pill",pillId )
-
                                                 newAvailability = oldAvailability?.plus(1)!!
-
-                                                //Log.d("new av plus", newAvailability.toString())
 
                                                 if (newAvailability < 0) {
                                                     newAvailability = 0
@@ -549,9 +479,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                                                 updateFields["availability"] = newAvailability
 
                                                 ref.child(pillId).updateChildren(updateFields)
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                val intent = Intent(context, UserScheduleActivity::class.java)
-//                                                context.startActivity(intent)
                                                 notifyDataSetChanged()
 
                                             }
@@ -589,13 +516,23 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                             true
                         }
                         "Usuń lek" -> {
-                            val pillModel = pillList?.get(position)
-                            val pillId = pillModel?.id
-                            if (pillId != null) {
-                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-                                    .child(pillId)
-                                dbRef.removeValue()
-                            }
+                            val alertDialog = AlertDialog.Builder(context)
+                                .setTitle("Potwierdzenie")
+                                .setMessage("Czy na pewno chcesz usunąć lek?")
+                                .setPositiveButton("Tak") { _, _ ->
+                                    val pillModel = pillList?.get(position)
+                                    val pillId = pillModel?.id
+                                    if (pillId != null) {
+                                        val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
+                                        dbRef.removeValue()
+                                        Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
+                                    }
+                                }.setNegativeButton("Anuluj") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .create()
+
+                            alertDialog.show()
                             true
                         }
                         else -> false
@@ -617,8 +554,6 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
         val user = FirebaseAuth.getInstance().currentUser
         val uid = user?.uid
         val id = UUID.randomUUID().toString()
-
-        //Log.d("alert to pilll name", pillName)
 
         val message = "Uwaga, kończą się tabletki w opakowaniu dla leku $pillName!"
 

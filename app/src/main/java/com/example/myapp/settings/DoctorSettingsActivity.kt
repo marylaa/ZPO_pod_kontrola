@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.patients_list.DoctorAddPatientsActivity
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
+import com.example.myapp.patient_notifications.MainNotificationsDoctor
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -25,6 +26,12 @@ class DoctorSettingsActivity : AppCompatActivity() {
 
         logoutButton = findViewById(R.id.logoutButton)
         logoutButton?.setOnClickListener { logoutUser() }
+
+        val messagesButton = findViewById<ImageButton>(R.id.showNotifications)
+        messagesButton?.setOnClickListener {
+            val intent = Intent(this@DoctorSettingsActivity, MainNotificationsDoctor::class.java)
+            startActivity(intent)
+        }
 
         val addPatientButton = findViewById<ImageButton>(R.id.patientButton)
         addPatientButton.setOnClickListener {

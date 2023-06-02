@@ -192,14 +192,11 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         var exists = false
         val pacientRef = FirebaseDatabase.getInstance().getReference("Patients").orderByChild("patient").equalTo(patientId)
         return pacientRef.get().continueWith { task ->
-            Log.d("WCHODZI", task.exception.toString())
             if (task.isSuccessful) {
-                Log.d("SUCC", doctorsList.toString())
                 val snapshot = task.result.children
                 for (snap in snapshot) {
                     val doctor = snap.getValue(PatientDoctorModel::class.java)
                     doctorsList.add(doctor!!.doctor)
-                    Log.d("AAA", doctorsList.toString())
                     exists = true
                 }
             }

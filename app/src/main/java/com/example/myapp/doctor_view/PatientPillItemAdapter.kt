@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.example.myapp.pills_list.PillModel
@@ -40,13 +41,23 @@ class PatientPillItemAdapter(private val pillList: MutableList<PillModel>?): Rec
                             true
                         }
                         "Usuń lek" -> {
-                            val pillModel = pillList?.get(position)
-                            val pillId = pillModel?.id
-                            if (pillId != null) {
-                                val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
-                                dbRef.removeValue()
-                                Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
-                            }
+                            val alertDialog = AlertDialog.Builder(context)
+                                .setTitle("Potwierdzenie")
+                                .setMessage("Czy na pewno chcesz usunąć lek?")
+                                .setPositiveButton("Tak") { _, _ ->
+                                    val pillModel = pillList?.get(position)
+                                    val pillId = pillModel?.id
+                                    if (pillId != null) {
+                                        val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
+                                        dbRef.removeValue()
+                                        Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
+                                    }
+                                }.setNegativeButton("Anuluj") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .create()
+
+                            alertDialog.show()
                             true
                         }
                         else -> false
