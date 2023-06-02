@@ -33,6 +33,9 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_pills_schedule)
 
+        val id = FirebaseAuth.getInstance().currentUser!!.uid
+        Log.d("CCCCCCCCCCCCCCCCC", id)
+
         val addButton = findViewById<Button>(R.id.addPill)
         addButton.setOnClickListener(this)
 

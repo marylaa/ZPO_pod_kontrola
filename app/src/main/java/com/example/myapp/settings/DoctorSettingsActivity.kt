@@ -1,7 +1,9 @@
 package com.example.myapp.settings
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
@@ -12,7 +14,8 @@ import com.example.myapp.patient_notifications.MainNotificationsDoctor
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.ktx.Firebase
 
 class DoctorSettingsActivity : AppCompatActivity() {
 
@@ -42,7 +45,6 @@ class DoctorSettingsActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
         navView.menu.findItem(R.id.navigation_settings).isChecked = true
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {

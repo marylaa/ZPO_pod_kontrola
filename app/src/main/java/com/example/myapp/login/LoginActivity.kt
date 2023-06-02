@@ -110,9 +110,15 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 if(dataSnapshot.child("userType").value.toString().equals("Pacjent")) {
                     val intent = Intent(this@LoginActivity, UserScheduleActivity::class.java)
                     startActivity(intent)
+
+                    val id = FirebaseAuth.getInstance().currentUser!!.uid
+                    Log.d("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", id)
                 } else {
                     val intent = Intent(this@LoginActivity, ViewPatientsActivity::class.java)
                     startActivity(intent)
+
+                    val id = FirebaseAuth.getInstance().currentUser!!.uid
+                    Log.d("BBBBBBBBBBBBBBBBBBBB", id)
                 }
             }
             override fun onCancelled(error: DatabaseError) {
