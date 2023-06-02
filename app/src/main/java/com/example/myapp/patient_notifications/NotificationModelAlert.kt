@@ -5,5 +5,6 @@ data class NotificationModelAlert (
     var pill: String = "",
     var date: String = "",
     var recipient: String = "",
-    var id: String = ""
+    var id: String = "",
+    var seen: Boolean = false
 )

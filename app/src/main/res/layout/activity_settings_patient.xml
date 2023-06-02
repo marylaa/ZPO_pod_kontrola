@@ -26,7 +26,7 @@
         android:paddingLeft="10dp"
         android:text="Wyloguj"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/healthAlert" />
@@ -51,7 +51,7 @@
         android:paddingLeft="10dp"
         android:text="Wszystkie leki"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/showPills"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
@@ -77,7 +77,7 @@
         android:paddingLeft="10dp"
         android:text="Powiadomienia"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@+id/pacientPills"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="1dp" />
@@ -103,7 +103,7 @@
         android:paddingLeft="10dp"
         android:text="Zgłoś pogorszenie zdrowia"
         android:textColor="@color/red"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@+id/notifications"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="1dp" />

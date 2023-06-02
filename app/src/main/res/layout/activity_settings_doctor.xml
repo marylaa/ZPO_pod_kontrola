@@ -26,7 +26,7 @@
         android:gravity="center_vertical"
         android:text="Dodaj pacjenta"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/patientButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
@@ -44,6 +44,32 @@
         app:layout_constraintTop_toBottomOf="@+id/settingsText" />
 
     <TextView
+        android:id="@+id/notifications"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Powiadomienia"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintTop_toBottomOf="@+id/textPatient"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <ImageButton
+        android:id="@+id/showNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/baseline_announcement_24"
+        android:backgroundTint="@color/black"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        app:layout_constraintBottom_toBottomOf="@+id/notifications"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/notifications" />
+
+    <TextView
         android:id="@+id/textLogout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -51,10 +77,10 @@
         android:gravity="center_vertical"
         android:text="Wyloguj"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/logoutButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPatient" />
+        app:layout_constraintTop_toBottomOf="@+id/notifications" />
 
     <ImageButton
         android:id="@+id/logoutButton"
@@ -66,7 +92,7 @@
         android:scaleY="1.3"
         app:layout_constraintBottom_toBottomOf="@+id/textLogout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPatient" />
+        app:layout_constraintTop_toBottomOf="@+id/notifications" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"

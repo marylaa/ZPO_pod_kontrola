@@ -62,7 +62,7 @@ class MainNotifications : AppCompatActivity(), View.OnClickListener {
 
         val messagesList: MutableList<NotificationModelAlert> = mutableListOf()
 
-        val query = dbRef.orderByChild("pacient").equalTo(userId)
+        val query = dbRef.orderByChild("recipient").equalTo(userId)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 messagesList.clear()

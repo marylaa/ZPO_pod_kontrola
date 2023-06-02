@@ -98,11 +98,9 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val today = current.format(formatter)
 
-//        val pillList: MutableList<PillModel> = mutableListOf()
-
         val query = dbRef.orderByChild("pacient").equalTo(uid)
-//        query.addValueEventListener(object : ValueEventListener {
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
+        query.addValueEventListener(object : ValueEventListener {
+        //query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
                 for (snapshot in dataSnapshot.children) {
