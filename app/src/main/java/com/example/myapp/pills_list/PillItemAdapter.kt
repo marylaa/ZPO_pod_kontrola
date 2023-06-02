@@ -1,6 +1,5 @@
 package com.example.myapp.pills_list
 
-import NotificationModel
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,6 +17,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
+import com.example.myapp.patient_notifications.NotificationModelAlert
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.time.LocalDate
@@ -620,8 +620,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                     if (shouldSendNotification) {
                         // Wyślij powiadomienie
-                        var notification = NotificationModel(message,pillName,currentDate,
-                            uid.toString(),id)
+                        var notification = NotificationModelAlert(message,pillName,currentDate, uid.toString(),id)
                         dbRef.child(id).setValue(notification)
                     }
                 }

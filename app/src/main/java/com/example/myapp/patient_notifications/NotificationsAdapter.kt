@@ -1,6 +1,5 @@
 package com.example.myapp.patient_notifications
 
-import NotificationModel
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import com.example.myapp.R
 import com.google.firebase.database.FirebaseDatabase
 
 
-class NotificationsAdapter(private val messagesList: MutableList<NotificationModel>) : RecyclerView.Adapter<NotificationsAdapter.ViewHolder>() {
+class NotificationsAdapter(private val messagesList: MutableList<NotificationModelAlert>) : RecyclerView.Adapter<NotificationsAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView1 = itemView.findViewById<TextView>(R.id.messageDate)

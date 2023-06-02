@@ -1,7 +1,5 @@
 package com.example.myapp.patient_notifications
 
-import NotificationModel
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
-import com.example.myapp.pills_list.PillModel
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -63,14 +60,14 @@ class MainNotifications : AppCompatActivity(), View.OnClickListener {
         dbRef = FirebaseDatabase.getInstance().getReference("Notifications")
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val messagesList: MutableList<NotificationModel> = mutableListOf()
+        val messagesList: MutableList<NotificationModelAlert> = mutableListOf()
 
         val query = dbRef.orderByChild("pacient").equalTo(userId)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 messagesList.clear()
                 for (snapshot in dataSnapshot.children) {
-                    val notification = snapshot.getValue(NotificationModel::class.java)
+                    val notification = snapshot.getValue(NotificationModelAlert::class.java)
                     messagesList.add(notification!!)
                 }
                 newRecyclerView.adapter = NotificationsAdapter(messagesList)
