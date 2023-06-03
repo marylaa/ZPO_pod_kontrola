@@ -17,7 +17,7 @@ import com.example.myapp.login.UserModel
 import com.example.myapp.pills_list.EditPillActivity
 import com.google.firebase.database.FirebaseDatabase
 
-class PatientItemAdapter(private val patientList: MutableList<UserModel>?) :
+class PatientItemAdapter(private val patientList: MutableList<UserModel>?, private val patientDoctorList: MutableList<PatientDoctorModel>?) :
     RecyclerView.Adapter<PatientItemAdapter.PatientItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PatientItemViewHolder {
@@ -27,6 +27,7 @@ class PatientItemAdapter(private val patientList: MutableList<UserModel>?) :
 
     override fun onBindViewHolder(holder: PatientItemViewHolder, position: Int) {
         val currentItem = patientList!![position]
+        val currentPatient = patientDoctorList!![position]
         holder.patientTitle.text = currentItem.firstName + " " + currentItem.lastName
 
         holder.patientId = currentItem.id
@@ -36,53 +37,38 @@ class PatientItemAdapter(private val patientList: MutableList<UserModel>?) :
             holder.itemView.context.startActivity(intent)
         }
 
-//        holder.itemView.apply {
-//            val pillActionsButton = findViewById<ImageButton>(R.id.more)
-//            pillActionsButton.setOnClickListener {
-//                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
-//
-//                popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
-//                popupMenu.setOnMenuItemClickListener { menuItem ->
-//                    when (menuItem.title) {
-//                        "Edytuj lek" -> {
-//                            val intent =
-//                                Intent(holder.itemView.context, EditPillActivity::class.java)
-//                            intent.putExtra("pillId", currentItem.id)
-//                            holder.itemView.context.startActivity(intent)
-//                            true
-//                        }
-//                        "Usuń lek" -> {
-//                            val alertDialog = AlertDialog.Builder(context)
-//                                .setTitle("Potwierdzenie")
-//                                .setMessage("Czy na pewno chcesz usunąć lek?")
-//                                .setPositiveButton("Tak") { _, _ ->
-//                                    val pillModel = pillList?.get(position)
-//                                    val pillId = pillModel?.id
-//                                    if (pillId != null) {
-//                                        val dbRef =
-//                                            FirebaseDatabase.getInstance().getReference("Pills")
-//                                                .child(pillId)
-//                                        dbRef.removeValue()
-//                                        Toast.makeText(
-//                                            context,
-//                                            "Tabletka została usunięta",
-//                                            Toast.LENGTH_SHORT
-//                                        ).show()
-//                                    }
-//                                }.setNegativeButton("Anuluj") { dialog, _ ->
-//                                    dialog.dismiss()
-//                                }
-//                                .create()
-//
-//                            alertDialog.show()
-//                            true
-//                        }
-//                        else -> false
-//                    }
-//                }
-//                popupMenu.show()
-//            }
-//        }
+        holder.itemView.apply {
+            val pillActionsButton = findViewById<ImageButton>(R.id.more)
+            pillActionsButton.setOnClickListener {
+                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
+
+                popupMenu.menuInflater.inflate(R.menu.patient_menu, popupMenu.menu)
+                popupMenu.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.title) {
+                        "Usuń pacjenta" -> {
+                            val alertDialog = AlertDialog.Builder(context)
+                                .setTitle("Potwierdzenie")
+                                .setMessage("Czy na pewno chcesz usunąć pacjenta?")
+                                .setPositiveButton("Tak") { _, _ ->
+                                    if (holder.patientId != null) {
+                                        val dbRef = FirebaseDatabase.getInstance().getReference("Patients").child(currentPatient.id)
+                                        dbRef.removeValue()
+                                        Toast.makeText(context, "Pacjent został usunięty", Toast.LENGTH_SHORT).show()
+                                    }
+                                }.setNegativeButton("Anuluj") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .create()
+
+                            alertDialog.show()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                popupMenu.show()
+            }
+        }
     }
 
     override fun getItemCount(): Int = patientList!!.size

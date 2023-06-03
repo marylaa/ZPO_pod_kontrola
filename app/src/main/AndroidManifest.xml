@@ -186,14 +186,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".patient_notifications.MainNotifications"
+            android:name=".notifications.MainNotifications"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".patient_notifications.MainNotificationsDoctor"
+            android:name=".notifications.MainNotificationsDoctor"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

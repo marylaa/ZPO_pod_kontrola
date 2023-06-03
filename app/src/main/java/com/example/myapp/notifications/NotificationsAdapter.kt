@@ -1,4 +1,4 @@
-package com.example.myapp.patient_notifications
+package com.example.myapp.notifications
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 class NotificationsAdapter(

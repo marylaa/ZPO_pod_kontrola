@@ -11,12 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
-import com.example.myapp.patient_notifications.MainNotifications
+import com.example.myapp.notifications.MainNotifications
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
-import com.example.myapp.login.UserModel
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
-import com.example.myapp.patient_notifications.NotificationModelAlert
+import com.example.myapp.notifications.NotificationModelAlert
 import com.example.myapp.patients_list.PatientDoctorModel
 import com.example.myapp.pills_list.PatientAllPillsActivity
 import com.example.myapp.pills_list.UserScheduleActivity

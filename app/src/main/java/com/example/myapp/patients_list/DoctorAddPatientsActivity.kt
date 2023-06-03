@@ -147,8 +147,9 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
 
     private fun addToDatabase() {
         dbRef = FirebaseDatabase.getInstance().getReference("Patients")
-        val new = PatientDoctorModel(FirebaseAuth.getInstance().uid.toString(), patientId)
+        val id = UUID.randomUUID().toString()
+        val new = PatientDoctorModel(FirebaseAuth.getInstance().uid.toString(), patientId, id)
 
-        dbRef.child(UUID.randomUUID().toString()).setValue(new)
+        dbRef.child(id).setValue(new)
     }
 }

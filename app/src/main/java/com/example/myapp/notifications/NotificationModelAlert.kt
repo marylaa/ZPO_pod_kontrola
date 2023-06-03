@@ -1,4 +1,4 @@
-package com.example.myapp.patient_notifications
+package com.example.myapp.notifications
 
 data class NotificationModelAlert (
     var message: String = "",

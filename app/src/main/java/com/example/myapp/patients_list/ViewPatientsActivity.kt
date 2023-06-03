@@ -16,11 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.settings.DoctorSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.login.UserModel
-import com.example.myapp.patient_notifications.NotificationModelAlert
-import com.example.myapp.pills_list.PatientAllPillItemAdapter
-import com.example.myapp.pills_list.PillModel
+import com.example.myapp.notifications.NotificationModelAlert
 import com.example.myapp.pills_list.UserScheduleActivity
-import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -29,6 +26,7 @@ class ViewPatientsActivity : AppCompatActivity() {
 
     private lateinit var newRecyclerView: RecyclerView
     private var patientList: MutableList<UserModel> = mutableListOf()
+    private var patientDoctorsList: MutableList<PatientDoctorModel> = mutableListOf()
     private lateinit var userId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,11 +39,12 @@ class ViewPatientsActivity : AppCompatActivity() {
         newRecyclerView = findViewById(R.id.rvPacients)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
-        getDataFromDatabase().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                newRecyclerView.adapter = PatientItemAdapter(patientList)
-                }
-            }
+        getDataFromDatabase()
+//            .addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                newRecyclerView.adapter = PatientItemAdapter(patientList, patientDoctorsList)
+//                }
+//            }
 
         val navView: BottomNavigationView = findViewById(R.id.navigation_bar)
         navView.menu.findItem(R.id.navigation_home).isChecked = true
@@ -69,19 +68,48 @@ class ViewPatientsActivity : AppCompatActivity() {
         }
     }
 
-    private fun getDataFromDatabase(): Task<Unit> {
+//    private fun getDataFromDatabase(): Task<Unit> {
+//        val doctorRef = FirebaseDatabase.getInstance().getReference("Patients")
+//        val query = doctorRef.orderByChild("doctor").equalTo(userId)
+//        return query.get().continueWith { task ->
+//            if (task.isSuccessful) {
+//                patientList.clear()
+//                patientDoctorsList.clear()
+//
+//                for (snapshot in task.result.children) {
+//                    val patientDoctor = snapshot.getValue(PatientDoctorModel::class.java)
+//                    val patientId = snapshot.child("patient").value.toString()
+//                    patientDoctorsList.add(patientDoctor!!)
+//                    getPatientFromDatabase(patientId)
+//                }
+//            }
+//        }
+//    }
+
+    private fun getDataFromDatabase() {
         val doctorRef = FirebaseDatabase.getInstance().getReference("Patients")
         val query = doctorRef.orderByChild("doctor").equalTo(userId)
-        return query.get().continueWith { task ->
-            if (task.isSuccessful) {
-                patientList.clear()
 
-                for (snapshot in task.result.children) {
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                patientList.clear()
+                patientDoctorsList.clear()
+
+                for (snapshot in dataSnapshot.children) {
+                    val patientDoctor = snapshot.getValue(PatientDoctorModel::class.java)
                     val patientId = snapshot.child("patient").value.toString()
+                    patientDoctorsList.add(patientDoctor!!)
                     getPatientFromDatabase(patientId)
                 }
+                Log.e("PACJENCI", patientList.toString())
+                Log.e("RELACJE", patientDoctorsList.toString())
+                newRecyclerView.adapter = PatientItemAdapter(patientList, patientDoctorsList)
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+            }
+        })
     }
 
     private fun getPatientFromDatabase(patientId: String) {
@@ -103,7 +131,8 @@ class ViewPatientsActivity : AppCompatActivity() {
 
     private fun getNotificationsFromDatabase() {
         val dbRef = FirebaseDatabase.getInstance().getReference("Notifications").orderByChild("recipient").equalTo(userId)
-        dbRef.addValueEventListener(object : ValueEventListener {
+
+        dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (snapshot in dataSnapshot.children) {
                     val notification = snapshot.getValue(NotificationModelAlert::class.java)

@@ -1,21 +1,17 @@
 package com.example.myapp.settings
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.patients_list.DoctorAddPatientsActivity
 import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
-import com.example.myapp.patient_notifications.MainNotificationsDoctor
+import com.example.myapp.notifications.MainNotificationsDoctor
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.ktx.Firebase
 
 class DoctorSettingsActivity : AppCompatActivity() {
 
