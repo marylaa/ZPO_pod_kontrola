@@ -62,6 +62,7 @@ class MainNotificationsDoctor : AppCompatActivity(), View.OnClickListener {
 
         val query = dbRef.orderByChild("recipient").equalTo(userId)
         query.addValueEventListener(object : ValueEventListener {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 messagesList.clear()
                 for (snapshot in dataSnapshot.children) {
