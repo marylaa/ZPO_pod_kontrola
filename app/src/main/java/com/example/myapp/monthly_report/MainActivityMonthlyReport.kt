@@ -45,12 +45,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     private lateinit var binding: ActivityMainMonthlyBinding
     private lateinit var dbRef: DatabaseReference
     private val paths = arrayOf(
-        "Ciśnienie [mmHg]",
         "Aktywność [godz.]",
-        "Waga [kg]",
-        "Sen [godz.]",
+        "Ciśnienie [mmHg]",
         "Cukier [mmol/L]",
-        "Temp. ciała [oC]"
+        "Sen [godz.]",
+        "Temp. ciała [oC]",
+        "Waga [kg]"
+
     )
     private var pillList = ArrayList<String>()
     private var pillListAndCount = ArrayList<List<String>>()
@@ -349,12 +350,12 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     @RequiresApi(Build.VERSION_CODES.O)
     fun createDict(data: List<Any>, param: String, wantedMonth: String): MutableList<Entry> {
         val dictionary = mapOf(
-            "Ciśnienie [mmHg]" to 0,
-            "Aktywność [godz.]" to 1,
-            "Waga [kg]" to 2,
+            "Ciśnienie [mmHg]" to 1,
+            "Aktywność [godz.]" to 0,
+            "Waga [kg]" to 5,
             "Sen [godz.]" to 3,
             "Temp. ciała [oC]" to 4,
-            "Cukier [mmol/L]" to 5,
+            "Cukier [mmol/L]" to 2,
             "mood" to 6,
             "notes" to 7
         )
