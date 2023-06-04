@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
 
@@ -63,20 +64,74 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
             override fun onTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
             }
 
+
             override fun afterTextChanged(editable: Editable?) {
-//                val currentPos = viewHolder.adapterPosition
-                if (viewHolder.getAdapterPosition() != RecyclerView.NO_POSITION) {
-                    ValuesArray[position].setInput(editable.toString())
+                val context = viewHolder.itemView.context
+                if (viewHolder.adapterPosition != RecyclerView.NO_POSITION) {
+                    val currentPos = viewHolder.adapterPosition
+                    val inputValue = editable.toString().toIntOrNull()
 
-                }
-//                    ValuesArray.set(currentPos, editable.toString())
-//                if(isOnTextChange)
-                Log.d(TAG, editable.toString())
+                    var isValueChanged = false // Dodatkowa zmienna logiczna
 
-                for(elem in ValuesArray){
-                    Log.d(TAG,elem.printVal())
+                    when (currentPos) {
+                        1, 3 -> {
+                            val inputValue = editable.toString().toIntOrNull()
+                            if (inputValue != null && inputValue > 24) {
+                                Toast.makeText(context, "Wprowadź wartość mniejszą lub równą 24", Toast.LENGTH_SHORT).show()
+                                textView3.setText("24")
+                            } else {
+                                ValuesArray[currentPos].setInput(editable.toString())
+                            }
+                        }
+                        4 -> {
+                            val inputValue = editable.toString().toIntOrNull()
+                            val isDefaultValue = (inputValue == null || inputValue <= 45) // Sprawdzamy, czy wartość jest domyślna lub mniejsza niż 45
+                            if (isDefaultValue) {
+                                ValuesArray[currentPos].setInput(editable.toString())
+                            } else {
+                                Toast.makeText(context, "Wprowadź wartość mniejszą lub równą 45", Toast.LENGTH_SHORT).show()
+                                textView3.setText("30")
+                            }
+                        }
+                        0 -> {
+                            val inputValue = editable.toString().toIntOrNull()
+                            val isDefaultValue = (inputValue == null || (inputValue <= 200))
+                            if (isDefaultValue && !isValueChanged) { // Sprawdzamy, czy wartość domyślna nie została jeszcze zmieniona
+                                ValuesArray[currentPos].setInput(editable.toString())
+                            } else {
+                                Toast.makeText(context, "Wprowadź wartość pomiędzy 100 a 200", Toast.LENGTH_SHORT).show()
+                                textView3.setText("120")
+                                isValueChanged = true // Ustawiamy flagę isValueChanged na true po wprowadzeniu niepoprawnej wartości
+                            }
+                        }
+                        5 -> {
+                            val inputValue = editable.toString().toIntOrNull()
+                            val isDefaultValue = (inputValue == null || (inputValue <= 150))
+                            if (isDefaultValue) {
+                                ValuesArray[currentPos].setInput(editable.toString())
+                            } else {
+                                Toast.makeText(context, "Wprowadź wartość pomiędzy 50 a 150", Toast.LENGTH_SHORT).show()
+                                textView3.setText("80")
+                            }
+                        }
+                        else -> {
+                            ValuesArray[currentPos].setInput(editable.toString())
+                        }
+                    }
+
+
+
+
+
+                    Log.d(TAG, editable.toString())
+
+                    for (elem in ValuesArray) {
+                        Log.d(TAG, elem.printVal())
+                    }
                 }
             }
+
+
 
 
 
