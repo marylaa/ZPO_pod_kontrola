@@ -126,6 +126,8 @@
         </activity>
         <activity
             android:name=".report.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
