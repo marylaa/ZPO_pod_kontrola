@@ -269,6 +269,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         val elementCountMap = mutableMapOf<Any, Int>()
 
+
         for (element in daysInDataBase) {
             val numberOfElems = elementCountMap[element]
             if (numberOfElems != null) {

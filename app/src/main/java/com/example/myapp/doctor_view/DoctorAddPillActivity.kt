@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
 import com.example.myapp.R
+import com.example.myapp.SharedObject
 import com.example.myapp.login.BaseActivity
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.AddPillActivity
@@ -179,7 +180,9 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     true
                 }
                 R.id.navigation_settings -> {
+
                     val intent = Intent(this@DoctorAddPillActivity, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", SharedObject.getlistPacientIds())
                     startActivity(intent)
                     true
                 }

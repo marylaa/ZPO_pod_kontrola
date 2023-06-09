@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.settings.DoctorSettingsActivity
 import com.example.myapp.R
+import com.example.myapp.SharedObject
 import com.example.myapp.login.UserModel
 import com.example.myapp.notifications.NotificationModelAlert
 import com.example.myapp.pills_list.UserScheduleActivity
@@ -59,6 +60,7 @@ class ViewPatientsActivity : AppCompatActivity() {
                 R.id.navigation_settings -> {
                     val intent = Intent(this@ViewPatientsActivity, DoctorSettingsActivity::class.java)
                     val patientIds = patientList.map { it.id }.toTypedArray()
+                    SharedObject.setlistPacientIds(patientIds)
                     intent.putExtra("patientIds", patientIds)
                     startActivity(intent)
                     true

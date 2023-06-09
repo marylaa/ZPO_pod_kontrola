@@ -5,17 +5,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/background"
         android:gravity="left|center_vertical"
-        android:text=" Miesięczny raport"
+        android:text=" "
         android:textColor="@color/white"
         android:textSize="27sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/baseline_arrow_back_24"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="330dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="Miesięczny raport"
+            android:paddingLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="27sp" />
+
+    </LinearLayout>
 
     <Spinner
         android:id="@+id/spinnerMonths"

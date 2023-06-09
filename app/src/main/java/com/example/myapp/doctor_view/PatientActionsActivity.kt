@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapp.R
+import com.example.myapp.SharedObject
 import com.example.myapp.login.UserModel
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.settings.DoctorSettingsActivity
@@ -50,6 +51,7 @@ class PatientActionsActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@PatientActionsActivity, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", SharedObject.getlistPacientIds())
                     startActivity(intent)
                     true
                 }

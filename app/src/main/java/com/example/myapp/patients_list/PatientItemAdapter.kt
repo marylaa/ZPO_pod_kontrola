@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.doctor_view.PatientActionsActivity
 import com.example.myapp.R
+import com.example.myapp.SharedObject
 import com.example.myapp.login.UserModel
 import com.example.myapp.pills_list.EditPillActivity
 import com.google.firebase.database.FirebaseDatabase
@@ -34,6 +35,7 @@ class PatientItemAdapter(private val patientList: MutableList<UserModel>?, priva
         holder.choosePatientButton.setOnClickListener {
             val intent = Intent(holder.itemView.context, PatientActionsActivity::class.java)
             intent.putExtra("patientId", holder.patientId)
+            SharedObject.setPacientId(holder.patientId.toString())
             holder.itemView.context.startActivity(intent)
         }
 

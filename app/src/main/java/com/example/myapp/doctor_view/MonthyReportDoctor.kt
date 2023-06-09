@@ -78,6 +78,9 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         val button = findViewById<Button>(R.id.pills)
         button.setOnClickListener(this)
 
+        val backButton = findViewById<ImageButton>(R.id.back)
+        backButton.setOnClickListener(this)
+
 
 
 
@@ -135,6 +138,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@MonthyReportDoctor, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", SharedObject.getlistPacientIds())
                     startActivity(intent)
                     true
                 }
@@ -781,8 +785,14 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 ////                    intent.putExtra("key", dataToTable.joinToString(", ")) // Przekazanie wartości jako dodatkowy parametr
 //                    val arrayList: ArrayList<String> = ArrayList(dataToTable.flatten())
 //                    intent.putStringArrayListExtra("dataList", arrayList)
+                    patientId?.let { SharedObject.setPacientId(it) }
                     val intent = Intent(this,PillsStatusMain::class.java)
 
+                    startActivity(intent)
+                }
+                R.id.back -> {
+                    val intent = Intent(this, PatientActionsActivity::class.java)
+                    intent.putExtra("patientId", SharedObject.getPacientId())
                     startActivity(intent)
                 }
             }

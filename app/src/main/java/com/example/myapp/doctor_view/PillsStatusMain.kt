@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,13 +16,19 @@ import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.settings.DoctorSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class PillsStatusMain : AppCompatActivity() {
+class PillsStatusMain : AppCompatActivity(), View.OnClickListener {
+
+    private var patientId: String? = null
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.pills_status)
+
+        patientId = intent.getStringExtra("patientId")
+
 
 
 
@@ -36,6 +43,10 @@ class PillsStatusMain : AppCompatActivity() {
 
         val pillNameTextView = findViewById<TextView>(R.id.pillName)
         pillNameTextView.text = SharedObject.getWantedPill()
+
+
+        val backButton = findViewById<ImageButton>(R.id.back)
+        backButton.setOnClickListener(this)
 
 
 
@@ -66,6 +77,7 @@ class PillsStatusMain : AppCompatActivity() {
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@PillsStatusMain, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", SharedObject.getlistPacientIds())
                     startActivity(intent)
                     true
                 }
@@ -78,4 +90,22 @@ class PillsStatusMain : AppCompatActivity() {
 
 
     }
+
+
+    override fun onClick(view: View?) {
+        if (view != null) {
+            when (view.id) {
+
+                R.id.back -> {
+                    val intent = Intent(this, MonthyReportDoctor::class.java)
+                    intent.putExtra("patientId", SharedObject.getPacientId())
+                    startActivity(intent)
+                }
+
+            }
+        }
+    }
+
+
+
 }
