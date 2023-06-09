@@ -322,7 +322,8 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                     continue
                 }
             }
-//            }
+
+
 
 
         }
@@ -423,7 +424,16 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun createDict(data: List<Any>, param: String, wantedMonth: String): MutableList<Entry> {
-        val dictionary = mapOf("Ciśnienie [mmHg]" to 0, "Aktywność [godz.]" to 1, "Waga [kg]" to 2, "Sen [godz.]" to 3, "Temp. ciała [oC]" to 4, "Cukier [mmol/L]" to 5, "mood" to 6, "notes" to 7)
+        val dictionary = mapOf(
+            "Ciśnienie [mmHg]" to 1,
+            "Aktywność [godz.]" to 0,
+            "Waga [kg]" to 5,
+            "Sen [godz.]" to 3,
+            "Temp. ciała [oC]" to 4,
+            "Cukier [mmol/L]" to 2,
+            "mood" to 6,
+            "notes" to 7
+        )
         var index = dictionary[param]
         var resultDict = mutableMapOf<String, Float>()
 
@@ -449,6 +459,9 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 //        val moodDict = mutableMapOf<String, String>()
 //        val notesDict = mutableMapOf<String, String>()
 //        val pressureDict = mutableMapOf<String, String>()
+
+        resultDict.clear()
+
         for (i in data.indices step 10) {
             if (data[i] is String) {
                 try {
@@ -693,7 +706,15 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         getPillsDataFromDatabase { data ->
             Create(data, selectedMonth, selectedPill)
+
         }
+
+
+
+
+
+
+
 
         when (parent?.id) {
             R.id.spinner3 -> {

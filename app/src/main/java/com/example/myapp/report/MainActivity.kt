@@ -4,6 +4,7 @@ package com.example.myapp.report
 //import com.example.myapp.report.databinding.ActivityMainBinding
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -11,6 +12,8 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +25,10 @@ import com.example.myapp.settings.PatientSettingsActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
+import java.io.Console
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -30,6 +37,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var dataExist: Boolean = false
     var report: Report = Report()
     val valuesList = arrayListOf<Value>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -185,6 +193,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(view: View?) {
 
         if (view != null) {
@@ -193,29 +202,75 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                     if (valuesList.size == 6 && report.getMood() != "") {
 
-                        // Create a new intent for the new activity
-                        val intent = Intent(this, MainActivityMonthlyReport::class.java)
+                        alreadyAdded { isDataAdded ->
+                            Log.d("is added",isDataAdded.toString())
+
+                            if (isDataAdded) {
+                                val alertDialogBuilder = AlertDialog.Builder(this)
+                                alertDialogBuilder.setMessage("Dane na dzisiaj zostały już dodane.")
+                                alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+
+                                    // Przekieruj na inną stronę
+                                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
+                                    startActivity(intent)
+
+                                    dialog.dismiss()
+                                }
+                                val alertDialog = alertDialogBuilder.create()
+                                alertDialog.show()
+                            } else {
+                                // Kontynuuj normalne działanie aplikacji
+                                // Create a new intent for the new activity
+                                val intent = Intent(this, MainActivityMonthlyReport::class.java)
 
 
-                        // Save the report to Firebase
-                        this.report.saveToFirebase()
+                                // Save the report to Firebase
+                                this.report.saveToFirebase()
 
-                        // Start the new activity
-                        startActivity(intent)
+                                // Start the new activity
+                                startActivity(intent)
+                            }
+                        }
+
+
+
+
+//                        Log.d("is added",isDataAddedForToday.toString())
+//
+//
+//                        if (isDataAddedForToday) {
+//                            Log.d("is added",isDataAddedForToday.toString())
+//                            val alertDialogBuilder = AlertDialog.Builder(this)
+//                            alertDialogBuilder.setMessage("Dane na dzisiaj zostały już dodane.")
+//                            alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+//
+//                                // Przekieruj na inną stronę
+//                                val intent = Intent(this, MainActivityMonthlyReport::class.java)
+//                                startActivity(intent)
+//
+//                                dialog.dismiss()
+//                            }
+//                            val alertDialog = alertDialogBuilder.create()
+//                            alertDialog.show()
+//                        } else {
+//                            // Kontynuuj normalne działanie aplikacji
+//                            // Create a new intent for the new activity
+//                            val intent = Intent(this, MainActivityMonthlyReport::class.java)
+//
+//
+//                            // Save the report to Firebase
+//                            this.report.saveToFirebase()
+//
+//                            // Start the new activity
+//                            startActivity(intent)
+//                        }
+
 
                     } else {
                         // Lista nie ma 6 elementów, wyświetl komunikat o błędzie lub wykonaj odpowiednie działania
                         Toast.makeText(this@MainActivity, "Wypełnij wszystkie pola", Toast.LENGTH_SHORT).show()
                     }
-//                    // Create a new intent for the new activity
-//                    val intent = Intent(this, MainActivityMonthlyReport::class.java)
-//
-//
-//                    // Save the report to Firebase
-//                    this.report.saveToFirebase()
-//
-//                    // Start the new activity
-//                    startActivity(intent)
+
                 }
 
             }
@@ -270,6 +325,55 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun alreadyAdded(callback: (Boolean) -> Unit) {
+        val dbRef = FirebaseDatabase.getInstance().getReference("report")
+        val user = FirebaseAuth.getInstance().currentUser
+        val uid = user?.uid
+
+        val reportValuesList = mutableListOf<String>()
+        val current = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        var isDataAddedForToday = false
+
+        val query = dbRef.orderByChild("user").equalTo(uid)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    for (rep in snapshot.children) {
+                        val reportValues = rep.getValue<String>().toString()
+                        reportValuesList.add(reportValues)
+                    }
+                }
+                Log.d("data", reportValuesList.toString())
+                for (i in 0 until reportValuesList.size step 10) {
+                    if (reportValuesList[i] is String) {
+                        try {
+                            val dateTime = LocalDate.parse(reportValuesList[i + 6] as String, formatter)
+                            Log.d("datetime", dateTime.toString())
+                            if (dateTime.equals(current)) {
+                                isDataAddedForToday = true
+                                break
+                            }
+                        } catch (e: IndexOutOfBoundsException) {
+                            continue
+                        }
+                    }
+                }
+                callback.invoke(isDataAddedForToday)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("TAG", "Błąd")
+                callback.invoke(false)
+            }
+        })
+    }
+
+
+
 
 
 

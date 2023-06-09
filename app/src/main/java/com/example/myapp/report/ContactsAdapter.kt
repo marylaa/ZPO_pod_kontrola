@@ -83,6 +83,15 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
                                 ValuesArray[currentPos].setInput(editable.toString())
                             }
                         }
+                        2 -> {
+                            val inputValue = editable.toString().toIntOrNull()
+                            if (inputValue != null && inputValue > 160) {
+                                Toast.makeText(context, "Wprowadź wartość mniejszą lub równą 160", Toast.LENGTH_SHORT).show()
+                                textView3.setText("70")
+                            } else {
+                                ValuesArray[currentPos].setInput(editable.toString())
+                            }
+                        }
                         4 -> {
                             val inputValue = editable.toString().toIntOrNull()
                             val isDefaultValue = (inputValue == null || inputValue <= 45) // Sprawdzamy, czy wartość jest domyślna lub mniejsza niż 45

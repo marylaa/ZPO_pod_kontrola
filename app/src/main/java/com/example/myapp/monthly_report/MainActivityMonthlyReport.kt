@@ -38,7 +38,7 @@ import kotlin.collections.*
 class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var adapterDate: RecycleViewAdapter
-    private lateinit var adapter: RecycleViewAdapterItem
+//    private lateinit var adapter: RecycleViewAdapterItem
     lateinit var linelist: ArrayList<Entry>
     lateinit var lineDataSet: LineDataSet
     lateinit var lineData: LineData
@@ -74,6 +74,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     val reportValuesList = mutableListOf<String>()
     var resultDict = mutableMapOf<String, Float>()
     private lateinit var adapterPills: ArrayAdapter<String>
+    private lateinit var adapter: ArrayAdapter<String>
+
 
     @SuppressLint("MissingInflatedId")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -116,7 +118,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
 
         var spinner = findViewById<View>(R.id.spinner3) as Spinner
-        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+        adapter = ArrayAdapter(
             this@MainActivityMonthlyReport,
             android.R.layout.simple_spinner_item, paths
         )
@@ -124,6 +126,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.setAdapter(adapter)
         spinner.setOnItemSelectedListener(this)
+
+        adapter.notifyDataSetChanged();
+
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
         navView.menu.findItem(R.id.navigation_report).isChecked = true
@@ -155,7 +160,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val query = dbRef.orderByChild("user").equalTo(uid)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
+                reportValuesList.clear()
                 for (snapshot in dataSnapshot.children) {
                     for (rep in snapshot.children) {
                         val reportValues = rep.getValue<String>().toString()
@@ -186,6 +191,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                reportValuesList.clear()
                 for (snapshot in dataSnapshot.children) {
                     for (rep in snapshot.children) {
                         val reportValues = rep.getValue<String>().toString()
@@ -359,7 +365,14 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             "mood" to 6,
             "notes" to 7
         )
+
+        Log.d("data", data.toString())
+        Log.d("param", param)
+        Log.d("wanted mnth", wantedMonth)
+
         var index = dictionary[param]
+
+        Log.d("index", index.toString())
 
         val current = LocalDate.now()
         val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -380,6 +393,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             "Grudzień" to "12"
         )
 
+        resultDict.clear()
+
         for (i in data.indices step 10) {
             if (data[i] is String) {
                 try {
@@ -398,8 +413,8 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         }
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
-        val entries = resultDict.entries.map { entry ->
-            val date = LocalDate.parse(entry.key, formatter)
+        var entries = resultDict.entries.map { entry ->
+            var date = LocalDate.parse(entry.key, formatter)
             Entry(
                 date.dayOfMonth.toFloat(),
                 entry.value.toFloat()
@@ -407,9 +422,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         }.sortedBy { it.x }.toMutableList()
 
 
-        val lineDataSet = LineDataSet(entries, param)
-        val lineData = LineData(lineDataSet)
-        val lineChart = findViewById<LineChart>(R.id.lineChart)
+        var lineDataSet = LineDataSet(entries, param)
+        var lineData = LineData(lineDataSet)
+        var lineChart = findViewById<LineChart>(R.id.lineChart)
         lineChart.description.text = "Dni miesiąca"
         lineChart.data = lineData
 
@@ -456,7 +471,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                pillList.clear()
+                pillList.clear()
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
@@ -477,7 +492,11 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val selectedItem = parent?.getItemAtPosition(position) as String
+
+        var selectedItem = ""
+        selectedItem = "Ciśnienie [mmHg]"
+
+        selectedItem = parent?.getItemAtPosition(position) as String
         Log.d("selected", selectedItem.toString())
 
         var selectedPill = ""
@@ -489,12 +508,18 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         }
 
 
-        val selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
+
+        var selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
+
 
 
         getPillsDataFromDatabase { data ->
             Create(data, selectedMonth, selectedPill)
+
         }
+
+        adapter.notifyDataSetChanged()
+
 
         when (parent?.id) {
             R.id.spinner3 -> {
