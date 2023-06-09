@@ -1,5 +1,8 @@
 package com.example.myapp.pills_list
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +24,7 @@ import com.google.firebase.database.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
@@ -103,7 +107,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
-        //query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
                 for (snapshot in dataSnapshot.children) {
@@ -135,8 +138,8 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
 
-                Log.d("pill list", pillList.toString())
                 newRecyclerView.adapter = PillItemAdapter(pillList,this@UserScheduleActivity)
+                sendNotificationHour()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -144,6 +147,48 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
         return pillList
+    }
+
+    private fun sendNotificationHour() {
+        for (pill in pillList) {
+            for(time in pill.time_list!!) {
+                if (time[1] as Boolean) {
+                    break
+                }
+                val getTime = time[0].toString().split(":")
+
+                // Pobierz godzinę zażycia tabletki
+                val hour = getTime[0].toInt()
+                val minute = getTime[1].toInt()
+
+                // Utwórz kalendarz i ustaw datę i godzinę powiadomienia
+                val calendar = Calendar.getInstance()
+                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                calendar.set(Calendar.MINUTE, minute)
+                calendar.set(Calendar.SECOND, 0)
+
+                // Sprawdź, czy czas powiadomienia jeszcze nie minął
+                if (calendar.timeInMillis > System.currentTimeMillis()) {
+                    // Ustaw harmonogram powiadomienia przy użyciu AlarmManagera
+                    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    val intent = Intent(this@UserScheduleActivity, NotificationReceiver::class.java)
+                    intent.putExtra("pillName", pill.name)
+                    val pendingIntent = PendingIntent.getBroadcast(
+                        this@UserScheduleActivity,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                    )
+
+                    // Ustaw harmonogram powiadomienia
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        calendar.timeInMillis,
+                        pendingIntent
+                    )
+                }
+            }
+        }
     }
 }
 

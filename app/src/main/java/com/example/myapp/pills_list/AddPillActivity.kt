@@ -96,9 +96,26 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
 
         saveButton?.setOnClickListener {
             if (validatePillDetails()) {
-                savePill()
-                Toast.makeText(this@AddPillActivity, "Tabletka została dodana", Toast.LENGTH_SHORT).show()
-                finish()
+                savePill { success ->
+                    if (success) {
+                        runOnUiThread {
+                            Toast.makeText(
+                                this@AddPillActivity,
+                                "Tabletka została dodana",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            finish()
+                        }
+                    } else {
+                        runOnUiThread {
+                            Toast.makeText(
+                                this@AddPillActivity,
+                                "Wystąpił błąd",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
             }
         }
 
@@ -278,7 +295,7 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun savePill() {
+    private fun savePill(completion: (Boolean) -> Unit)  {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
         val current = LocalDate.now()
@@ -324,7 +341,13 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
         val id = UUID.randomUUID().toString()
         val newPill = PillModel(id, uid, name, amountLeft, amountInBox, frequency, times, date, nextDay)
 
-        dbRef.child(id).setValue(newPill)
+        dbRef.child(id).setValue(newPill).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                completion(true) // Zwróć true w przypadku powodzenia
+            } else {
+                completion(false) // Zwróć false w przypadku błędu
+            }
+        }
     }
 
     override fun onClick(view: View?) {
