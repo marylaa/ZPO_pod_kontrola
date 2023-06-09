@@ -42,8 +42,13 @@ class NotificationsAdapter(
                 .setMessage("Czy na pewno chcesz usunąć wiadomość?")
                 .setPositiveButton("Tak") { _, _ ->
                     val dbRef = FirebaseDatabase.getInstance().getReference("Notifications")
-                    dbRef.child(currentItem.id!!).removeValue()
-                    Toast.makeText(context, "Wiadomość została usunięta", Toast.LENGTH_SHORT).show()
+                    dbRef.child(currentItem.id!!).removeValue().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(context, "Wiadomość została usunięta", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
                 .setNegativeButton("Anuluj") { dialog, _ ->
                     dialog.dismiss()

@@ -59,8 +59,18 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 .setPositiveButton("Tak") { _, _ ->
                     getDoctorFromDatabase(userId).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            healthAlert()
-                            Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
+                            healthAlert { success ->
+                                if (success) {
+                                    runOnUiThread {
+                                        Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
+                                        finish()
+                                    }
+                                } else {
+                                    runOnUiThread {
+                                        Toast.makeText(this@PatientSettingsActivity, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -122,7 +132,7 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun healthAlert() {
+    private fun healthAlert(completion: (Boolean) -> Unit) {
         val dbFirebase = FirebaseDatabase.getInstance()
         val dbReference = dbFirebase.getReference()
 
@@ -170,7 +180,13 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                                     id,
                                     false
                                 )
-                                dbRef.child(id).setValue(notification)
+                                dbRef.child(id).setValue(notification).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        completion(true) // Zwróć true w przypadku powodzenia
+                                    } else {
+                                        completion(false) // Zwróć false w przypadku błędu
+                                    }
+                                }
                             }
                         }
 

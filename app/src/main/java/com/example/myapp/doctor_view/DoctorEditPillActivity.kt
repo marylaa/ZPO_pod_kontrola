@@ -95,9 +95,18 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
         saveButton?.setOnClickListener{
             if (validatePillDetails()) {
-                savePill()
-                Toast.makeText(this@DoctorEditPillActivity, "Tabletka została edytowana", Toast.LENGTH_SHORT).show()
-                finish()
+                savePill { success ->
+                    if (success) {
+                        runOnUiThread {
+                            Toast.makeText(this@DoctorEditPillActivity, "Tabletka została edytowana", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                    } else {
+                        runOnUiThread {
+                            Toast.makeText(this@DoctorEditPillActivity, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
 
@@ -313,7 +322,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun savePill() {
+    private fun savePill(completion: (Boolean) -> Unit) {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
         val current = LocalDate.now()
@@ -321,8 +330,6 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
         val date = current.format(formatter)
 
         pill!!.name = pillName?.text.toString().trim() { it <= ' ' }
-        pill!!.frequency = selectedFrequency
-        pill!!.date_last = date
         pill!!.availability = inputLeft?.text.toString().toIntOrNull()
         pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
 
@@ -343,22 +350,46 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
         } else {
             times = mutableListOf(times1)
         }
-        pill!!.time_list = times
 
-        var nextDay = ""
-        if (selectedFrequency.equals("Co drugi dzień")) {
-            val next = current.plusDays(2)
-            nextDay = next.format(formatter)
-        } else if (selectedFrequency.equals("Raz w tygodniu")) {
-            val next = current.plusDays(7)
-            nextDay = next.format(formatter)
+        //jesli nie byly zmieniane czasy to data w bazie musi zostac ta sama
+        if (!(pill!!.frequency.equals(selectedFrequency))) {
+            pill!!.date_last = date
+
+            pill!!.time_list = times
+            pill!!.frequency = selectedFrequency
+
+            var nextDay = ""
+            if (selectedFrequency.equals("Co drugi dzień")) {
+                val next = current.plusDays(2)
+                nextDay = next.format(formatter)
+            } else if (selectedFrequency.equals("Raz w tygodniu")) {
+                val next = current.plusDays(7)
+                nextDay = next.format(formatter)
+            } else {
+                val next = current.plusDays(1)
+                nextDay = next.format(formatter)
+            }
+            pill!!.date_next = nextDay
         } else {
-            val next = current.plusDays(1)
-            nextDay = next.format(formatter)
-        }
-        pill!!.date_next = nextDay
 
-        dbRef.child(pill!!.id.toString()).setValue(pill)
+            var same = true
+            for (i in 0..times.size - 1) {
+                if(!(pill!!.time_list!![i][0]!!.equals(times[i][0]))) {
+                    same = false
+                }
+            }
+            if (!same) {
+                pill!!.time_list = times
+            }
+        }
+
+        dbRef.child(pill!!.id.toString()).setValue(pill).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                completion(true) // Zwróć true w przypadku powodzenia
+            } else {
+                completion(false) // Zwróć false w przypadku błędu
+            }
+        }
     }
 
     override fun onClick(view: View?) {

@@ -51,8 +51,13 @@ class PatientAllPillItemAdapter(private val pillList: MutableList<PillModel>?) :
                                     val pillId = pillModel?.id
                                     if (pillId != null) {
                                         val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
-                                        dbRef.removeValue()
-                                        Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
+                                        dbRef.removeValue().addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(context, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
                                     }
                                 }.setNegativeButton("Anuluj") { dialog, _ ->
                                     dialog.dismiss()

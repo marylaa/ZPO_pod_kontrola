@@ -97,9 +97,18 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
         saveButton?.setOnClickListener{
             if (validatePillDetails()) {
-                savePill()
-                Toast.makeText(this@EditPillActivity, "Tabletka została edytowana", Toast.LENGTH_SHORT).show()
-                finish()
+                savePill { success ->
+                    if (success) {
+                        runOnUiThread {
+                            Toast.makeText(this@EditPillActivity, "Tabletka została edytowana", Toast.LENGTH_SHORT).show()
+                            finish()
+                        }
+                    } else {
+                        runOnUiThread {
+                            Toast.makeText(this@EditPillActivity, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             }
         }
 
@@ -326,7 +335,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun savePill() {
+    private fun savePill(completion: (Boolean) -> Unit) {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
 
         val current = LocalDate.now()
@@ -359,6 +368,9 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         if (!(pill!!.frequency.equals(selectedFrequency))) {
             pill!!.date_last = date
 
+            pill!!.time_list = times
+            pill!!.frequency = selectedFrequency
+
             var nextDay = ""
             if (selectedFrequency.equals("Co drugi dzień")) {
                 val next = current.plusDays(2)
@@ -371,11 +383,26 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 nextDay = next.format(formatter)
             }
             pill!!.date_next = nextDay
-        }
-        pill!!.time_list = times
-        pill!!.frequency = selectedFrequency
+        } else {
 
-        dbRef.child(pill!!.id.toString()).setValue(pill)
+            var same = true
+            for (i in 0..times.size - 1) {
+                if(!(pill!!.time_list!![i][0]!!.equals(times[i][0]))) {
+                    same = false
+                }
+            }
+            if (!same) {
+                pill!!.time_list = times
+            }
+        }
+
+        dbRef.child(pill!!.id.toString()).setValue(pill).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                completion(true) // Zwróć true w przypadku powodzenia
+            } else {
+                completion(false) // Zwróć false w przypadku błędu
+            }
+        }
     }
 
 

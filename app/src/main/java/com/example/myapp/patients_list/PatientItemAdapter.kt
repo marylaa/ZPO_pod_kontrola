@@ -52,8 +52,13 @@ class PatientItemAdapter(private val patientList: MutableList<UserModel>?, priva
                                 .setPositiveButton("Tak") { _, _ ->
                                     if (holder.patientId != null) {
                                         val dbRef = FirebaseDatabase.getInstance().getReference("Patients").child(currentPatient.id)
-                                        dbRef.removeValue()
-                                        Toast.makeText(context, "Pacjent został usunięty", Toast.LENGTH_SHORT).show()
+                                        dbRef.removeValue().addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                Toast.makeText(context, "Pacjent został usunięty", Toast.LENGTH_SHORT).show()
+                                            } else {
+                                                Toast.makeText(context, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
                                     }
                                 }.setNegativeButton("Anuluj") { dialog, _ ->
                                     dialog.dismiss()
