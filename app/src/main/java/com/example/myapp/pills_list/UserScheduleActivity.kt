@@ -192,4 +192,3 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
     }
 }
 
-
