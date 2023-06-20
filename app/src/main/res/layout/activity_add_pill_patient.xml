@@ -179,7 +179,7 @@
 
     <EditText
         android:id="@+id/hourTime2"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:visibility="gone"
         android:inputType="number"
         android:layout_height="wrap_content"
@@ -209,7 +209,7 @@
 
     <EditText
         android:id="@+id/minuteTime2"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:background="@drawable/rounded_corner"
@@ -239,7 +239,7 @@
 
     <EditText
         android:id="@+id/hourTime3"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:visibility="gone"
@@ -269,7 +269,7 @@
 
     <EditText
         android:id="@+id/minuteTime3"
-        android:layout_width="80dp"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:background="@drawable/rounded_corner"

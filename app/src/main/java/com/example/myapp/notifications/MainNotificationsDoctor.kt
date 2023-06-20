@@ -23,10 +23,13 @@ class MainNotificationsDoctor : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var dbRef: DatabaseReference
+    private lateinit var patientIds: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_notifications_doctor)
+
+        patientIds = intent.getStringArrayExtra("patientIds")!!
 
         newRecyclerView = findViewById(R.id.rvNotifications)
         newRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -46,6 +49,7 @@ class MainNotificationsDoctor : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@MainNotificationsDoctor, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", patientIds)
                     startActivity(intent)
                     true
                 }
@@ -84,6 +88,7 @@ class MainNotificationsDoctor : AppCompatActivity(), View.OnClickListener {
             when (view.id) {
                 R.id.back -> {
                     val intent = Intent(this, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", patientIds)
                     startActivity(intent)
                 }
             }

@@ -29,6 +29,7 @@ class DoctorSettingsActivity : AppCompatActivity() {
         val messagesButton = findViewById<ImageButton>(R.id.showNotifications)
         messagesButton?.setOnClickListener {
             val intent = Intent(this@DoctorSettingsActivity, MainNotificationsDoctor::class.java)
+            intent.putExtra("patientIds", patientIds)
             startActivity(intent)
         }
 
