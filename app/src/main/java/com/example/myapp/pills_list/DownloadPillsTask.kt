@@ -19,7 +19,7 @@ class DownloadPillsTask(private val pillName: String) :
             client.setConnectTimeout(300, TimeUnit.MILLISECONDS) // Ustawienie limitu czasu połączenia
             client.setReadTimeout(300, TimeUnit.MILLISECONDS) // Ustawienie limitu czasu odczytu
 
-            val url = "http://192.168.1.4:5000/search/" + pillName// IP na którym stoi serwer
+            val url = "http://192.168.89.104:5000/search/" + pillName// IP na którym stoi serwer
 
             val request = Request.Builder()
                 .url(url)

@@ -63,7 +63,6 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                                 if (success) {
                                     runOnUiThread {
                                         Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
-                                        finish()
                                     }
                                 } else {
                                     runOnUiThread {
