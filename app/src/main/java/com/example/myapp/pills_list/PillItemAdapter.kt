@@ -125,7 +125,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                     dbReference.child("Pills_status").push().setValue(
                         mapOf(
                             "status" to currentItem.time_list!![0][1].toString(),
-                            "name" to currentItem.name,
+                            "id" to currentItem.id,
                             "date" to current,
                             "user" to uid
 
@@ -140,7 +140,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                     // usunięcie z bazy danych odcheckowanej tabletki
                     val dbReference =
                         FirebaseDatabase.getInstance().getReference().child("Pills_status")
-                    val query = dbReference.orderByChild("name").equalTo(currentItem.name)
+                    val query = dbReference.orderByChild("id").equalTo(currentItem.id)
                     query.addListenerForSingleValueEvent(object : ValueEventListener {
                         override fun onDataChange(snapshot: DataSnapshot) {
                             for (childSnapshot in snapshot.children) {
@@ -264,7 +264,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                         dbReference.child("Pills_status").push().setValue(
                             mapOf(
                                 "status" to currentItem.time_list!![1][1].toString(),
-                                "name" to currentItem.name,
+                                "id" to currentItem.id,
                                 "date" to current,
                                 "user" to uid
                             )
@@ -284,7 +284,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                         // usunięcie z bazy danych odcheckowanej tabletki
                         val dbReference =
                             FirebaseDatabase.getInstance().getReference().child("Pills_status")
-                        val query = dbReference.orderByChild("name").equalTo(currentItem.name)
+                        val query = dbReference.orderByChild("id").equalTo(currentItem.id)
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 for (childSnapshot in snapshot.children) {
@@ -408,7 +408,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                         dbReference.child("Pills_status").push().setValue(
                             mapOf(
                                 "status" to currentItem.time_list!![2][1].toString(),
-                                "name" to currentItem.name,
+                                "id" to currentItem.id,
                                 "date" to current,
                                 "user" to uid
                             )
@@ -428,7 +428,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                         // usunięcie z bazy danych odcheckowanej tabletki
                         val dbReference =
                             FirebaseDatabase.getInstance().getReference().child("Pills_status")
-                        val query = dbReference.orderByChild("name").equalTo(currentItem.name)
+                        val query = dbReference.orderByChild("id").equalTo(currentItem.id)
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
                                 for (childSnapshot in snapshot.children) {

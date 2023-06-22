@@ -54,6 +54,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
     )
     private var pillList = ArrayList<String>()
+    private var pillListId = ArrayList<String>()
     private var pillListAndCount = ArrayList<List<String>>()
 
     private var monthsList = arrayOf(
@@ -244,6 +245,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         var prevName = ""
         var count = 1
 
+        var pillId = pillListId.get(0)
+        if (wantedPill != "") {
+            var index = pillList.indexOf(wantedPill)
+            pillId = pillListId.get(index)
+        }
+
+
         for (i in 0 until data.size step 4) {
             if (data[i] is String) {
                 try {
@@ -254,7 +262,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                     Log.d("datetime", dateTime.toString())
                     val month = dateTime.monthValue
                     val monthFormatted = String.format("%02d", month)
-                    if (monthFormatted == (months[wantedMonth].toString()) && pillName == wantedPill) {
+                    if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
                         daysInDataBase.add(dateTime)
                     }
 
@@ -473,10 +481,12 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
+                pillListId.clear()
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
 //                    pillList.add(pill!!.getName())
                     pillList.add(pill!!.name.toString())
+                    pillListId.add(pill!!.id.toString())
                     val onePill: List<String> =
                         listOf(pill!!.name, pill!!.time_list?.size.toString())
                     pillListAndCount.add(onePill)
