@@ -598,14 +598,19 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
     fun pillsColors(list: SortedMap<String, String>): ArrayList<Int> {
         var colors = arrayListOf<Int>()
         for ((key, value) in list.entries) {
-//            if (value.equals(true)) {
-//                colors.add(Color.GREEN)
-//            } else if (value.equals(false)) {
-//                colors.add(Color.RED)
-//            }
+            var number = 0.0
+            try {
+                var splited = value.split("/")
+                Log.e("value", value)
+                Log.e("splited", splited.toString())
+                number = splited[0].toDouble() / splited[1].toDouble()
+            } catch (e: Exception) {
+                number = -1.0
+            }
+
             if(value.equals("1/3") or value.equals("2/3") or value.equals("1/2")){
                 colors.add(Color.YELLOW)
-            }else if(value.equals("1/1") or value.equals("3/3") or value.equals("2/2")){
+            }else if(value.equals("1/1") or value.equals("3/3") or value.equals("2/2") or (number > 1)){
                 colors.add(Color.GREEN)
             }else{
                 colors.add(Color.RED)

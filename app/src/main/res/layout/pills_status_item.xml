@@ -10,12 +10,12 @@
         android:id="@+id/datePill"
         android:layout_width="177dp"
         android:layout_height="match_parent"
-        android:paddingLeft="20dp"
+        android:layout_marginLeft="80dp"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/countPill"
-        android:layout_width="131dp"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
         android:textSize="18sp"/>
 

@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/patientName"
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
@@ -40,12 +40,12 @@
     <TextView
         android:id="@+id/pacientReport"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="Miesięczny raport"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/chooseReport"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,13 +76,13 @@
     <TextView
         android:id="@+id/pacientPills"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="Leki"
         android:layout_marginTop="5dp"
         android:textColor="@color/black"
-        android:textSize="24sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toStartOf="@+id/choosePills"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
