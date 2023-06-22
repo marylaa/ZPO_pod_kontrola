@@ -368,6 +368,12 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         if (!(pill!!.frequency.equals(selectedFrequency))) {
             pill!!.date_last = date
 
+            // zostawienie checkboxa w stanie jaki byl
+            for(i in 0..times.size - 1) {
+                if(pill!!.time_list!![i][1] as Boolean) {
+                    times[i][1] = true
+                }
+            }
             pill!!.time_list = times
             pill!!.frequency = selectedFrequency
 
@@ -392,6 +398,12 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 }
             }
             if (!same) {
+                // zostawienie checkboxa w stanie jaki byl
+                for(i in 0..times.size - 1) {
+                    if(pill!!.time_list!![i][1] as Boolean) {
+                        times[i][1] = true
+                    }
+                }
                 pill!!.time_list = times
             }
         }
