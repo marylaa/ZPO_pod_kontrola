@@ -361,6 +361,8 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                     if (isChecked) {
                         pillTakenInfo()
+                        val database = FirebaseDatabase.getInstance().getReference("Pills")
+                        database.child(currentItem.id!!).setValue(currentItem)
 
                         var newAvailability = 0
                         var oldAvailability = 0
