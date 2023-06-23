@@ -12,7 +12,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myapp.EmptyActivity
 import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
@@ -38,11 +37,6 @@ import kotlin.collections.*
 class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var adapterDate: RecycleViewAdapter
-//    private lateinit var adapter: RecycleViewAdapterItem
-    lateinit var linelist: ArrayList<Entry>
-    lateinit var lineDataSet: LineDataSet
-    lateinit var lineData: LineData
-    private lateinit var binding: ActivityMainMonthlyBinding
     private lateinit var dbRef: DatabaseReference
     private val paths = arrayOf(
         "Aktywność [godz.]",
@@ -165,11 +159,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 for (snapshot in dataSnapshot.children) {
                     for (rep in snapshot.children) {
                         val reportValues = rep.getValue<String>().toString()
-
                         reportValuesList.add(reportValues)
                     }
                 }
-                Log.d("glowne zczytanie", reportValuesList.toString())
 
                 callback(reportValuesList)
             }
@@ -199,9 +191,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                         reportValuesList.add(reportValues)
                     }
                 }
-
-                Log.d("zczytanie pills", reportValuesList.toString())
-
                 callback(reportValuesList)
             }
 
@@ -236,7 +225,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         val current = LocalDate.now()
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val formatted = current.format(formatter)
 
         val resultDict = mutableMapOf<LocalDate, String>()
         var daysInDataBase = mutableListOf<LocalDate>()
@@ -256,10 +244,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             if (data[i] is String) {
                 try {
                     var pillName = data[i + 1] as String
-                    Log.d("i", i.toString())
-                    Log.d("name", pillName)
                     var dateTime = LocalDate.parse(data[i] as String, formatter)
-                    Log.d("datetime", dateTime.toString())
                     val month = dateTime.monthValue
                     val monthFormatted = String.format("%02d", month)
                     if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
@@ -294,27 +279,18 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             newDict[element.toString()] = number
         }
 
-        Log.d("new dict", newDict.toString())
-
-        Log.d("days", daysInDataBase.toString())
-
 
         val dictionary = mutableMapOf<String, String>()
-
         val year = Year.now().value // pobranie aktualnego roku
-
         val numberOfDaysInMonth = getNumberOfDaysInMonth(year, months[wantedMonth]!!.toInt())
 
 
         for (day in 1..numberOfDaysInMonth) {
-//            val date = LocalDate.of(year, months[wantedMonth]!!.toInt() + 1, day)
             val dayFormatted = String.format("%02d", day)
             var date =
                 year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
             dictionary[date] = "0"
         }
-
-        Log.d("slownik daty", dictionary.toString())
 
         for (key in dictionary.keys) {
             for ((keyNewDict, valueNewDict) in newDict.entries) {
@@ -324,13 +300,9 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             }
         }
 
-        Log.d("slownik daty zmiana", dictionary.toString())
-
         val sortedDates = dictionary.toSortedMap()
 
         var colors = pillsColors(sortedDates)
-        Log.d("colors", colors.toString())
-
         var dates = mutableListOf<String>()
 
         for (key in dictionary.keys) {
@@ -345,13 +317,10 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         adapterDate = RecycleViewAdapter(this, colors, dates)
         recyclerView1.adapter = adapterDate
 
-        Log.d("daty pils", resultDict.toString())
         return resultDict
     }
 
     fun getPillFrequency(name: String): String? {
-        Log.d("pill name", name)
-        Log.d("ccc", pillListAndCount.toString())
         for (index in pillListAndCount.indices) {
             val item = pillListAndCount[index]
             if (item.isNotEmpty() && item[0] == name) {
@@ -374,14 +343,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             "mood" to 6,
             "notes" to 7
         )
-
-        Log.d("data", data.toString())
-        Log.d("param", param)
-        Log.d("wanted mnth", wantedMonth)
-
         var index = dictionary[param]
-
-        Log.d("index", index.toString())
 
         val current = LocalDate.now()
         val formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -453,9 +415,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         lineDataSet.valueTextSize = 20f
         lineChart.invalidate()
 
-
-        Log.d("dic", resultDict.keys.toString())
-
         val noDataTextView = findViewById<TextView>(R.id.noDataTextView)
 
         if (entries.isEmpty()) {
@@ -464,8 +423,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         } else {
             lineChart.visibility = View.VISIBLE
             noDataTextView.visibility = View.GONE
-
-            // Reszta kodu wykresu
         }
         return entries
     }
@@ -475,8 +432,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val user = FirebaseAuth.getInstance().currentUser;
         val uid = user?.uid
 
-//        val pillList: MutableList<String> = mutableListOf()
-
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -484,15 +439,12 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 pillListId.clear()
                 for (snapshot in dataSnapshot.children) {
                     val pill = snapshot.getValue(PillModel::class.java)
-//                    pillList.add(pill!!.getName())
                     pillList.add(pill!!.name.toString())
                     pillListId.add(pill!!.id.toString())
                     val onePill: List<String> =
                         listOf(pill!!.name, pill!!.time_list?.size.toString())
                     pillListAndCount.add(onePill)
                     adapterPills.notifyDataSetChanged()
-                    Log.d("pils", pillList.toString())
-                    Log.d("pills and count", pillListAndCount.toString())
                 }
             }
             override fun onCancelled(error: DatabaseError) {
@@ -517,20 +469,13 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         if (pillList.isNotEmpty()) {
             selectedPill = pillList[0]
         }
-
-
-
         var selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
-
-
 
         getPillsDataFromDatabase { data ->
             Create(data, selectedMonth, selectedPill)
-
         }
 
         adapter.notifyDataSetChanged()
-
 
         when (parent?.id) {
             R.id.spinner3 -> {
@@ -541,13 +486,11 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             R.id.spinnerPills -> {
                 getPillsDataFromDatabase { data ->
                     Create(data, selectedMonth, selectedItem)
-
                 }
                 adapterPills.notifyDataSetChanged()
             }
         }
     }
-
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         // Handle no item selection here
@@ -560,8 +503,6 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
             var number = 0.0
             try {
                 var splited = value.split("/")
-                Log.e("value", value)
-                Log.e("splited", splited.toString())
                 number = splited[0].toDouble() / splited[1].toDouble()
             } catch (e: Exception) {
                 number = -1.0

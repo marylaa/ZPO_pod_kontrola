@@ -1,7 +1,5 @@
 package com.example.myapp.report
 
-
-//import com.example.myapp.report.databinding.ActivityMainBinding
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
@@ -30,14 +28,11 @@ import java.io.Console
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-
 
     private var dataExist: Boolean = false
     var report: Report = Report()
     val valuesList = arrayListOf<Value>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,28 +53,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Log.d(TAG, valuesName[i])
             valuesList.add(value)
         }
-
-
         var adapter = ContactsAdapter(valuesList)
 
-
-
-
-        // ...
         // Lookup the recyclerview in activity layout
         val rvContacts = findViewById<View>(R.id.rvItems) as RecyclerView
-//
-//        rvContacts.setAdapter(adapter);
-//        adapter.notifyDataSetChanged()
-        // Initialize contacts
-//        contacts = Contact.createContactsList()
-        // Create adapter passing in the sample user data
-//        val adapter = ContactsAdapter(contacts)
-        // Attach the adapter to the recyclerview to populate items
         rvContacts.adapter = adapter
         // Set layout manager to position the items
         rvContacts.layoutManager = LinearLayoutManager(this)
-
 
         val radioGroup = findViewById<RadioGroup>(R.id.radio_group)
         var checkedRadioButton: String? = null
@@ -89,7 +69,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             checkedRadioButton = radioButton.text.toString()
             this.report.setMood(checkedRadioButton)
         }
-
 
         val notes = findViewById<EditText>(R.id.contact_name6)
         notes.addTextChangedListener(object : TextWatcher {
@@ -105,60 +84,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
 
-
-//        val stringNotes = notes.text.toString()
-//            val report = Report(adapter.returnValuesArray(), checkedRadioButton, stringNotes)
         this.report.setValueList(adapter.returnValuesArray())
-//        this.report.setNotes(stringNotes)
-
-        Log.d(TAG, report.printReport())
-        Log.d(TAG, report.printReport())
-//            report.saveToFirebase()
-
-
-
-//        val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
-////        val navController = findNavController(R.id.navigation_home)
-//        navView.menu.findItem(R.id.navigation_home).isChecked = true
-//
-//
-//        navView.setOnNavigationItemSelectedListener { menuItem ->
-//            when (menuItem.itemId) {
-//                R.id.navigation_home -> {
-//                    val intent = Intent(this@MainActivity, UserScheduleActivity::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
-//                R.id.navigation_report -> {
-//                    val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
-//                R.id.navigation_settings -> {
-//                    val intent = Intent(this@MainActivity, PatientSettingsActivity::class.java)
-//                    startActivity(intent)
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
 
         isCurrentUserPatientForPath { result ->
             dataExist = result
-            Log.d("wynik", dataExist.toString())
-
-//            // Sprawdź, czy użytkownik nie jest pacjentem
-//            if (!dataExist) {
-//                navView.menu.findItem(R.id.navigation_report).isChecked = false
-//                val intent = Intent(this@MainActivity, EmptyActivity::class.java)
-//                startActivity(intent)
-//            }
         }
 
         navView.menu.findItem(R.id.navigation_home).isChecked = true
-
         navView.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
@@ -167,16 +101,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     true
                 }
                 R.id.navigation_report -> {
-                    // Dodatkowa logika, jeśli użytkownik nie jest pacjentem
-//                    if (!dataExist) {
-//                        val intent = Intent(this@MainActivity, EmptyActivity::class.java)
-//                        startActivity(intent)
-//                        true
-//                    } else {
                         val intent = Intent(this@MainActivity, MainActivityMonthlyReport::class.java)
                         startActivity(intent)
                         true
-//                    }
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@MainActivity, PatientSettingsActivity::class.java)
@@ -186,11 +113,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 else -> false
             }
         }
-
-
-
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -231,57 +153,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                                 startActivity(intent)
                             }
                         }
-
-
-
-
-//                        Log.d("is added",isDataAddedForToday.toString())
-//
-//
-//                        if (isDataAddedForToday) {
-//                            Log.d("is added",isDataAddedForToday.toString())
-//                            val alertDialogBuilder = AlertDialog.Builder(this)
-//                            alertDialogBuilder.setMessage("Dane na dzisiaj zostały już dodane.")
-//                            alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
-//
-//                                // Przekieruj na inną stronę
-//                                val intent = Intent(this, MainActivityMonthlyReport::class.java)
-//                                startActivity(intent)
-//
-//                                dialog.dismiss()
-//                            }
-//                            val alertDialog = alertDialogBuilder.create()
-//                            alertDialog.show()
-//                        } else {
-//                            // Kontynuuj normalne działanie aplikacji
-//                            // Create a new intent for the new activity
-//                            val intent = Intent(this, MainActivityMonthlyReport::class.java)
-//
-//
-//                            // Save the report to Firebase
-//                            this.report.saveToFirebase()
-//
-//                            // Start the new activity
-//                            startActivity(intent)
-//                        }
-
-
                     } else {
                         // Lista nie ma 6 elementów, wyświetl komunikat o błędzie lub wykonaj odpowiednie działania
                         Toast.makeText(this@MainActivity, "Wypełnij wszystkie pola", Toast.LENGTH_SHORT).show()
                     }
-
                 }
-
             }
-        }else if(view != null && this.report.getMood() != ""){
+        } else if(view != null && this.report.getMood() != ""){
             when (view.id) {
                 R.id.button -> {
-                    // Create a new intent for the new activity
                     val intent = Intent(this, UserScheduleActivity::class.java)
-
-
-                    // Start the new activity
                     startActivity(intent)
                 }
             }
@@ -371,19 +252,4 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
