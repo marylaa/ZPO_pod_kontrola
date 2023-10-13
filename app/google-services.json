@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1065887098077",
+    "firebase_url": "https://pod-kontrola-default-rtdb.firebaseio.com",
     "project_id": "pod-kontrola",
     "storage_bucket": "pod-kontrola.appspot.com"
   },
@@ -14,7 +15,44 @@
       },
       "oauth_client": [
         {
-          "client_id": "1065887098077-gblruv7s5cph0gp5re98tr34dna35v3d.apps.googleusercontent.com",
+          "client_id": "1065887098077-scej7qejlbgvqk4jfb4cm22qkc7i49ta.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapp",
+            "certificate_hash": "2c15e42f1e9619644a6294be5de8f7ebe37ebfcb"
+          }
+        },
+        {
+          "client_id": "1065887098077-pvap1elsrovcgra0rfhqe4b8p9d7np0t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-Gu8_A9eeutzP2kWh_PSrq2xxLySVuR8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1065887098077-gblruv7s5cph0gp5re98tr34dna35v3d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065887098077:android:63cfae4fdde2cf088c2734",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1065887098077-pvap1elsrovcgra0rfhqe4b8p9d7np0t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

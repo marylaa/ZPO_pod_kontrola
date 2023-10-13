@@ -1,5 +1,6 @@
 package com.example.myapp.login
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,15 +9,18 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.myapp.R
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.*
-import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.launch
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
 
@@ -24,6 +28,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private var inputPassword: EditText? = null
     private var loginButton: Button? = null
     private lateinit var dbRef: DatabaseReference
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +41,19 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         loginButton = findViewById(R.id.loginButton)
 
         loginButton?.setOnClickListener{ logInRegisteredUser() }
+
+
+        auth = FirebaseAuth.getInstance()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("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")
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+
+        findViewById<Button>(R.id.loginButtonGoogle).setOnClickListener{
+            signInGoogle()
+        }
 
         //////////////////////////////////////////////////////////////////////////////////////////
 //        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
@@ -126,4 +146,48 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             }
         })
     }
+
+    private fun signInGoogle(){
+        val signInINtent = googleSignInClient.signInIntent
+        launcher.launch(signInINtent)
+    }
+
+    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result ->
+        if(result.resultCode == Activity.RESULT_OK){
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            handleResults(task)
+        }
+    }
+
+    private fun handleResults(task: Task<GoogleSignInAccount>) {
+        println("tutajjj 111")
+
+        if(task.isSuccessful){
+            val account : GoogleSignInAccount? = task.result
+            if(account != null){
+                println("tutajjj")
+                updateUI(account)
+            }
+        }else{
+            Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun updateUI(account: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        auth.signInWithCredential(credential).addOnCompleteListener{ task ->
+            if (task.isSuccessful) {
+                val intent: Intent = Intent(this, UserScheduleActivity::class.java)
+                startActivity(intent)
+
+                // Dodaj Toast poniżej
+                Toast.makeText(this, "Zalogowano pomyślnie przez konto Google", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }
