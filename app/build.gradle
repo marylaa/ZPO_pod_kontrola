@@ -67,7 +67,13 @@ dependencies {
     implementation "com.github.PhilJay:MPAndroidChart:v3.1.0"
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
+
+    // Add the dependency for the Firebase Authentication library
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     // MPAndroidChart library
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'

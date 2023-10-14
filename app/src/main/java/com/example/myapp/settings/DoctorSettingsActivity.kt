@@ -2,6 +2,7 @@ package com.example.myapp.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
@@ -10,8 +11,11 @@ import com.example.myapp.R
 import com.example.myapp.login.LoginActivity
 import com.example.myapp.notifications.MainNotificationsDoctor
 import com.example.myapp.patients_list.ViewPatientsActivity
+import com.facebook.login.LoginManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class DoctorSettingsActivity : AppCompatActivity() {
 
@@ -55,6 +59,9 @@ class DoctorSettingsActivity : AppCompatActivity() {
     }
 
     private fun logoutUser() {
+        // Wyloguj użytkownika z Facebooka
+        LoginManager.getInstance().logOut()
+
         val auth = FirebaseAuth.getInstance()
         auth.signOut()
 

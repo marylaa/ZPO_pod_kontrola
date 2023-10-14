@@ -8,6 +8,16 @@
     android:background="@color/background"
     tools:context=".login.LoginActivity">
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebook_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton"
+        android:layout_marginTop="10dp"/>
+
     <TextView
         android:id="@+id/title"
         android:layout_width="fill_parent"
@@ -58,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="64dp"
         android:enabled="true"
         android:text="Zaloguj się"
@@ -74,14 +84,14 @@
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
         android:clickable="true"
-        android:text="Zarejestruj się"
         android:onClick="onClick"
+        android:text="Zarejestruj się"
         android:textStyle="bold"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+        app:layout_constraintTop_toBottomOf="@+id/facebook_login_button" />
 
     <ImageView
         android:layout_width="129dp"

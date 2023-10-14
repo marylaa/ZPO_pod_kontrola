@@ -11,6 +11,9 @@
     <string name="err_msg_enter_valid_minute">Podane minuty są niepoprawne</string>
     <string name="err_msg_enter_valid_amount">Podana ilość jest niepoprawna</string>
     <string name="err_msg_enter_valid_in_box">Podana ilość w opakowaniu jest niepoprawna</string>
+    <string name="facebook_app_id">286824100841957</string>
+    <string name="fb_login_protocol_scheme">fb286824100841957</string>
+    <string name="facebook_client_token">d8392c014fd9eaa08ad92a43a50cfce5</string>
 
     <array name="users">
         <item>Pacjent</item>
