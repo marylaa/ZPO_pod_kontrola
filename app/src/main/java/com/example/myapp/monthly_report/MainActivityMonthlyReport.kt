@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myapp.EmptyActivity
 import com.example.myapp.R
 import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
@@ -70,6 +71,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     var resultDict = mutableMapOf<String, Float>()
     private lateinit var adapterPills: ArrayAdapter<String>
     private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var pillId: String
 
 
     @SuppressLint("MissingInflatedId")
@@ -233,91 +235,97 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         var prevName = ""
         var count = 1
 
-        var pillId = pillListId.get(0)
-        if (wantedPill != "") {
-            var index = pillList.indexOf(wantedPill)
-            pillId = pillListId.get(index)
+        if (pillListId.isEmpty()) {
+            val intent = Intent(this, EmptyActivity::class.java)
+            startActivity(intent)
+        } else {
+            pillId = pillListId.get(0)
         }
+            if (wantedPill != "") {
+                var index = pillList.indexOf(wantedPill)
+                pillId = pillListId.get(index)
+            }
 
 
-        for (i in 0 until data.size step 4) {
-            if (data[i] is String) {
-                try {
-                    var pillName = data[i + 1] as String
-                    var dateTime = LocalDate.parse(data[i] as String, formatter)
-                    val month = dateTime.monthValue
-                    val monthFormatted = String.format("%02d", month)
-                    if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
-                        daysInDataBase.add(dateTime)
+            for (i in 0 until data.size step 4) {
+                if (data[i] is String) {
+                    try {
+                        var pillName = data[i + 1] as String
+                        var dateTime = LocalDate.parse(data[i] as String, formatter)
+                        val month = dateTime.monthValue
+                        val monthFormatted = String.format("%02d", month)
+                        if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
+                            daysInDataBase.add(dateTime)
+                        }
+
+                        prevDate = dateTime
+                        prevName = pillName
+
+                    } catch (e: IndexOutOfBoundsException) {
+                        continue
                     }
-
-                    prevDate = dateTime
-                    prevName = pillName
-
-                } catch (e: IndexOutOfBoundsException) {
-                    continue
                 }
             }
-        }
 
-        val elementCountMap = mutableMapOf<Any, Int>()
-
-
-        for (element in daysInDataBase) {
-            val numberOfElems = elementCountMap[element]
-            if (numberOfElems != null) {
-                elementCountMap[element] = numberOfElems + 1
-            } else {
-                elementCountMap[element] = 1
-            }
-        }
-
-        for ((element, numberOfElems) in elementCountMap) {
-            println("Element: $element, Count: $numberOfElems")
-            var freq = getPillFrequency(wantedPill)
-            var number = numberOfElems.toString() + "/" + freq
-            newDict[element.toString()] = number
-        }
+            val elementCountMap = mutableMapOf<Any, Int>()
 
 
-        val dictionary = mutableMapOf<String, String>()
-        val year = Year.now().value // pobranie aktualnego roku
-        val numberOfDaysInMonth = getNumberOfDaysInMonth(year, months[wantedMonth]!!.toInt())
-
-
-        for (day in 1..numberOfDaysInMonth) {
-            val dayFormatted = String.format("%02d", day)
-            var date =
-                year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
-            dictionary[date] = "0"
-        }
-
-        for (key in dictionary.keys) {
-            for ((keyNewDict, valueNewDict) in newDict.entries) {
-                if (key.toString().equals(keyNewDict)) {
-                    dictionary[key] = valueNewDict
+            for (element in daysInDataBase) {
+                val numberOfElems = elementCountMap[element]
+                if (numberOfElems != null) {
+                    elementCountMap[element] = numberOfElems + 1
+                } else {
+                    elementCountMap[element] = 1
                 }
             }
-        }
 
-        val sortedDates = dictionary.toSortedMap()
+            for ((element, numberOfElems) in elementCountMap) {
+                println("Element: $element, Count: $numberOfElems")
+                var freq = getPillFrequency(wantedPill)
+                var number = numberOfElems.toString() + "/" + freq
+                newDict[element.toString()] = number
+            }
 
-        var colors = pillsColors(sortedDates)
-        var dates = mutableListOf<String>()
 
-        for (key in dictionary.keys) {
-            dates.add(key)
-        }
+            val dictionary = mutableMapOf<String, String>()
+            val year = Year.now().value // pobranie aktualnego roku
+            val numberOfDaysInMonth = getNumberOfDaysInMonth(year, months[wantedMonth]!!.toInt())
 
-        // set up the RecyclerView
-        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-        val horizontalLayoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView1.layoutManager = horizontalLayoutManager
-        adapterDate = RecycleViewAdapter(this, colors, dates)
-        recyclerView1.adapter = adapterDate
 
-        return resultDict
+            for (day in 1..numberOfDaysInMonth) {
+                val dayFormatted = String.format("%02d", day)
+                var date =
+                    year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
+                dictionary[date] = "0"
+            }
+
+            for (key in dictionary.keys) {
+                for ((keyNewDict, valueNewDict) in newDict.entries) {
+                    if (key.toString().equals(keyNewDict)) {
+                        dictionary[key] = valueNewDict
+                    }
+                }
+            }
+
+            val sortedDates = dictionary.toSortedMap()
+
+            var colors = pillsColors(sortedDates)
+            var dates = mutableListOf<String>()
+
+            for (key in dictionary.keys) {
+                dates.add(key)
+            }
+
+            // set up the RecyclerView
+            val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
+            val horizontalLayoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView1.layoutManager = horizontalLayoutManager
+            adapterDate = RecycleViewAdapter(this, colors, dates)
+            recyclerView1.adapter = adapterDate
+
+            return resultDict
+
     }
 
     fun getPillFrequency(name: String): String? {

@@ -8,29 +8,28 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.myapp.R
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
+import com.facebook.AccessToken
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.*
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.facebook.AccessToken
-import com.facebook.login.widget.LoginButton
-import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 
 open class LoginActivity : BaseActivity(), View.OnClickListener {
@@ -71,7 +70,7 @@ open class LoginActivity : BaseActivity(), View.OnClickListener {
 
 
 
-        findViewById<Button>(R.id.loginButtonGoogle).setOnClickListener{
+        findViewById<SignInButton>(R.id.loginButtonGoogle).setOnClickListener{
             signInGoogle()
         }
 
