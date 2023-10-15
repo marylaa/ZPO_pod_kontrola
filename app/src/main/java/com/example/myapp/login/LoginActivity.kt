@@ -42,13 +42,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
         loginButton?.setOnClickListener{ logInRegisteredUser() }
 
-
         auth = FirebaseAuth.getInstance()
+
+
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("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")
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
+
 
 
         findViewById<Button>(R.id.loginButtonGoogle).setOnClickListener{
