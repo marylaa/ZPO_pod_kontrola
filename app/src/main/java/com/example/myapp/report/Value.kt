@@ -1,25 +1,6 @@
 package com.example.myapp.report
 
-//import kotlinx.serialization.encodeToString
-//import kotlinx.serialization.json.Json
-//import kotlinx.serialization.Serializable
-//import kotlinx.serialization.encodeToString
-
-//@Serializable
 class Value(internal val name: String, private val unit: String, private val id: Int, internal var input: String) {
-//    var this_name: String = name
-//        // Custom Getter
-//        get() {
-//            return field
-//        }
-//    var this_id: Int = id
-//        get() = id
-//
-//    var this_unit: String = unit
-//        // Custom Getter
-//        get() {
-//            return field
-//        }
 
     fun getName(): String {
         return name
@@ -45,15 +26,8 @@ class Value(internal val name: String, private val unit: String, private val id:
         return "Value(name='$name', unit='$unit', id=$id, input='$input')"
     }
 
-//    fun toJson(): String{
-//        val json = Json.encodeToString(this)
-//        return json
-//    }
-
     fun getInput(): String {
         return input
 
     }
-
-
 }

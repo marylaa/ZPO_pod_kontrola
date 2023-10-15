@@ -92,8 +92,8 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
                     if (validateDetails()) {
                         ifUserExist().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
-                                Toast.makeText(this@DoctorAddPatientsActivity, "Pacjent został dodany", Toast.LENGTH_SHORT).show()
                                 if (task.result) {
+                                    Toast.makeText(this@DoctorAddPatientsActivity, "Pacjent został dodany", Toast.LENGTH_SHORT).show()
                                     val intent = Intent(this, DoctorSettingsActivity::class.java)
                                     startActivity(intent)
                                 }
@@ -104,6 +104,7 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
 
                 R.id.close -> {
                     val intent = Intent(this, DoctorSettingsActivity::class.java)
+                    intent.putExtra("patientIds", patientIds)
                     startActivity(intent)
                 }
             }

@@ -27,7 +27,6 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
         val button = itemView.findViewById<Button>(R.id.button)
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactsAdapter.ViewHolder {
         val context = parent.context
         val inflater = LayoutInflater.from(context)
@@ -37,23 +36,15 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
         return ViewHolder(contactView)
     }
 
-
-
     override fun onBindViewHolder(viewHolder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         // Get the data model based on position
         val elem: Value = ValuesArray[position]
 
-
         // Set item views based on your views and data model
         val textView1 = viewHolder.nameTextView1
-//        textView1.text = contact.name
         textView1.text = elem.getName()
         val textView2 = viewHolder.nameTextView2
-//        textView2.text = contact.unit
         textView2.text = elem.getUnit()
-
-
-
 
         val textView3 = viewHolder.nameTextView3
         textView3.setInputType(InputType.TYPE_CLASS_NUMBER)
@@ -63,7 +54,6 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
 
             override fun onTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
             }
-
 
             override fun afterTextChanged(editable: Editable?) {
                 val context = viewHolder.itemView.context
@@ -127,11 +117,6 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
                             ValuesArray[currentPos].setInput(editable.toString())
                         }
                     }
-
-
-
-
-
                     Log.d(TAG, editable.toString())
 
                     for (elem in ValuesArray) {
@@ -139,25 +124,9 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
                     }
                 }
             }
-
-
-
-
-
-
         })
-
-
-
-
         val button = viewHolder.button
-
-
-
-
     }
-
-
 
     override fun getItemCount(): Int {
         return ValuesArray.size
@@ -166,6 +135,4 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
     fun returnValuesArray(): Array<Value> {
         return ValuesArray.toTypedArray()
     }
-
-
 }

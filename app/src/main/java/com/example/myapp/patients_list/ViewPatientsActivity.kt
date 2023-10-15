@@ -17,6 +17,7 @@ import com.example.myapp.settings.DoctorSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.SharedObject
 import com.example.myapp.login.UserModel
+import com.example.myapp.notifications.MainNotificationsDoctor
 import com.example.myapp.notifications.NotificationModelAlert
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -29,6 +30,7 @@ class ViewPatientsActivity : AppCompatActivity() {
     private var patientList: MutableList<UserModel> = mutableListOf()
     private var patientDoctorsList: MutableList<PatientDoctorModel> = mutableListOf()
     private lateinit var userId: String
+    private lateinit var patientIds: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,11 +43,6 @@ class ViewPatientsActivity : AppCompatActivity() {
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
         getDataFromDatabase()
-//            .addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                newRecyclerView.adapter = PatientItemAdapter(patientList, patientDoctorsList)
-//                }
-//            }
 
         val navView: BottomNavigationView = findViewById(R.id.navigation_bar)
         navView.menu.findItem(R.id.navigation_home).isChecked = true
@@ -59,7 +56,7 @@ class ViewPatientsActivity : AppCompatActivity() {
                 }
                 R.id.navigation_settings -> {
                     val intent = Intent(this@ViewPatientsActivity, DoctorSettingsActivity::class.java)
-                    val patientIds = patientList.map { it.id }.toTypedArray()
+                    patientIds = patientList.map { it.id }.toTypedArray()
                     SharedObject.setlistPacientIds(patientIds)
                     intent.putExtra("patientIds", patientIds)
                     startActivity(intent)
@@ -69,24 +66,6 @@ class ViewPatientsActivity : AppCompatActivity() {
             }
         }
     }
-
-//    private fun getDataFromDatabase(): Task<Unit> {
-//        val doctorRef = FirebaseDatabase.getInstance().getReference("Patients")
-//        val query = doctorRef.orderByChild("doctor").equalTo(userId)
-//        return query.get().continueWith { task ->
-//            if (task.isSuccessful) {
-//                patientList.clear()
-//                patientDoctorsList.clear()
-//
-//                for (snapshot in task.result.children) {
-//                    val patientDoctor = snapshot.getValue(PatientDoctorModel::class.java)
-//                    val patientId = snapshot.child("patient").value.toString()
-//                    patientDoctorsList.add(patientDoctor!!)
-//                    getPatientFromDatabase(patientId)
-//                }
-//            }
-//        }
-//    }
 
     private fun getDataFromDatabase() {
         val doctorRef = FirebaseDatabase.getInstance().getReference("Patients")
@@ -159,7 +138,7 @@ class ViewPatientsActivity : AppCompatActivity() {
     }
 
     private fun sendNotification(notification: NotificationModelAlert?) {
-        val intent = Intent(this@ViewPatientsActivity, UserScheduleActivity::class.java)
+        val intent = Intent(this@ViewPatientsActivity, ViewPatientsActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val requestCode = 0
         val pendingIntent = PendingIntent.getActivity(

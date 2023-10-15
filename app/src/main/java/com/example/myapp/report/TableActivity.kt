@@ -1,22 +1,16 @@
 package com.example.myapp.report
 
-
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapp.R
 
 class TableActivity: AppCompatActivity() {
 
-    // on below line we are creating a variable.
     lateinit var languageLV: ListView
     lateinit var lngList: ArrayList<String>
-//    private var dataList = mutableListOf<List<String>>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +18,6 @@ class TableActivity: AppCompatActivity() {
 
         val value = intent.getStringExtra("key")
         var dataList = value?.toList()
-
 
         // on below line we are initializing our variables.
         languageLV = findViewById(R.id.idLVLanguages)
@@ -36,9 +29,6 @@ class TableActivity: AppCompatActivity() {
         )
 
         // on below line we are setting adapter for our list view.
-        Log.d("lista", dataList.toString())
         languageLV.adapter = adapter
-
-
     }
 }

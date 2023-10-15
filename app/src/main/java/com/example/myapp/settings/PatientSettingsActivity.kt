@@ -19,10 +19,13 @@ import com.example.myapp.notifications.NotificationModelAlert
 import com.example.myapp.patients_list.PatientDoctorModel
 import com.example.myapp.pills_list.PatientAllPillsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
+import com.facebook.login.LoginManager
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
@@ -63,7 +66,6 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                                 if (success) {
                                     runOnUiThread {
                                         Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
-                                        finish()
                                     }
                                 } else {
                                     runOnUiThread {
@@ -105,6 +107,9 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun logoutUser() {
+        // Wyloguj użytkownika z Facebooka
+        LoginManager.getInstance().logOut()
+        
         val auth = FirebaseAuth.getInstance()
         auth.signOut()
 
