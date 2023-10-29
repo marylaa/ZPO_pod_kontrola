@@ -20,9 +20,7 @@ import com.example.myapp.settings.DoctorSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.SharedObject
 import com.example.myapp.login.UserModel
-import com.example.myapp.notifications.MainNotificationsDoctor
 import com.example.myapp.notifications.NotificationModelAlert
-import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*

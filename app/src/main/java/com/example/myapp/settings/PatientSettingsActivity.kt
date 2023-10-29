@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.notifications.MainNotifications
 import com.example.myapp.R
+import com.example.myapp.chat.ChatActivity
 import com.example.myapp.login.LoginActivity
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.notifications.NotificationModelAlert
 import com.example.myapp.patients_list.PatientDoctorModel
+import com.example.myapp.patients_list.PatientItemAdapter
 import com.example.myapp.pills_list.PatientAllPillsActivity
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.facebook.login.LoginManager
@@ -42,8 +44,13 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_patient)
 
+
+
         userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         doctorsList = arrayListOf()
+
+        getDoctorFromDatabase(userId)
+
 
         logoutButton = findViewById(R.id.logoutButton)
         logoutButton?.setOnClickListener { logoutUser() }
@@ -53,6 +60,9 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
         val notifications = findViewById<ImageButton>(R.id.showNotifications)
         notifications.setOnClickListener(this)
+
+        val chatButton = findViewById<ImageButton>(R.id.choosedChat)
+        chatButton.setOnClickListener(this)
 
         val healthAlertButton = findViewById<ImageButton>(R.id.healthAlertImage)
         healthAlertButton.setOnClickListener {
@@ -128,6 +138,11 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.showNotifications -> {
                     val intent = Intent(this, MainNotifications::class.java)
+                    startActivity(intent)
+                }
+                R.id.choosedChat ->{
+                    val intent = Intent(this, ChatActivity::class.java)
+                    intent.putExtra("Id", doctorsList[0])
                     startActivity(intent)
                 }
 
@@ -247,4 +262,6 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
             dbRef.child(id).setValue(notification)
         }
     }
+
+
 }

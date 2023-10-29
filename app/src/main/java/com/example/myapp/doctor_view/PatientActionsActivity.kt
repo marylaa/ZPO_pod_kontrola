@@ -1,5 +1,6 @@
 package com.example.myapp.doctor_view
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapp.R
 import com.example.myapp.SharedObject
+import com.example.myapp.chat.ChatActivity
 import com.example.myapp.login.UserModel
 import com.example.myapp.patients_list.ViewPatientsActivity
 import com.example.myapp.settings.DoctorSettingsActivity
@@ -22,6 +24,7 @@ class PatientActionsActivity : AppCompatActivity(), View.OnClickListener {
 
     private var patientId: String? = null
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient_doctor_actions)
@@ -34,6 +37,11 @@ class PatientActionsActivity : AppCompatActivity(), View.OnClickListener {
 
         val reportButton = findViewById<ImageButton>(R.id.chooseReport)
         reportButton.setOnClickListener(this)
+
+        val chatButton = findViewById<ImageButton>(R.id.choosedChat)
+        chatButton.setOnClickListener(this)
+
+
 
         patientId = intent.getStringExtra("patientId")
         val patientName = findViewById<TextView>(R.id.patientName)
@@ -78,6 +86,11 @@ class PatientActionsActivity : AppCompatActivity(), View.OnClickListener {
                 R.id.chooseReport ->{
                     val intent = Intent(this, MonthyReportDoctor::class.java)
                     intent.putExtra("patientId", patientId)
+                    startActivity(intent)
+                }
+                R.id.choosedChat ->{
+                    val intent = Intent(this, ChatActivity::class.java)
+                    intent.putExtra("Id", patientId)
                     startActivity(intent)
                 }
             }

@@ -9,8 +9,9 @@
 <!--    android:id="@+id/navigation_messages"-->
 <!--    android:icon="@drawable/baseline_announcement_24"-->
 <!--    android:title="chart" />-->
-<item
+    <item
     android:id="@+id/navigation_settings"
     android:icon="@drawable/baseline_settings_24"
     android:title="settings" />
+
 </menu>
