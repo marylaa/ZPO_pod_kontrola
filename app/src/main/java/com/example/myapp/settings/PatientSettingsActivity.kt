@@ -257,7 +257,8 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 currentDate,
                 doctor,
                 id,
-                false
+                false,
+                userId
             )
             dbRef.child(id).setValue(notification)
         }
