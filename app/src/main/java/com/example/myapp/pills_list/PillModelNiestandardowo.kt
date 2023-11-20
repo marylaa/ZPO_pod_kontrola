@@ -7,7 +7,7 @@ data class PillModelNiestandardowo(
     var availability: Int? = null,
     var inBox: Int? = null,
     var frequency: String = "",
-    var time_list: MutableList<MutableList<MutableList<Any?>>?>? = null,
+    var time_list: MutableList<Any?>? = null,
     var date_last: String = "",
     var date_next: String = ""
 

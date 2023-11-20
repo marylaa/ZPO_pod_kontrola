@@ -677,17 +677,18 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             times1 = mutableListOf<Any?>(time1, false)
         }
         var times: MutableList<MutableList<Any?>?>? = null
-        var timesNiestandardowe: MutableList<MutableList<MutableList<Any?>>?>? = null
+        var timesNiestandardowe: MutableList<Any?>? = null
 
         if (selectedFrequency.equals("Niestandardowa")) {
+            data class DayObject(val day: String, val times: MutableList<MutableList<Any?>> = mutableListOf())
+
             val timesMonday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeMonday) in hoursMonday.withIndex()) {
                 if (timeMonday !== null) {
                     timesMonday.add(mutableListOf<Any?>(timeToString(hoursMonday.get(index), minutesMonday.get(index)), false))
                 }
             }
-            Log.e("AAAAAAAAAAA hoursMonday", hoursMonday.contentToString())
-            Log.e("AAAAAAAAAAA timesMonday", timesMonday.toString())
+            val mondayList = DayObject("Poniedziałek", timesMonday)
 
             val timesTuesday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeTuesday) in hoursTuesday.withIndex()) {
@@ -695,6 +696,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     timesTuesday.add(mutableListOf<Any?>(timeToString(hoursTuesday.get(index), minutesTuesday.get(index)), false))
                 }
             }
+            val tuesdayList = DayObject("Wtorek", timesTuesday)
 
             val timesWednesday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeWednesday) in hoursWednesday.withIndex()) {
@@ -702,6 +704,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     timesWednesday.add(mutableListOf<Any?>(timeToString(hoursWednesday.get(index), minutesWednesday.get(index)), false))
                 }
             }
+            val wednesdayList = DayObject("Środa", timesWednesday)
 
             val timesThursday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeThursday) in hoursThursday.withIndex()) {
@@ -709,6 +712,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     timesThursday.add(mutableListOf<Any?>(timeToString(hoursThursday.get(index), minutesThursday.get(index)), false))
                 }
             }
+            val thursdayList = DayObject("Czwartek", timesThursday)
 
             val timesFriday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeFriday) in hoursFriday.withIndex()) {
@@ -716,6 +720,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     timesFriday.add(mutableListOf<Any?>(timeToString(hoursFriday.get(index), minutesFriday.get(index)), false))
                 }
             }
+            val fridayList = DayObject("Piątek", timesFriday)
 
             val timesSaturday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeSaturday) in hoursSaturday.withIndex()) {
@@ -723,6 +728,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     timesSaturday.add(mutableListOf<Any?>(timeToString(hoursSaturday.get(index), minutesSaturday.get(index)), false))
                 }
             }
+            val saturdayList = DayObject("Sobota", timesSaturday)
 
             val timesSunday: MutableList<MutableList<Any?>> = mutableListOf()
             for((index, timeSunday) in hoursSunday.withIndex()) {
@@ -730,8 +736,12 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                     timesSunday.add(mutableListOf<Any?>(timeToString(hoursSunday.get(index), minutesSunday.get(index)), false))
                 }
             }
+            val sundayList = DayObject("Niedziela", timesSunday)
+            
+            timesNiestandardowe = mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
+                .filter { it.times.isNotEmpty() }
+                .toMutableList()
 
-            timesNiestandardowe = mutableListOf(timesMonday, timesTuesday)
         } else if (selectedFrequency.equals("Dwa razy dziennie")) {
             val time2 = timeToString(hours.get(1), minutes.get(1))
             val times2 = mutableListOf<Any?>(time2, false)
