@@ -1,7 +1,6 @@
 package com.example.myapp.pills_list
 
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -19,10 +18,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Request
-import org.json.JSONArray
-import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -125,7 +120,8 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
             "Dwa razy dziennie",
             "Trzy razy dziennie",
             "Co drugi dzień",
-            "Raz w tygodniu"
+            "Raz w tygodniu",
+            "Niestandardowa"
         )
         val adapter = ArrayAdapter(this, R.layout.list_item, elements)
         spinner.adapter = adapter
@@ -310,7 +306,7 @@ class AddPillActivity : BaseActivity(), View.OnClickListener {
 
         val time1 = timeToString(hours.get(0), minutes.get(0))
         val times1 = mutableListOf<Any?>(time1, false)
-        var times: MutableList<MutableList<Any?>>? = null
+        var times: MutableList<MutableList<Any?>?>? = null
 
         if (selectedFrequency.equals("Dwa razy dziennie")) {
             val time2 = timeToString(hours.get(1), minutes.get(1))

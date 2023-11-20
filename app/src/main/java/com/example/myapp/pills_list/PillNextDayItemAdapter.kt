@@ -34,18 +34,18 @@ class PillNextDayItemAdapter(private val pillList: MutableList<PillModel>?): Rec
         val currentItem = pillList!![position]
 
         var timesADay = currentItem.time_list!!
-        holder.time1.text = timesADay[0][0].toString()
+        holder.time1.text = timesADay[0]?.get(0)?.toString()
         if (timesADay.size === 2) {
             holder.checkBox2.setVisibility(View.VISIBLE);
             holder.time2.setVisibility(View.VISIBLE);
-            holder.time2.text = timesADay[1][0].toString()
+            holder.time2.text = timesADay[1]?.get(0)?.toString()
         } else if (timesADay.size === 3) {
             holder.checkBox2.setVisibility(View.VISIBLE);
             holder.time2.setVisibility(View.VISIBLE);
-            holder.time2.text = timesADay[1][0].toString()
+            holder.time2.text = timesADay[1]?.get(0)?.toString()
             holder.checkBox3.setVisibility(View.VISIBLE);
             holder.time3.setVisibility(View.VISIBLE);
-            holder.time3.text = timesADay[2][0].toString()
+            holder.time3.text = timesADay[2]?.get(0)?.toString()
         }
 
         holder.pillTitle.text = currentItem.name

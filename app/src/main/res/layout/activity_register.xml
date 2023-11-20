@@ -14,7 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="85dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/rounded_corner"
         android:gravity="center"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="80dp"
         android:layout_marginRight="40dp"
         android:hint="Imię"
         android:inputType="text"
@@ -74,23 +74,33 @@
         app:layout_constraintTop_toBottomOf="@+id/inputLastName" />
 
     <EditText
+        android:id="@+id/inputPesel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:hint="Numer PESEL"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputEmaill" />
+
+    <EditText
         android:id="@+id/inputPasswordd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
         android:hint="Hasło"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmaill" />
+        app:layout_constraintTop_toBottomOf="@+id/inputPesel" />
 
     <EditText
         android:id="@+id/inputPassworddRepeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginRight="40dp"
         android:layout_marginLeft="40dp"
         android:hint="Powtórz hasło"
@@ -103,7 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="130dp"
         android:layout_marginTop="30dp"
         android:backgroundTint="@color/white"
         android:enabled="true"

@@ -122,12 +122,12 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                         val newDate = dateAfter.plusDays(daysBetween)
                         pill!!.date_next = newDate.format(formatter)
                         // odcheckowanie checkboxów
-                        pill.time_list!![0][1] = false
+                        pill.time_list!![0]?.set(1, false)
                         if (pill.time_list!!.size >= 2) {
-                            pill.time_list!![1][1] = false
+                            pill.time_list!![1]?.set(1, false)
                         }
                         if (pill.time_list!!.size === 3) {
-                            pill.time_list!![2][1] = false
+                            pill.time_list!![2]?.set(1, false)
                         }
                     }
                     dbRef.child(pill!!.id.toString()).setValue(pill)
@@ -152,7 +152,7 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
     private fun sendNotificationHour() {
         for (pill in pillList) {
             for(time in pill.time_list!!) {
-                if (time[1] as Boolean) {
+                if (time?.get(1) as Boolean) {
                     break
                 }
                 val getTime = time[0].toString().split(":")

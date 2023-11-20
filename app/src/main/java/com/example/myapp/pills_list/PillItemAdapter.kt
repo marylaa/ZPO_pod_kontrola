@@ -45,18 +45,18 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
         counter = 1
 
         var timesADay = currentItem.time_list!!
-        holder.time1.text = timesADay[0][0].toString()
+        holder.time1.text = timesADay[0]?.get(0)?.toString()
         if (timesADay.size === 2) {
             holder.checkBox2.setVisibility(View.VISIBLE);
             holder.time2.setVisibility(View.VISIBLE);
-            holder.time2.text = timesADay[1][0].toString()
+            holder.time2.text = timesADay[1]?.get(0)?.toString()
         } else if (timesADay.size === 3) {
             holder.checkBox2.setVisibility(View.VISIBLE);
             holder.time2.setVisibility(View.VISIBLE);
-            holder.time2.text = timesADay[1][0].toString()
+            holder.time2.text = timesADay[1]?.get(0)?.toString()
             holder.checkBox3.setVisibility(View.VISIBLE);
             holder.time3.setVisibility(View.VISIBLE);
-            holder.time3.text = timesADay[2][0].toString()
+            holder.time3.text = timesADay[2]?.get(0)?.toString()
         }
 
         holder.pillTitle.text = currentItem.name
@@ -69,9 +69,9 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
         val current = LocalDate.now().format(formatter)
 
         holder.itemView.apply {
-            holder.checkBox1.isChecked = timesADay[0][1] as Boolean
+            holder.checkBox1.isChecked = timesADay[0]?.get(1) as Boolean
             holder.checkBox1.setOnCheckedChangeListener { _, isChecked ->
-                currentItem.time_list!![0][1] = isChecked
+                currentItem.time_list!![0]?.set(1, isChecked)
 
                 if (isChecked) {
                     val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -124,7 +124,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                     dbReference.child("Pills_status").push().setValue(
                         mapOf(
-                            "status" to currentItem.time_list!![0][1].toString(),
+                            "status" to currentItem.time_list!![0]!![1]?.toString(),
                             "id" to currentItem.id,
                             "date" to current,
                             "user" to uid
@@ -210,9 +210,9 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
             }
 
             if (timesADay.size >= 2) {
-                holder.checkBox2.isChecked = timesADay[1][1] as Boolean
+                holder.checkBox2.isChecked = timesADay[1]?.get(1) as Boolean
                 holder.checkBox2.setOnCheckedChangeListener { _, isChecked ->
-                    currentItem.time_list!![1][1] = isChecked
+                    currentItem.time_list!![1]?.set(1, isChecked)
 
                     if (isChecked) {
                         val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -263,7 +263,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                         dbReference.child("Pills_status").push().setValue(
                             mapOf(
-                                "status" to currentItem.time_list!![1][1].toString(),
+                                "status" to currentItem.time_list!![1]?.get(1)?.toString(),
                                 "id" to currentItem.id,
                                 "date" to current,
                                 "user" to uid
@@ -355,9 +355,9 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
                 }
             }
             if (timesADay.size === 3) {
-                holder.checkBox3.isChecked = timesADay[2][1] as Boolean
+                holder.checkBox3.isChecked = timesADay[2]?.get(1) as Boolean
                 holder.checkBox3.setOnCheckedChangeListener { _, isChecked ->
-                    currentItem.time_list!![2][1] = isChecked
+                    currentItem.time_list!![2]?.set(1, isChecked)
 
                     if (isChecked) {
                         pillTakenInfo()
@@ -409,7 +409,7 @@ class PillItemAdapter(private val pillList: MutableList<PillModel>?, private val
 
                         dbReference.child("Pills_status").push().setValue(
                             mapOf(
-                                "status" to currentItem.time_list!![2][1].toString(),
+                                "status" to currentItem.time_list!![2]?.get(1)?.toString(),
                                 "id" to currentItem.id,
                                 "date" to current,
                                 "user" to uid
