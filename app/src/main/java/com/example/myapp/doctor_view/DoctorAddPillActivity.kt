@@ -75,6 +75,13 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
     private lateinit var fridayButton: Button
     private lateinit var saturdayButton: Button
     private lateinit var sundayButton: Button
+    private lateinit var mondayButtonRemove: ImageButton
+    private lateinit var tuesdayButtonRemove: ImageButton
+    private lateinit var wednesdayButtonRemove: ImageButton
+    private lateinit var thursdayButtonRemove: ImageButton
+    private lateinit var fridayButtonRemove: ImageButton
+    private lateinit var saturdayButtonRemove: ImageButton
+    private lateinit var sundayButtonRemove: ImageButton
     private var monday = 0
     private var tuesday = 0
     private var wednesday = 0
@@ -737,7 +744,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
                 }
             }
             val sundayList = DayObject("Niedziela", timesSunday)
-            
+
             timesNiestandardowe = mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
                 .filter { it.times.isNotEmpty() }
                 .toMutableList()
@@ -814,6 +821,7 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
     private fun addMonday() {
         if (monday == 0) {
             monday = 1
+            mondayButtonRemove.setVisibility(View.VISIBLE)
             mondayText.setVisibility(View.VISIBLE)
             mondayTextViewHour1.setVisibility(View.VISIBLE)
             mondayTextView1.setVisibility(View.VISIBLE)
@@ -831,12 +839,19 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             mondayTextView3.setVisibility(View.VISIBLE)
             mondayInputHour3.setVisibility(View.VISIBLE)
             mondayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun addTuesday() {
         if (tuesday == 0) {
             tuesday = 1
+            tuesdayButtonRemove.setVisibility(View.VISIBLE)
             tuesdayText.setVisibility(View.VISIBLE)
             tuesdayTextViewHour1.setVisibility(View.VISIBLE)
             tuesdayTextView1.setVisibility(View.VISIBLE)
@@ -854,12 +869,19 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             tuesdayTextView3.setVisibility(View.VISIBLE)
             tuesdayInputHour3.setVisibility(View.VISIBLE)
             tuesdayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun addWednesday() {
         if (wednesday == 0) {
             wednesday = 1
+            wednesdayButtonRemove.setVisibility(View.VISIBLE)
             wednesdayText.setVisibility(View.VISIBLE)
             wednesdayTextViewHour1.setVisibility(View.VISIBLE)
             wednesdayTextView1.setVisibility(View.VISIBLE)
@@ -877,12 +899,19 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             wednesdayTextView3.setVisibility(View.VISIBLE)
             wednesdayInputHour3.setVisibility(View.VISIBLE)
             wednesdayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun addThursday() {
         if (thursday == 0) {
             thursday = 1
+            thursdayButtonRemove.setVisibility(View.VISIBLE)
             thursdayText.setVisibility(View.VISIBLE)
             thursdayTextViewHour1.setVisibility(View.VISIBLE)
             thursdayTextView1.setVisibility(View.VISIBLE)
@@ -900,12 +929,19 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             thursdayTextView3.setVisibility(View.VISIBLE)
             thursdayInputHour3.setVisibility(View.VISIBLE)
             thursdayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun addFriday() {
         if (friday == 0) {
             friday = 1
+            fridayButtonRemove.setVisibility(View.VISIBLE)
             fridayText.setVisibility(View.VISIBLE)
             fridayTextViewHour1.setVisibility(View.VISIBLE)
             fridayTextView1.setVisibility(View.VISIBLE)
@@ -923,12 +959,19 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             fridayTextView3.setVisibility(View.VISIBLE)
             fridayInputHour3.setVisibility(View.VISIBLE)
             fridayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun addSaturday() {
         if (saturday == 0) {
             saturday = 1
+            saturdayButtonRemove.setVisibility(View.VISIBLE)
             saturdayText.setVisibility(View.VISIBLE)
             saturdayTextViewHour1.setVisibility(View.VISIBLE)
             saturdayTextView1.setVisibility(View.VISIBLE)
@@ -946,12 +989,19 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             saturdayTextView3.setVisibility(View.VISIBLE)
             saturdayInputHour3.setVisibility(View.VISIBLE)
             saturdayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun addSunday() {
         if (sunday == 0) {
             sunday = 1
+            sundayButtonRemove.setVisibility(View.VISIBLE)
             sundayText.setVisibility(View.VISIBLE)
             sundayTextViewHour1.setVisibility(View.VISIBLE)
             sundayTextView1.setVisibility(View.VISIBLE)
@@ -969,6 +1019,222 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
             sundayTextView3.setVisibility(View.VISIBLE)
             sundayInputHour3.setVisibility(View.VISIBLE)
             sundayInputMinute3.setVisibility(View.VISIBLE)
+        } else {
+            Toast.makeText(
+                this@DoctorAddPillActivity,
+                "Maksymalnie można dodać 3 dawki dziennie",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun removeMonday() {
+        if (monday == 1) {
+            monday = 0
+            mondayButtonRemove.setVisibility(View.GONE)
+            mondayText.setVisibility(View.GONE)
+            mondayTextViewHour1.setVisibility(View.GONE)
+            mondayTextView1.setVisibility(View.GONE)
+            mondayInputHour1.setVisibility(View.GONE)
+            mondayInputMinute1.setVisibility(View.GONE)
+            mondayInputHour1.text = null
+            mondayInputMinute1.text = null
+        } else if (monday == 2) {
+            monday = 1
+            mondayTextViewHour2.setVisibility(View.GONE)
+            mondayTextView2.setVisibility(View.GONE)
+            mondayInputHour2.setVisibility(View.GONE)
+            mondayInputMinute2.setVisibility(View.GONE)
+            mondayInputHour2.text = null
+            mondayInputMinute2.text = null
+        } else if (monday == 3) {
+            monday = 2
+            mondayTextViewHour3.setVisibility(View.GONE)
+            mondayTextView3.setVisibility(View.GONE)
+            mondayInputHour3.setVisibility(View.GONE)
+            mondayInputMinute3.setVisibility(View.GONE)
+            mondayInputHour3.text = null
+            mondayInputMinute3.text = null
+        }
+    }
+
+    private fun removeTuesday() {
+        if (tuesday == 1) {
+            tuesday = 0
+            tuesdayButtonRemove.setVisibility(View.GONE)
+            tuesdayText.setVisibility(View.GONE)
+            tuesdayTextViewHour1.setVisibility(View.GONE)
+            tuesdayTextView1.setVisibility(View.GONE)
+            tuesdayInputHour1.setVisibility(View.GONE)
+            tuesdayInputMinute1.setVisibility(View.GONE)
+            tuesdayInputHour1.text = null
+            tuesdayInputMinute1.text = null
+        } else if (tuesday == 2) {
+            tuesday = 1
+            tuesdayTextViewHour2.setVisibility(View.GONE)
+            tuesdayTextView2.setVisibility(View.GONE)
+            tuesdayInputHour2.setVisibility(View.GONE)
+            tuesdayInputMinute2.setVisibility(View.GONE)
+            tuesdayInputHour2.text = null
+            tuesdayInputMinute2.text = null
+        } else if (tuesday == 3) {
+            tuesday = 2
+            tuesdayTextViewHour3.setVisibility(View.GONE)
+            tuesdayTextView3.setVisibility(View.GONE)
+            tuesdayInputHour3.setVisibility(View.GONE)
+            tuesdayInputMinute3.setVisibility(View.GONE)
+            tuesdayInputHour3.text = null
+            tuesdayInputMinute3.text = null
+        }
+    }
+
+    private fun removeWednesday() {
+        if (wednesday == 1) {
+            wednesday = 0
+            wednesdayButtonRemove.setVisibility(View.GONE)
+            wednesdayText.setVisibility(View.GONE)
+            wednesdayTextViewHour1.setVisibility(View.GONE)
+            wednesdayTextView1.setVisibility(View.GONE)
+            wednesdayInputHour1.setVisibility(View.GONE)
+            wednesdayInputMinute1.setVisibility(View.GONE)
+            wednesdayInputHour1.text = null
+            wednesdayInputMinute1.text = null
+        } else if (wednesday == 2) {
+            wednesday = 1
+            wednesdayTextViewHour2.setVisibility(View.GONE)
+            wednesdayTextView2.setVisibility(View.GONE)
+            wednesdayInputHour2.setVisibility(View.GONE)
+            wednesdayInputMinute2.setVisibility(View.GONE)
+            wednesdayInputHour2.text = null
+            wednesdayInputMinute2.text = null
+        } else if (wednesday == 3) {
+            wednesday = 2
+            wednesdayTextViewHour3.setVisibility(View.GONE)
+            wednesdayTextView3.setVisibility(View.GONE)
+            wednesdayInputHour3.setVisibility(View.GONE)
+            wednesdayInputMinute3.setVisibility(View.GONE)
+            wednesdayInputHour3.text = null
+            wednesdayInputMinute3.text = null
+        }
+    }
+
+    private fun removeThursday() {
+        if (thursday == 1) {
+            thursday = 0
+            thursdayButtonRemove.setVisibility(View.GONE)
+            thursdayText.setVisibility(View.GONE)
+            thursdayTextViewHour1.setVisibility(View.GONE)
+            thursdayTextView1.setVisibility(View.GONE)
+            thursdayInputHour1.setVisibility(View.GONE)
+            thursdayInputMinute1.setVisibility(View.GONE)
+            thursdayInputHour1.text = null
+            thursdayInputMinute1.text = null
+        } else if (thursday == 2) {
+            thursday = 1
+            thursdayTextViewHour2.setVisibility(View.GONE)
+            thursdayTextView2.setVisibility(View.GONE)
+            thursdayInputHour2.setVisibility(View.GONE)
+            thursdayInputMinute2.setVisibility(View.GONE)
+            thursdayInputHour2.text = null
+            thursdayInputMinute2.text = null
+        } else if (thursday == 3) {
+            thursday = 2
+            thursdayTextViewHour3.setVisibility(View.GONE)
+            thursdayTextView3.setVisibility(View.GONE)
+            thursdayInputHour3.setVisibility(View.GONE)
+            thursdayInputMinute3.setVisibility(View.GONE)
+            thursdayInputHour3.text = null
+            thursdayInputMinute3.text = null
+        }
+    }
+
+    private fun removeFriday() {
+        if (friday == 1) {
+            friday = 0
+            fridayButtonRemove.setVisibility(View.GONE)
+            fridayText.setVisibility(View.GONE)
+            fridayTextViewHour1.setVisibility(View.GONE)
+            fridayTextView1.setVisibility(View.GONE)
+            fridayInputHour1.setVisibility(View.GONE)
+            fridayInputMinute1.setVisibility(View.GONE)
+            fridayInputHour1.text = null
+            fridayInputMinute1.text = null
+        } else if (friday == 2) {
+            friday = 1
+            fridayTextViewHour2.setVisibility(View.GONE)
+            fridayTextView2.setVisibility(View.GONE)
+            fridayInputHour2.setVisibility(View.GONE)
+            fridayInputMinute2.setVisibility(View.GONE)
+            fridayInputHour2.text = null
+            fridayInputMinute2.text = null
+        } else if (friday == 3) {
+            friday = 2
+            fridayTextViewHour3.setVisibility(View.GONE)
+            fridayTextView3.setVisibility(View.GONE)
+            fridayInputHour3.setVisibility(View.GONE)
+            fridayInputMinute3.setVisibility(View.GONE)
+            fridayInputHour3.text = null
+            fridayInputMinute3.text = null
+        }
+    }
+
+    private fun removeSaturday() {
+        if (saturday == 1) {
+            saturday = 0
+            saturdayButtonRemove.setVisibility(View.GONE)
+            saturdayText.setVisibility(View.GONE)
+            saturdayTextViewHour1.setVisibility(View.GONE)
+            saturdayTextView1.setVisibility(View.GONE)
+            saturdayInputHour1.setVisibility(View.GONE)
+            saturdayInputMinute1.setVisibility(View.GONE)
+            saturdayInputHour1.text = null
+            saturdayInputMinute1.text = null
+        } else if (saturday == 2) {
+            saturday = 1
+            saturdayTextViewHour2.setVisibility(View.GONE)
+            saturdayTextView2.setVisibility(View.GONE)
+            saturdayInputHour2.setVisibility(View.GONE)
+            saturdayInputMinute2.setVisibility(View.GONE)
+            saturdayInputHour2.text = null
+            saturdayInputMinute2.text = null
+        } else if (saturday == 3) {
+            saturday = 2
+            saturdayTextViewHour3.setVisibility(View.GONE)
+            saturdayTextView3.setVisibility(View.GONE)
+            saturdayInputHour3.setVisibility(View.GONE)
+            saturdayInputMinute3.setVisibility(View.GONE)
+            saturdayInputHour3.text = null
+            saturdayInputMinute3.text = null
+        }
+    }
+
+    private fun removeSunday() {
+        if (sunday == 1) {
+            sunday = 0
+            sundayButtonRemove.setVisibility(View.GONE)
+            sundayText.setVisibility(View.GONE)
+            sundayTextViewHour1.setVisibility(View.GONE)
+            sundayTextView1.setVisibility(View.GONE)
+            sundayInputHour1.setVisibility(View.GONE)
+            sundayInputMinute1.setVisibility(View.GONE)
+            sundayInputHour1.text = null
+            sundayInputMinute1.text = null
+        } else if (sunday == 2) {
+            sunday = 1
+            sundayTextViewHour2.setVisibility(View.GONE)
+            sundayTextView2.setVisibility(View.GONE)
+            sundayInputHour2.setVisibility(View.GONE)
+            sundayInputMinute2.setVisibility(View.GONE)
+            sundayInputHour2.text = null
+            sundayInputMinute2.text = null
+        } else if (sunday == 3) {
+            sunday = 2
+            sundayTextViewHour3.setVisibility(View.GONE)
+            sundayTextView3.setVisibility(View.GONE)
+            sundayInputHour3.setVisibility(View.GONE)
+            sundayInputMinute3.setVisibility(View.GONE)
+            sundayInputHour3.text = null
+            sundayInputMinute3.text = null
         }
     }
 
@@ -990,6 +1256,20 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         saturdayButton.setOnClickListener{ addSaturday() }
         sundayButton = findViewById(R.id.sunday)
         sundayButton.setOnClickListener{ addSunday() }
+        mondayButtonRemove = findViewById(R.id.removeMonday)
+        mondayButtonRemove.setOnClickListener{ removeMonday() }
+        thursdayButtonRemove = findViewById(R.id.removeThursday)
+        thursdayButtonRemove.setOnClickListener{ removeThursday() }
+        tuesdayButtonRemove = findViewById(R.id.removeTuesday)
+        tuesdayButtonRemove.setOnClickListener{ removeTuesday() }
+        wednesdayButtonRemove = findViewById(R.id.removeWednesday)
+        wednesdayButtonRemove.setOnClickListener{ removeWednesday() }
+        fridayButtonRemove = findViewById(R.id.removeFriday)
+        fridayButtonRemove.setOnClickListener{ removeFriday() }
+        saturdayButtonRemove = findViewById(R.id.removeSaturday)
+        saturdayButtonRemove.setOnClickListener{ removeSaturday() }
+        sundayButtonRemove = findViewById(R.id.removeSunday)
+        sundayButtonRemove.setOnClickListener{ removeSunday() }
 
         //MONDAY
         mondayText = findViewById(R.id.mondayText)
@@ -1101,6 +1381,13 @@ class DoctorAddPillActivity : BaseActivity(), View.OnClickListener {
         niestandardowaButtons.setVisibility(View.GONE);
         niestandardowaSeparator1.setVisibility(View.GONE);
         niestandardowaSeparator2.setVisibility(View.GONE);
+        mondayButtonRemove.setVisibility(View.GONE)
+        thursdayButtonRemove.setVisibility(View.GONE)
+        tuesdayButtonRemove.setVisibility(View.GONE)
+        wednesdayButtonRemove.setVisibility(View.GONE)
+        fridayButtonRemove.setVisibility(View.GONE)
+        saturdayButtonRemove.setVisibility(View.GONE)
+        sundayButtonRemove.setVisibility(View.GONE)
 
         inputHour1.setVisibility(View.VISIBLE);
         inputMinute1.setVisibility(View.VISIBLE);
