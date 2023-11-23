@@ -121,7 +121,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
                     pillName?.setText(it.name)
                     inputLeft?.setText(it.availability.toString())
                     inputPackage?.setText(it.inBox.toString())
-                    val hour1 = it.time_list!!.get(0).get(0).toString().split(":")
+                    val hour1 = it.time_list!!.get(0)?.get(0).toString().split(":")
                     inputHour1?.setText(hour1.get(0))
                     inputMinute1?.setText(hour1.get(1))
 
@@ -135,7 +135,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
                             text2.setVisibility(View.VISIBLE);
                             text22.setVisibility(View.VISIBLE);
 
-                            val hour2 = it.time_list!!.get(1).get(0).toString().split(":")
+                            val hour2 = it.time_list!!.get(1)?.get(0).toString().split(":")
                             inputHour2?.setText(hour2.get(0))
                             inputMinute2?.setText(hour2.get(1))
                         }
@@ -151,11 +151,11 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
                             text3.setVisibility(View.VISIBLE);
                             text33.setVisibility(View.VISIBLE);
 
-                            val hour2 = it.time_list!!.get(1).get(0).toString().split(":")
+                            val hour2 = it.time_list!!.get(1)?.get(0).toString().split(":")
                             inputHour2?.setText(hour2.get(0))
                             inputMinute2?.setText(hour2.get(1))
 
-                            val hour3 = it.time_list!!.get(2).get(0).toString().split(":")
+                            val hour3 = it.time_list!!.get(2)?.get(0).toString().split(":")
                             inputHour3?.setText(hour3.get(0))
                             inputMinute3?.setText(hour3.get(1))
                         }
@@ -337,7 +337,7 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
         val time1 = timeToString(hours.get(0), minutes.get(0))
         val times1 = mutableListOf<Any?>(time1, false)
-        var times: MutableList<MutableList<Any?>>? = null
+        var times: MutableList<MutableList<Any?>?>? = null
 
         if (selectedFrequency.equals("Dwa razy dziennie")) {
             val time2 = timeToString(hours.get(1), minutes.get(1))
@@ -360,14 +360,14 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
             // zostawienie checkboxa w stanie jaki byl
             if (times.size < pill!!.time_list!!.size) {
                 for(i in 0..times.size - 1) {
-                    if(pill!!.time_list!![i][1] as Boolean) {
-                        times[i][1] = true
+                    if(pill!!.time_list!![i]?.get(1) as Boolean) {
+                        times[i]?.set(1, true)
                     }
                 }
             } else {
                 for(i in 0..pill!!.time_list!!.size - 1) {
-                    if(pill!!.time_list!![i][1] as Boolean) {
-                        times[i][1] = true
+                    if(pill!!.time_list!![i]?.get(1) as Boolean) {
+                        times[i]?.set(1, true)
                     }
                 }
             }
@@ -390,15 +390,15 @@ class DoctorEditPillActivity : BaseActivity(), View.OnClickListener {
 
             var same = true
             for (i in 0..times.size - 1) {
-                if(!(pill!!.time_list!![i][0]!!.equals(times[i][0]))) {
+                if(!(pill!!.time_list!![i]?.get(0)!!.equals(times[i]?.get(0)))) {
                     same = false
                 }
             }
             if (!same) {
                 // zostawienie checkboxa w stanie jaki byl
                 for(i in 0..times.size - 1) {
-                    if(pill!!.time_list!![i][1] as Boolean) {
-                        times[i][1] = true
+                    if(pill!!.time_list!![i]?.get(1) as Boolean) {
+                        times[i]?.set(1, true)
                     }
                 }
                 pill!!.time_list = times

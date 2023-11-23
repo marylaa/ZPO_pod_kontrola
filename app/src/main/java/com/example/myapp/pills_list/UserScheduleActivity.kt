@@ -26,19 +26,17 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-
 class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var dbRef: DatabaseReference
     private var pillList: MutableList<PillModel> = mutableListOf()
+    private var pillListCustom: MutableList<PillModelCustom> = mutableListOf()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_pills_schedule)
-
-        val id = FirebaseAuth.getInstance().currentUser!!.uid
-        Log.d("CCCCCCCCCCCCCCCCC", id)
 
         val addButton = findViewById<Button>(R.id.addPill)
         addButton.setOnClickListener(this)
@@ -79,11 +77,10 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         if(view !=null){
             when (view.id){
-
                 R.id.addPill ->{
                     val intent = Intent(this, AddPillActivity::class.java)
                     startActivity(intent)
-                };
+                }
                 R.id.addRaport -> {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
@@ -109,36 +106,66 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
+                pillListCustom.clear()
                 for (snapshot in dataSnapshot.children) {
-                    val pill = snapshot.getValue(PillModel::class.java)
+                    try {
+                        val pill = snapshot.getValue(PillModel::class.java)
+                        Log.e("PILLLLLLLLLLLLLLL", pill.toString())
 
-                    val dateBefore = LocalDate.parse(pill!!.date_last, formatter)
+                        if (pill?.frequency !== "Niestandardowa") {
+                            val dateBefore = LocalDate.parse(pill!!.date_last, formatter)
 
-                    // przesuwanie dat, jesli zmienil sie dzien
-                    if(dateBefore.isBefore(current)) {
-                        val dateAfter = LocalDate.parse(pill!!.date_next, formatter)
-                        pill!!.date_last = pill!!.date_next
-                        val daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter)
-                        val newDate = dateAfter.plusDays(daysBetween)
-                        pill!!.date_next = newDate.format(formatter)
-                        // odcheckowanie checkboxów
-                        pill.time_list!![0][1] = false
-                        if (pill.time_list!!.size >= 2) {
-                            pill.time_list!![1][1] = false
+                            // przesuwanie dat, jesli zmienil sie dzien
+                            if (dateBefore.isBefore(current)) {
+                                val dateAfter = LocalDate.parse(pill!!.date_next, formatter)
+                                pill!!.date_last = pill!!.date_next
+                                val daysBetween = ChronoUnit.DAYS.between(dateBefore, dateAfter)
+                                val newDate = dateAfter.plusDays(daysBetween)
+                                pill!!.date_next = newDate.format(formatter)
+                                // odcheckowanie checkboxów
+                                pill.time_list!![0]?.set(1, false)
+                                if (pill.time_list!!.size >= 2) {
+                                    pill.time_list!![1]?.set(1, false)
+                                }
+                                if (pill.time_list!!.size === 3) {
+                                    pill.time_list!![2]?.set(1, false)
+                                }
+                            }
+                            dbRef.child(pill!!.id.toString()).setValue(pill)
+
+                            // sprawdzenie czy dziś bedzie brana tabletka
+                            if (pill!!.date_last.equals(today)) {
+                                pillList.add(pill!!)
+                            }
                         }
-                        if (pill.time_list!!.size === 3) {
-                            pill.time_list!![2][1] = false
-                        }
-                    }
-                    dbRef.child(pill!!.id.toString()).setValue(pill)
+                    } catch (e: Exception) {
+                        // NIESTANDARDOWA częstotliwość
 
-                    // sprawdzenie czy dziś bedzie brana tabletka
-                    if (pill!!.date_last.equals(today)) {
-                        pillList.add(pill!!)
+                        val days = arrayOf("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela")
+                        val today = LocalDate.now()
+                        val dayOfWeek = today.dayOfWeek.value - 1
+
+                        val pill = snapshot.getValue(PillModelCustom::class.java)
+                        Log.e("PILLLLLLLLLLLLLLL", pill?.time_list.toString())
+                        Log.e("PILLLLLLLLLLLLLLL", days.get(dayOfWeek))
+                        val todayDay = days.get(dayOfWeek)
+
+                        for (item in pill?.time_list.orEmpty()) {
+                            val dayValue = item["day"]
+
+                            Log.e("Dzień tygodnia", dayValue.toString())
+                            // sprawdzenie czy dziś bedzie brana tabletka
+                            if (dayValue.toString().equals(todayDay)) {
+                                pillListCustom.add(pill!!)
+                            }
+                        }
                     }
                 }
 
-                newRecyclerView.adapter = PillItemAdapter(pillList,this@UserScheduleActivity)
+                val mergedList = mutableListOf<Any>()
+                mergedList.addAll(pillList)
+                mergedList.addAll(pillListCustom)
+                newRecyclerView.adapter = PillItemAdapter(mergedList, this@UserScheduleActivity)
                 sendNotificationHour()
             }
 
@@ -151,41 +178,43 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sendNotificationHour() {
         for (pill in pillList) {
-            for(time in pill.time_list!!) {
-                if (time[1] as Boolean) {
-                    break
-                }
-                val getTime = time[0].toString().split(":")
+            if (pill.frequency !== "Niestandardowa") {
+                for(time in pill.time_list!!) {
+                    if (time?.get(1) as Boolean) {
+                        break
+                    }
+                    val getTime = time[0].toString().split(":")
 
-                // Pobierz godzinę zażycia tabletki
-                val hour = getTime[0].toInt()
-                val minute = getTime[1].toInt()
+                    // Pobierz godzinę zażycia tabletki
+                    val hour = getTime[0].toInt()
+                    val minute = getTime[1].toInt()
 
-                // Utwórz kalendarz i ustaw datę i godzinę powiadomienia
-                val calendar = Calendar.getInstance()
-                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                calendar.set(Calendar.MINUTE, minute)
-                calendar.set(Calendar.SECOND, 0)
+                    // Utwórz kalendarz i ustaw datę i godzinę powiadomienia
+                    val calendar = Calendar.getInstance()
+                    calendar.set(Calendar.HOUR_OF_DAY, hour)
+                    calendar.set(Calendar.MINUTE, minute)
+                    calendar.set(Calendar.SECOND, 0)
 
-                // Sprawdź, czy czas powiadomienia jeszcze nie minął
-                if (calendar.timeInMillis > System.currentTimeMillis()) {
-                    // Ustaw harmonogram powiadomienia przy użyciu AlarmManagera
-                    val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    val intent = Intent(this@UserScheduleActivity, NotificationReceiver::class.java)
-                    intent.putExtra("pillName", pill.name)
-                    val pendingIntent = PendingIntent.getBroadcast(
-                        this@UserScheduleActivity,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
+                    // Sprawdź, czy czas powiadomienia jeszcze nie minął
+                    if (calendar.timeInMillis > System.currentTimeMillis()) {
+                        // Ustaw harmonogram powiadomienia przy użyciu AlarmManagera
+                        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        val intent = Intent(this@UserScheduleActivity, NotificationReceiver::class.java)
+                        intent.putExtra("pillName", pill.name)
+                        val pendingIntent = PendingIntent.getBroadcast(
+                            this@UserScheduleActivity,
+                            0,
+                            intent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
 
-                    // Ustaw harmonogram powiadomienia
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                    )
+                        // Ustaw harmonogram powiadomienia
+                        alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                        )
+                    }
                 }
             }
         }

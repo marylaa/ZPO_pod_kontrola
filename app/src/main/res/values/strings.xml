@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MyApp</string>
     <string name="err_msg_enter_email">Wprowadź email</string>
+    <string name="err_msg_enter_pesel">Wprowadź numer PESEL</string>
+    <string name="err_msg_wrong_pesel">Numer PESEL musi mieć 11 cyfr</string>
     <string name="err_msg_enter_first_name">Wprowadź imię</string>
     <string name="err_msg_enter_last_name">Wprowadź nazwisko</string>
     <string name="err_msg_enter_password">Wprowadź hasło</string>

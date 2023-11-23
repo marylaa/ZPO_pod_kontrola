@@ -119,7 +119,7 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
     private fun logoutUser() {
         // Wyloguj użytkownika z Facebooka
         LoginManager.getInstance().logOut()
-        
+
         val auth = FirebaseAuth.getInstance()
         auth.signOut()
 

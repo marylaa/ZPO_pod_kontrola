@@ -93,17 +93,40 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
         val tomorrow = current.plusDays(1).format(formatter)
 
         val pillList: MutableList<PillModel> = mutableListOf()
+        val pillListCustom: MutableList<PillModelCustom> = mutableListOf()
 
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
                 for (snapshot in dataSnapshot.children) {
-                    val pill = snapshot.getValue(PillModel::class.java)
+                    try {
+                        val pill = snapshot.getValue(PillModel::class.java)
 
-                    // sprawdzenie czy jutro bedzie brana tabletka
-                    if (pill!!.date_last.equals(tomorrow) || pill!!.date_next.equals(tomorrow)) {
-                        pillList.add(pill!!)
+                        // sprawdzenie czy jutro bedzie brana tabletka
+                        if (pill!!.date_last.equals(tomorrow) || pill!!.date_next.equals(tomorrow)) {
+                            pillList.add(pill!!)
+                        }
+                    } catch (e: Exception) {
+                        // NIESTANDARDOWA częstotliwość
+
+                        val days = arrayOf("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela")
+                        val today = LocalDate.now()
+                        val dayOfWeek = today.dayOfWeek.value
+                        val pill = snapshot.getValue(PillModelCustom::class.java)
+                        Log.e("PILLLLLLLLLLLLLLL", pill?.time_list.toString())
+                        Log.e("PILLLLLLLLLLLLLLL", days.get(dayOfWeek))
+                        val tomorrowDay = days.get(dayOfWeek)
+
+                        for (item in pill?.time_list.orEmpty()) {
+                            val dayValue = item["day"]
+
+                            Log.e("Dzień tygodnia", dayValue.toString())
+                            // sprawdzenie czy dziś bedzie brana tabletka
+                            if (dayValue.toString().equals(tomorrowDay)) {
+                                pillListCustom.add(pill!!)
+                            }
+                        }
                     }
                 }
                 newRecyclerView.adapter = PillNextDayItemAdapter(pillList)
