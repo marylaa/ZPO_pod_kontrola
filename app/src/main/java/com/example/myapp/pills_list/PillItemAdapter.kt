@@ -588,6 +588,7 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
             var timesADay: List<List<Any>>? = listOf()
             for (item in currentItem?.time_list.orEmpty()) {
                 val dayValue = item["day"]
+                Log.e("ITEEEEEEEEEMMMMMMMMM", currentItem?.time_list.toString())
                 // sprawdzenie czy dziś bedzie brana tabletka
                 if (dayValue.toString().equals(todayDay)) {
                     timesADay = item["times"] as? List<List<Any>>
@@ -621,7 +622,19 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
             holder.itemView.apply {
                 holder.checkBox1.isChecked = timesADay?.get(0)?.get(1) as Boolean
                 holder.checkBox1.setOnCheckedChangeListener { _, isChecked ->
-                    //currentItem.time_list!![0]?.set(1, isChecked)
+
+                    for (item in currentItem?.time_list.orEmpty()) {
+                        val current = item as? HashMap<String, Any>
+
+                        val currentDay = current!!["day"] as? String
+                        val timesList = current!!["times"] as? MutableList<MutableList<Any>>
+
+                        if (currentDay == todayDay && timesList != null) {
+                            timesList[0][1] = isChecked
+                            item["times"] = timesList
+                        }
+                    }
+                    ////////////////////////////////////////
 
                     if (isChecked) {
                         val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -641,10 +654,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                 for (snapshot in dataSnapshot.children) {
-                                    val pillModel = snapshot.getValue(PillModel::class.java)
-                                    if (pillModel!!.id == pillId) {
-                                        oldAvailability = pillModel.availability!!
-                                        break;
+                                    try {
+                                        val pillModel = snapshot.getValue(PillModelCustom::class.java)
+                                        if (pillModel!!.id == pillId) {
+                                            oldAvailability = pillModel.availability!!
+                                            break;
+                                        }
+                                    } catch(e:Exception) {
+                                        Log.e("BŁĄD", e.message.toString())
                                     }
                                 }
 
@@ -672,15 +689,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                         })
 
 
-//                        dbReference.child("Pills_status").push().setValue(
-//                            mapOf(
-//                                "status" to currentItem.time_list!![0]!![1]?.toString(),
-//                                "id" to currentItem.id,
-//                                "date" to current,
-//                                "user" to uid
-//
-//                            )
-//                        )
+                        dbReference.child("Pills_status").push().setValue(
+                            mapOf(
+                                "status" to "true",
+                                "id" to currentItem.id,
+                                "date" to current,
+                                "user" to uid
+                            )
+                        )
                     }
 
                     if (!isChecked) {
@@ -688,8 +704,7 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                         database.child(currentItem.id!!).setValue(currentItem)
 
                         // usunięcie z bazy danych odcheckowanej tabletki
-                        val dbReference =
-                            FirebaseDatabase.getInstance().getReference().child("Pills_status")
+                        val dbReference = FirebaseDatabase.getInstance().getReference().child("Pills_status")
                         val query = dbReference.orderByChild("id").equalTo(currentItem.id)
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(snapshot: DataSnapshot) {
@@ -712,13 +727,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                             ValueEventListener {
                                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                 for (snapshot in dataSnapshot.children) {
-                                                    val pillModel =
-                                                        snapshot.getValue(PillModel::class.java)
-                                                    if (pillModel!!.id == pillId) {
-                                                        oldAvailability = pillModel.availability!!
-                                                        break;
-
-
+                                                    try {
+                                                        val pillModel = snapshot.getValue(PillModelCustom::class.java)
+                                                        if (pillModel!!.id == pillId) {
+                                                            oldAvailability = pillModel.availability!!
+                                                            break;
+                                                        }
+                                                    } catch(e:Exception) {
+                                                        Log.e("BŁĄD", e.message.toString())
                                                     }
                                                 }
 
@@ -729,18 +745,11 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                                 }
                                                 if (newAvailability <= 5) {
                                                     AvailabilityAlert(currentItem.name)
-                                                    sendNotification(
-                                                        newAvailability,
-                                                        currentItem.name
-                                                    )
+                                                    sendNotification(newAvailability, currentItem.name)
                                                 }
 
-                                                val ref =
-                                                    FirebaseDatabase.getInstance()
-                                                        .getReference("Pills")
-
-                                                val updateFields: MutableMap<String, Any> =
-                                                    HashMap()
+                                                val ref = FirebaseDatabase.getInstance().getReference("Pills")
+                                                val updateFields: MutableMap<String, Any> = HashMap()
                                                 updateFields["availability"] = newAvailability
 
                                                 ref.child(pillId).updateChildren(updateFields)
@@ -767,7 +776,19 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                 if (timesADay.size >= 2) {
                     holder.checkBox2.isChecked = timesADay[1]?.get(1) as Boolean
                     holder.checkBox2.setOnCheckedChangeListener { _, isChecked ->
-                        //currentItem.time_list!![1]?.set(1, isChecked)
+
+                        for (item in currentItem?.time_list.orEmpty()) {
+                            val current = item as? HashMap<String, Any>
+
+                            val currentDay = current!!["day"] as? String
+                            val timesList = current!!["times"] as? MutableList<MutableList<Any>>
+
+                            if (currentDay == todayDay && timesList != null) {
+                                timesList[1][1] = isChecked
+                                item["times"] = timesList
+                            }
+                        }
+                        ////////////////////////////////////////
 
                         if (isChecked) {
                             val database = FirebaseDatabase.getInstance().getReference("Pills")
@@ -786,11 +807,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                             query.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     for (snapshot in dataSnapshot.children) {
-                                        val pillModel = snapshot.getValue(PillModel::class.java)
-                                        if (pillModel!!.id == pillId) {
-                                            oldAvailability = pillModel.availability!!
-                                            Log.d("old av", oldAvailability.toString())
-                                            break;
+                                        try {
+                                            val pillModel = snapshot.getValue(PillModelCustom::class.java)
+                                            if (pillModel!!.id == pillId) {
+                                                oldAvailability = pillModel.availability!!
+                                                break;
+                                            }
+                                        } catch(e:Exception) {
+                                            Log.e("BŁĄD", e.message.toString())
                                         }
                                     }
 
@@ -816,20 +840,18 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                 }
                             })
 
-//                            dbReference.child("Pills_status").push().setValue(
-//                                mapOf(
-//                                    "status" to currentItem.time_list!![1]?.get(1)?.toString(),
-//                                    "id" to currentItem.id,
-//                                    "date" to current,
-//                                    "user" to uid
-//                                )
-//                            )
-
-//                                .addOnCompleteListener { task ->
-//                                    if (task.isSuccessful) {
-//                                        notifyDataSetChanged()
-//                                    }
-//                                }
+                            dbReference.child("Pills_status").push().setValue(
+                                mapOf(
+                                    "status" to "true",
+                                    "id" to currentItem.id,
+                                    "date" to current,
+                                    "user" to uid
+                                )
+                            ).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        notifyDataSetChanged()
+                                    }
+                                }
                         }
 
                         if (!isChecked) {
@@ -864,12 +886,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                                 ValueEventListener {
                                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                     for (snapshot in dataSnapshot.children) {
-                                                        val pillModel =
-                                                            snapshot.getValue(PillModel::class.java)
-                                                        if (pillModel!!.id == pillId) {
-                                                            oldAvailability =
-                                                                pillModel.availability!!
-                                                            break;
+                                                        try {
+                                                            val pillModel = snapshot.getValue(PillModelCustom::class.java)
+                                                            if (pillModel!!.id == pillId) {
+                                                                oldAvailability = pillModel.availability!!
+                                                                break;
+                                                            }
+                                                        } catch(e:Exception) {
+                                                            Log.e("BŁĄD", e.message.toString())
                                                         }
                                                     }
 
@@ -917,7 +941,19 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                 if (timesADay.size === 3) {
                     holder.checkBox3.isChecked = timesADay[2]?.get(1) as Boolean
                     holder.checkBox3.setOnCheckedChangeListener { _, isChecked ->
-                        //currentItem.time_list!![2]?.set(1, isChecked)
+
+                        for (item in currentItem?.time_list.orEmpty()) {
+                            val current = item as? HashMap<String, Any>
+
+                            val currentDay = current!!["day"] as? String
+                            val timesList = current!!["times"] as? MutableList<MutableList<Any>>
+
+                            if (currentDay == todayDay && timesList != null) {
+                                timesList[2][1] = isChecked
+                                item["times"] = timesList
+                            }
+                        }
+                        ////////////////////////////////////////
 
                         if (isChecked) {
                             pillTakenInfo()
@@ -937,11 +973,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                             query.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     for (snapshot in dataSnapshot.children) {
-                                        val pillModel = snapshot.getValue(PillModel::class.java)
-                                        if (pillModel!!.id == pillId) {
-                                            oldAvailability = pillModel.availability!!
-                                            Log.d("old av", oldAvailability.toString())
-                                            break;
+                                        try {
+                                            val pillModel = snapshot.getValue(PillModelCustom::class.java)
+                                            if (pillModel!!.id == pillId) {
+                                                oldAvailability = pillModel.availability!!
+                                                break;
+                                            }
+                                        } catch(e:Exception) {
+                                            Log.e("BŁĄD", e.message.toString())
                                         }
                                     }
 
@@ -966,21 +1005,19 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                     Log.d("TAG", "Błąd")
                                 }
                             })
-//
-//                            dbReference.child("Pills_status").push().setValue(
-//                                mapOf(
-//                                    "status" to currentItem.time_list!![2]?.get(1)?.toString(),
-//                                    "id" to currentItem.id,
-//                                    "date" to current,
-//                                    "user" to uid
-//                                )
-//                            )
-//
-//                                .addOnCompleteListener { task ->
-//                                    if (task.isSuccessful) {
-//                                        notifyDataSetChanged()
-//                                    }
-//                                }
+
+                            dbReference.child("Pills_status").push().setValue(
+                                mapOf(
+                                    "status" to "true",
+                                    "id" to currentItem.id,
+                                    "date" to current,
+                                    "user" to uid
+                                )
+                            ).addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        notifyDataSetChanged()
+                                    }
+                                }
                         }
 
                         if (!isChecked) {
@@ -1016,12 +1053,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                                 ValueEventListener {
                                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                     for (snapshot in dataSnapshot.children) {
-                                                        val pillModel =
-                                                            snapshot.getValue(PillModel::class.java)
-                                                        if (pillModel!!.id == pillId) {
-                                                            oldAvailability =
-                                                                pillModel.availability!!
-                                                            break;
+                                                        try {
+                                                            val pillModel = snapshot.getValue(PillModelCustom::class.java)
+                                                            if (pillModel!!.id == pillId) {
+                                                                oldAvailability = pillModel.availability!!
+                                                                break;
+                                                            }
+                                                        } catch(e:Exception) {
+                                                            Log.e("BŁĄD", e.message.toString())
                                                         }
                                                     }
 
