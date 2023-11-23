@@ -110,7 +110,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                 for (snapshot in dataSnapshot.children) {
                     try {
                         val pill = snapshot.getValue(PillModel::class.java)
-                        Log.e("PILLLLLLLLLLLLLLL", pill.toString())
 
                         if (pill?.frequency !== "Niestandardowa") {
                             val dateBefore = LocalDate.parse(pill!!.date_last, formatter)
@@ -146,8 +145,6 @@ class UserScheduleActivity : AppCompatActivity(), View.OnClickListener {
                         val dayOfWeek = today.dayOfWeek.value - 1
 
                         val pill = snapshot.getValue(PillModelCustom::class.java)
-                        Log.e("PILLLLLLLLLLLLLLL", pill?.time_list.toString())
-                        Log.e("PILLLLLLLLLLLLLLL", days.get(dayOfWeek))
                         val todayDay = days.get(dayOfWeek)
 
                         for (item in pill?.time_list.orEmpty()) {

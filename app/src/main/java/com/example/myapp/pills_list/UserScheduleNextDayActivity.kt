@@ -20,11 +20,12 @@ import com.google.firebase.database.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var newRecyclerView: RecyclerView
     private lateinit var dbRef: DatabaseReference
+    private var pillList: MutableList<PillModel> = mutableListOf()
+    private var pillListCustom: MutableList<PillModelCustom> = mutableListOf()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +66,6 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         if(view !=null){
             when (view.id){
-
                 R.id.addPill ->{
                     val intent = Intent(this, AddPillActivity::class.java)
                     startActivity(intent)
@@ -92,20 +92,23 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val tomorrow = current.plusDays(1).format(formatter)
 
-        val pillList: MutableList<PillModel> = mutableListOf()
-        val pillListCustom: MutableList<PillModelCustom> = mutableListOf()
+        pillList = mutableListOf()
+        pillListCustom = mutableListOf()
 
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
+                pillListCustom.clear()
                 for (snapshot in dataSnapshot.children) {
                     try {
                         val pill = snapshot.getValue(PillModel::class.java)
 
-                        // sprawdzenie czy jutro bedzie brana tabletka
-                        if (pill!!.date_last.equals(tomorrow) || pill!!.date_next.equals(tomorrow)) {
-                            pillList.add(pill!!)
+                        if (pill?.frequency !== "Niestandardowa") {
+                            // sprawdzenie czy jutro bedzie brana tabletka
+                            if (pill!!.date_last.equals(tomorrow) || pill!!.date_next.equals(tomorrow)) {
+                                pillList.add(pill!!)
+                            }
                         }
                     } catch (e: Exception) {
                         // NIESTANDARDOWA częstotliwość
@@ -113,23 +116,25 @@ class UserScheduleNextDayActivity : AppCompatActivity(), View.OnClickListener {
                         val days = arrayOf("Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota", "Niedziela")
                         val today = LocalDate.now()
                         val dayOfWeek = today.dayOfWeek.value
+
                         val pill = snapshot.getValue(PillModelCustom::class.java)
-                        Log.e("PILLLLLLLLLLLLLLL", pill?.time_list.toString())
-                        Log.e("PILLLLLLLLLLLLLLL", days.get(dayOfWeek))
                         val tomorrowDay = days.get(dayOfWeek)
 
                         for (item in pill?.time_list.orEmpty()) {
                             val dayValue = item["day"]
 
-                            Log.e("Dzień tygodnia", dayValue.toString())
-                            // sprawdzenie czy dziś bedzie brana tabletka
+                            // sprawdzenie czy jutro bedzie brana tabletka
                             if (dayValue.toString().equals(tomorrowDay)) {
                                 pillListCustom.add(pill!!)
                             }
                         }
                     }
                 }
-                newRecyclerView.adapter = PillNextDayItemAdapter(pillList)
+
+                val mergedList = mutableListOf<Any>()
+                mergedList.addAll(pillList)
+                mergedList.addAll(pillListCustom)
+                newRecyclerView.adapter = PillNextDayItemAdapter(mergedList)
             }
 
             override fun onCancelled(error: DatabaseError) {

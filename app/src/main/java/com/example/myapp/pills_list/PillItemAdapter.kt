@@ -33,8 +33,7 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
     private lateinit var dbRef: DatabaseReference
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PillItemViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_pill, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_pill, parent, false)
         return PillItemViewHolder(itemView)
     }
 
@@ -588,11 +587,10 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
             var timesADay: List<List<Any>>? = listOf()
             for (item in currentItem?.time_list.orEmpty()) {
                 val dayValue = item["day"]
-                Log.e("ITEEEEEEEEEMMMMMMMMM", currentItem?.time_list.toString())
+
                 // sprawdzenie czy dziś bedzie brana tabletka
                 if (dayValue.toString().equals(todayDay)) {
                     timesADay = item["times"] as? List<List<Any>>
-                    Log.e("LICZBAAAAAAAAAAAAAAA", timesADay?.size.toString())
                 }
             }
 
