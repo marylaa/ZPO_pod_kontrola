@@ -76,6 +76,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
 
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -276,20 +277,14 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         }
 
         for (i in 0 until data.size step 5) {
-//        for (i in data.indices step 4) {
-//            for (j in 1 until data.size step 4) {
             if (data[i] is String) {
                 try {
-                    var pillName = data[i+1] as String
-                    Log.d("i",i.toString())
-                    Log.d("name", pillName)
+                    var pillName = data[i + 1] as String
                     var dateTime = LocalDate.parse(data[i] as String, formatter)
-                    Log.d("datetime", dateTime.toString())
                     val month = dateTime.monthValue
                     val monthFormatted = String.format("%02d", month)
                     if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
                         daysInDataBase.add(dateTime)
-
                     }
 
                     prevDate = dateTime
@@ -299,11 +294,8 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                     continue
                 }
             }
-
-
-
-
         }
+
 
         val elementCountMap = mutableMapOf<Any, Int>()
 
@@ -507,8 +499,7 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
     private fun getAllPillsFromDatabase() {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
-        val user = FirebaseAuth.getInstance().currentUser;
-        val uid = user?.uid
+        val uid = patientId
 
 
         val query = dbRef.orderByChild("pacient").equalTo(uid)
@@ -590,6 +581,9 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         var prevDate: LocalDate? = null
         var prevName = ""
         var count = 1
+
+        SharedObject.setWantedPill(wantedPill)
+
 
         print("days in database" + daysInDataBase.toString())
 
@@ -677,20 +671,14 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         val sortedDates = dictionary.toSortedMap()
 
+        SharedObject.setSortedDates(sortedDates)
+
         var colors = pillsColorsCustom(sortedDates, wantedPill)
         var dates = mutableListOf<String>()
 
         for (key in dictionary.keys) {
             dates.add(key)
         }
-
-        // set up the RecyclerView
-//        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-//        val horizontalLayoutManager =
-//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        recyclerView1.layoutManager = horizontalLayoutManager
-//        adapterDate = RecycleViewAdapter(this, colors, dates)
-//        recyclerView1.adapter = adapterDate
 
         return resultDict
 
@@ -815,13 +803,10 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
         println(pillListFreq)
 
         if (!pillListFreq[selectedItem].equals("Niestandardowa", ignoreCase = true)) {
-
-            println("tutaj")
             getPillsDataFromDatabase { data ->
                 Create(data, selectedMonth, selectedPill)
-            }
 
-            adapter.notifyDataSetChanged()
+            }
 
             when (parent?.id) {
                 R.id.spinner3 -> {
@@ -832,9 +817,11 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                 R.id.spinnerPills -> {
                     getPillsDataFromDatabase { data ->
                         Create(data, selectedMonth, selectedItem)
+
                     }
                     adapterPills.notifyDataSetChanged()
                 }
+
             }
         } else {
             println("niestandardowe")
@@ -843,7 +830,6 @@ class MonthyReportDoctor : AppCompatActivity(), AdapterView.OnItemSelectedListen
                 CreateCustom(data, selectedMonth, selectedPill)
             }
 
-            adapter.notifyDataSetChanged()
 
             when (parent?.id) {
                 R.id.spinner3 -> {
