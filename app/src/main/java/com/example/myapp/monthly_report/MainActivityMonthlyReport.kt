@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.EmptyActivity
 import com.example.myapp.R
-import com.example.myapp.databinding.ActivityMainMonthlyBinding
 import com.example.myapp.pills_list.PillModel
+import com.example.myapp.pills_list.PillModelCustom
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.example.myapp.settings.PatientSettingsActivity
 import com.github.mikephil.charting.charts.LineChart
@@ -28,6 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Year
 import java.time.YearMonth
@@ -50,7 +51,12 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
     )
     private var pillList = ArrayList<String>()
     private var pillListId = ArrayList<String>()
-    private var pillListAndCount = ArrayList<List<String>>()
+    private var pillListFreq = mutableMapOf<String, String>()
+//    private var pillListAndCount = ArrayList<List<String>>()
+    private var pillListAndCount = ArrayList<Obj>()
+    private var pillListAndCountCustom = ArrayList<ObjCustom>()
+
+
 
     private var monthsList = arrayOf(
         "Styczeń",
@@ -235,108 +241,300 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         var prevName = ""
         var count = 1
 
+        print("days in database" + daysInDataBase.toString())
+
+
         if (pillListId.isEmpty()) {
             val intent = Intent(this, EmptyActivity::class.java)
             startActivity(intent)
         } else {
             pillId = pillListId.get(0)
         }
-            if (wantedPill != "") {
-                var index = pillList.indexOf(wantedPill)
-                pillId = pillListId.get(index)
-            }
+        if (wantedPill != "") {
+            var index = pillList.indexOf(wantedPill)
+            pillId = pillListId.get(index)
+        }
 
 
-            for (i in 0 until data.size step 4) {
-                if (data[i] is String) {
-                    try {
-                        var pillName = data[i + 1] as String
-                        var dateTime = LocalDate.parse(data[i] as String, formatter)
-                        val month = dateTime.monthValue
-                        val monthFormatted = String.format("%02d", month)
-                        if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
-                            daysInDataBase.add(dateTime)
-                        }
+        println(data.toString())
 
-                        prevDate = dateTime
-                        prevName = pillName
-
-                    } catch (e: IndexOutOfBoundsException) {
-                        continue
+        for (i in 0 until data.size step 5) {
+            if (data[i] is String) {
+                try {
+                    var pillName = data[i + 1] as String
+                    var dateTime = LocalDate.parse(data[i] as String, formatter)
+                    val month = dateTime.monthValue
+                    val monthFormatted = String.format("%02d", month)
+                    if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
+                        daysInDataBase.add(dateTime)
                     }
+
+                    prevDate = dateTime
+                    prevName = pillName
+
+                } catch (e: IndexOutOfBoundsException) {
+                    continue
                 }
             }
+        }
 
-            val elementCountMap = mutableMapOf<Any, Int>()
+        val elementCountMap = mutableMapOf<Any, Int>()
+
+        println("days in database")
+        print("days in database" + daysInDataBase.toString())
 
 
-            for (element in daysInDataBase) {
-                val numberOfElems = elementCountMap[element]
-                if (numberOfElems != null) {
-                    elementCountMap[element] = numberOfElems + 1
-                } else {
-                    elementCountMap[element] = 1
+
+
+        for (element in daysInDataBase) {
+            val numberOfElems = elementCountMap[element]
+            if (numberOfElems != null) {
+                elementCountMap[element] = numberOfElems + 1
+            } else {
+                elementCountMap[element] = 1
+            }
+        }
+
+        for ((element, numberOfElems) in elementCountMap) {
+            println("Element: $element, Count: $numberOfElems")
+            var freq = getPillFrequency(wantedPill)
+            var number = numberOfElems.toString() + "/" + freq
+            newDict[element.toString()] = number
+        }
+
+
+        val dictionary = mutableMapOf<String, String>()
+        val year = Year.now().value // pobranie aktualnego roku
+        val numberOfDaysInMonth = getNumberOfDaysInMonth(year, months[wantedMonth]!!.toInt())
+
+
+        for (day in 1..numberOfDaysInMonth) {
+            val dayFormatted = String.format("%02d", day)
+            var date =
+                year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
+            dictionary[date] = "0"
+        }
+
+        for (key in dictionary.keys) {
+            for ((keyNewDict, valueNewDict) in newDict.entries) {
+                if (key.toString().equals(keyNewDict)) {
+                    dictionary[key] = valueNewDict
                 }
             }
+        }
 
-            for ((element, numberOfElems) in elementCountMap) {
-                println("Element: $element, Count: $numberOfElems")
-                var freq = getPillFrequency(wantedPill)
-                var number = numberOfElems.toString() + "/" + freq
-                newDict[element.toString()] = number
-            }
+        val sortedDates = dictionary.toSortedMap()
+
+        var colors = pillsColors(sortedDates)
+        var dates = mutableListOf<String>()
+
+        for (key in dictionary.keys) {
+            dates.add(key)
+        }
+
+        // set up the RecyclerView
+        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
+        val horizontalLayoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView1.layoutManager = horizontalLayoutManager
+        adapterDate = RecycleViewAdapter(this, colors, dates)
+        recyclerView1.adapter = adapterDate
+
+        return resultDict
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun CreateCustom(
+        data: List<Any>,
+        wantedMonth: String,
+        wantedPill: String
+    ): MutableMap<LocalDate, String> {
+        val months = mapOf(
+            "Styczeń" to "01",
+            "Luty" to "02",
+            "Marzec" to "03",
+            "Kwiecień" to "04",
+            "Maj" to "05",
+            "Czerwiec" to "06",
+            "Lipiec" to "07",
+            "Sierpień" to "08",
+            "Wrzesień" to "09",
+            "Październik" to "10",
+            "Listopad" to "11",
+            "Grudzień" to "12"
+        )
+
+        val current = LocalDate.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        val resultDict = mutableMapOf<LocalDate, String>()
+        var daysInDataBase = mutableListOf<LocalDate>()
+        val newDict = mutableMapOf<String, String>()
+        var prevDate: LocalDate? = null
+        var prevName = ""
+        var count = 1
+
+        print("days in database" + daysInDataBase.toString())
 
 
-            val dictionary = mutableMapOf<String, String>()
-            val year = Year.now().value // pobranie aktualnego roku
-            val numberOfDaysInMonth = getNumberOfDaysInMonth(year, months[wantedMonth]!!.toInt())
+        if (pillListId.isEmpty()) {
+            val intent = Intent(this, EmptyActivity::class.java)
+            startActivity(intent)
+        } else {
+            pillId = pillListId.get(0)
+        }
+        if (wantedPill != "") {
+            var index = pillList.indexOf(wantedPill)
+            pillId = pillListId.get(index)
+        }
 
 
-            for (day in 1..numberOfDaysInMonth) {
-                val dayFormatted = String.format("%02d", day)
-                var date =
-                    year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
-                dictionary[date] = "0"
-            }
+        println(data.toString())
 
-            for (key in dictionary.keys) {
-                for ((keyNewDict, valueNewDict) in newDict.entries) {
-                    if (key.toString().equals(keyNewDict)) {
-                        dictionary[key] = valueNewDict
+        for (i in 0 until data.size step 5) {
+            if (data[i] is String) {
+                try {
+                    var pillName = data[i + 1] as String
+                    var dateTime = LocalDate.parse(data[i] as String, formatter)
+                    val month = dateTime.monthValue
+                    val monthFormatted = String.format("%02d", month)
+                    if (monthFormatted == (months[wantedMonth].toString()) && pillName == pillId) {
+                        daysInDataBase.add(dateTime)
                     }
+
+                    prevDate = dateTime
+                    prevName = pillName
+
+                } catch (e: IndexOutOfBoundsException) {
+                    continue
                 }
             }
+        }
 
-            val sortedDates = dictionary.toSortedMap()
+        val elementCountMap = mutableMapOf<Any, Int>()
 
-            var colors = pillsColors(sortedDates)
-            var dates = mutableListOf<String>()
+        println("days in database")
+        print("days in database" + daysInDataBase.toString())
 
-            for (key in dictionary.keys) {
-                dates.add(key)
+
+
+
+        for (element in daysInDataBase) {
+            val numberOfElems = elementCountMap[element]
+            if (numberOfElems != null) {
+                elementCountMap[element] = numberOfElems + 1
+            } else {
+                elementCountMap[element] = 1
             }
+        }
 
-            // set up the RecyclerView
-            val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
-            val horizontalLayoutManager =
-                LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            recyclerView1.layoutManager = horizontalLayoutManager
-            adapterDate = RecycleViewAdapter(this, colors, dates)
-            recyclerView1.adapter = adapterDate
+        for ((element, numberOfElems) in elementCountMap) {
+            println("Element: $element, Count: $numberOfElems")
+            // Znajdź dzień tygodnia dla daty
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val localDate = LocalDate.parse(element.toString(), formatter)
+            val dayOfWeekStr = localDate.dayOfWeek.toString()
 
-            return resultDict
+
+            var freq = getPillFrequencyCustom(wantedPill, dayOfWeekStr)
+            Log.d("aa",freq.toString())
+            var number = numberOfElems.toString() + "/" + freq.toString()
+            newDict[element.toString()] = number
+        }
+
+
+        val dictionary = mutableMapOf<String, String>()
+        val year = Year.now().value // pobranie aktualnego roku
+        val numberOfDaysInMonth = getNumberOfDaysInMonth(year, months[wantedMonth]!!.toInt())
+
+
+        for (day in 1..numberOfDaysInMonth) {
+            val dayFormatted = String.format("%02d", day)
+            var date =
+                year.toString() + "-" + months[wantedMonth].toString() + "-" + dayFormatted.toString()
+            dictionary[date] = "0"
+        }
+
+        for (key in dictionary.keys) {
+            for ((keyNewDict, valueNewDict) in newDict.entries) {
+                if (key.toString().equals(keyNewDict)) {
+                    dictionary[key] = valueNewDict
+                }
+            }
+        }
+
+        val sortedDates = dictionary.toSortedMap()
+
+        var colors = pillsColorsCustom(sortedDates, wantedPill)
+        var dates = mutableListOf<String>()
+
+        for (key in dictionary.keys) {
+            dates.add(key)
+        }
+
+        // set up the RecyclerView
+        val recyclerView1: RecyclerView = findViewById(R.id.rvAnimals)
+        val horizontalLayoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView1.layoutManager = horizontalLayoutManager
+        adapterDate = RecycleViewAdapter(this, colors, dates)
+        recyclerView1.adapter = adapterDate
+
+        return resultDict
 
     }
 
     fun getPillFrequency(name: String): String? {
-        for (index in pillListAndCount.indices) {
-            val item = pillListAndCount[index]
-            if (item.isNotEmpty() && item[0] == name) {
-                return item[1]
+        for (obj in pillListAndCount) {
+            if (obj.name == name) {
+                return obj.lenght
             }
         }
         return null
     }
+
+    data class ObjCustom(val name: String, val lenght: String, val timeList: MutableList<HashMap<String, Any>>?)
+    data class Obj(val name: String, val lenght: String, val timeList: MutableList<MutableList<Any?>?>?)
+
+
+    fun getPillFrequencyCustom(name: String, dayOfWeek: String): Int? {
+        for (pill in pillListAndCountCustom) {
+            if (pill.name.equals(name)) {
+
+                val rawTimesList = pill.timeList
+
+                println(rawTimesList)
+
+
+                val translatedDayOfWeek = translateToPolish(dayOfWeek)
+
+                val dayElement = rawTimesList!!.find { it["day"] == translatedDayOfWeek }
+                val timesCount = dayElement?.get("times") as? List<List<Any>> ?: emptyList()
+
+                println("Times count for $dayOfWeek: ${timesCount.size}")
+
+                return timesCount.size
+
+            }
+        }
+        return null
+    }
+    fun translateToPolish(dayOfWeek: String): String {
+        // Dodaj odpowiednie tłumaczenia dni tygodnia, jeśli są inne niż angielskie
+        val translations = mapOf(
+            "MONDAY" to "Poniedziałek",
+            "TUESDAY" to "Wtorek",
+            "WEDNESDAY" to "Środa",
+            "THURSDAY" to "Czwartek",
+            "FRIDAY" to "Piątek",
+            "SATURDAY" to "Sobota",
+            "SUNDAY" to "Niedziela"
+        )
+
+        return translations[dayOfWeek] ?: dayOfWeek
+    }
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -440,21 +638,49 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         val user = FirebaseAuth.getInstance().currentUser;
         val uid = user?.uid
 
+
         val query = dbRef.orderByChild("pacient").equalTo(uid)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
                 pillListId.clear()
+                pillListFreq.clear()
                 for (snapshot in dataSnapshot.children) {
-                    val pill = snapshot.getValue(PillModel::class.java)
-                    pillList.add(pill!!.name.toString())
-                    pillListId.add(pill!!.id.toString())
-                    val onePill: List<String> =
-                        listOf(pill!!.name, pill!!.time_list?.size.toString())
-                    pillListAndCount.add(onePill)
-                    adapterPills.notifyDataSetChanged()
+                    val frequencyValue = snapshot.child("frequency").getValue(String::class.java)
+                    var pill: PillModel? = null
+                    var pillCustom: PillModelCustom? = null
+
+                    if (frequencyValue != null && frequencyValue != "Niestandardowa") {
+                        pill = snapshot.getValue(PillModel::class.java)
+                        pillList.add(pill!!.name.toString())
+                        pillListId.add(pill!!.id.toString())
+                        pillListFreq.put(pill!!.name.toString(), pill!!.frequency.toString())
+                        val onePill =  Obj(
+                                name = pill!!.name.toString(),
+                                lenght = pill!!.time_list?.size.toString(),
+                                timeList = pill!!.time_list
+                            )
+                        pillListAndCount.add(onePill)
+                        adapterPills.notifyDataSetChanged()
+                    } else {
+                        pillCustom = snapshot.getValue(PillModelCustom::class.java)
+                        pillList.add(pillCustom!!.name.toString())
+                        pillListId.add(pillCustom!!.id.toString())
+                        pillListFreq.put(
+                            pillCustom!!.name.toString(),
+                            pillCustom!!.frequency.toString()
+                        )
+                        val onePill =  ObjCustom(
+                            name = pillCustom!!.name.toString(),
+                            lenght = pillCustom!!.time_list?.size.toString(),
+                            timeList = pillCustom!!.time_list
+                        )
+                        pillListAndCountCustom.add(onePill)
+                        adapterPills.notifyDataSetChanged()
+                    }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.d("TAG", "Błąd")
             }
@@ -479,23 +705,52 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
         }
         var selectedMonth = findViewById<Spinner>(R.id.spinnerMonths).selectedItem.toString()
 
-        getPillsDataFromDatabase { data ->
-            Create(data, selectedMonth, selectedPill)
-        }
 
-        adapter.notifyDataSetChanged()
+        println(pillListFreq)
 
-        when (parent?.id) {
-            R.id.spinner3 -> {
-                getDataFromDatabase { data ->
-                    createDict(data, selectedItem, selectedMonth)
+        if (!pillListFreq[selectedItem].equals("Niestandardowa", ignoreCase = true)) {
+
+            println("tutaj")
+            getPillsDataFromDatabase { data ->
+                Create(data, selectedMonth, selectedPill)
+            }
+
+            adapter.notifyDataSetChanged()
+
+            when (parent?.id) {
+                R.id.spinner3 -> {
+                    getDataFromDatabase { data ->
+                        createDict(data, selectedItem, selectedMonth)
+                    }
+                }
+                R.id.spinnerPills -> {
+                    getPillsDataFromDatabase { data ->
+                        Create(data, selectedMonth, selectedItem)
+                    }
+                    adapterPills.notifyDataSetChanged()
                 }
             }
-            R.id.spinnerPills -> {
-                getPillsDataFromDatabase { data ->
-                    Create(data, selectedMonth, selectedItem)
+        } else {
+            println("niestandardowe")
+
+            getPillsDataFromDatabase { data ->
+                CreateCustom(data, selectedMonth, selectedPill)
+            }
+
+            adapter.notifyDataSetChanged()
+
+            when (parent?.id) {
+                R.id.spinner3 -> {
+                    getDataFromDatabase { data ->
+                        createDict(data, selectedItem, selectedMonth)
+                    }
                 }
-                adapterPills.notifyDataSetChanged()
+                R.id.spinnerPills -> {
+                    getPillsDataFromDatabase { data ->
+                        CreateCustom(data, selectedMonth, selectedItem)
+                    }
+                    adapterPills.notifyDataSetChanged()
+                }
             }
         }
     }
@@ -516,13 +771,73 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                 number = -1.0
             }
 
-            if(value.equals("1/3") or value.equals("2/3") or value.equals("1/2")){
+            if (value.equals("1/3") or value.equals("2/3") or value.equals("1/2")) {
                 colors.add(Color.YELLOW)
-            }else if(value.equals("1/1") or value.equals("3/3") or value.equals("2/2") or (number > 1)){
+            } else if (value.equals("1/1") or value.equals("3/3") or value.equals("2/2") or (number > 1)) {
                 colors.add(Color.GREEN)
-            }else{
+            } else {
                 colors.add(Color.RED)
             }
+        }
+        return colors
+    }
+
+    fun pillsColorsCustom(list: SortedMap<String, String>, wantedPill: String): ArrayList<Int> {
+
+        var days = arrayListOf<String>()
+
+        for (pill in pillListAndCountCustom) {
+            if (pill.name.equals(wantedPill)) {
+
+                val rawTimesList = pill.timeList
+                for (x in rawTimesList!!) {
+
+                    days.add(x?.get("day").toString())
+
+                }
+
+
+            }
+        }
+
+
+
+
+
+        var colors = arrayListOf<Int>()
+        for ((key, value) in list.entries) {
+            println(value)
+            var number = 0.0
+            try {
+                var splited = value.split("/")
+                number = splited[0].toDouble() / splited[1].toDouble()
+            } catch (e: Exception) {
+                number = -1.0
+            }
+            // Dodaj logikę sprawdzającą dzień tygodnia
+            val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date = dateFormatter.parse(key)
+
+            val calendar = Calendar.getInstance()
+            calendar.time = date
+
+            val dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale("pl", "PL"))
+
+            println(dayOfWeek)
+
+            if (days.any { it.equals(dayOfWeek, ignoreCase = true) }) {
+                if (value.equals("1/3") or value.equals("2/3") or value.equals("1/2")) {
+                    colors.add(Color.YELLOW)
+                } else if (value.equals("1/1") or value.equals("3/3") or value.equals("2/2") or (number > 1)) {
+                    colors.add(Color.GREEN)
+                }else {
+                    colors.add(Color.RED)
+                }
+
+            }else{
+                colors.add(Color.GRAY)
+            }
+
         }
         return colors
     }

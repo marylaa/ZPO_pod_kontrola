@@ -22,6 +22,7 @@ import com.example.myapp.notifications.NotificationModelAlert
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -124,12 +125,17 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                         })
 
 
+                        val currentTime = LocalTime.now()
+                        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                        val formattedTime = currentTime.format(formatter)
+
                         dbReference.child("Pills_status").push().setValue(
                             mapOf(
                                 "status" to currentItem.time_list!![0]!![1]?.toString(),
                                 "id" to currentItem.id,
                                 "date" to current,
-                                "user" to uid
+                                "user" to uid,
+                                "time" to formattedTime.toString()
 
                             )
                         )
@@ -268,12 +274,17 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                 }
                             })
 
+                            val currentTime = LocalTime.now()
+                            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                            val formattedTime = currentTime.format(formatter)
+
                             dbReference.child("Pills_status").push().setValue(
                                 mapOf(
                                     "status" to currentItem.time_list!![1]?.get(1)?.toString(),
                                     "id" to currentItem.id,
                                     "date" to current,
-                                    "user" to uid
+                                    "user" to uid,
+                                    "time" to formattedTime.toString()
                                 )
                             )
 
@@ -419,12 +430,17 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                 }
                             })
 
+                            val currentTime = LocalTime.now()
+                            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                            val formattedTime = currentTime.format(formatter)
+
                             dbReference.child("Pills_status").push().setValue(
                                 mapOf(
                                     "status" to currentItem.time_list!![2]?.get(1)?.toString(),
                                     "id" to currentItem.id,
                                     "date" to current,
-                                    "user" to uid
+                                    "user" to uid,
+                                    "time" to formattedTime.toString()
                                 )
                             )
 
@@ -688,13 +704,18 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                             }
                         })
 
+                        val currentTime = LocalTime.now()
+                        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                        val formattedTime = currentTime.format(formatter)
+
 
                         dbReference.child("Pills_status").push().setValue(
                             mapOf(
                                 "status" to "true",
                                 "id" to currentItem.id,
                                 "date" to current,
-                                "user" to uid
+                                "user" to uid,
+                                "time" to formattedTime.toString()
                             )
                         )
                     }
@@ -839,13 +860,17 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                     Log.d("TAG", "Błąd")
                                 }
                             })
+                            val currentTime = LocalTime.now()
+                            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                            val formattedTime = currentTime.format(formatter)
 
                             dbReference.child("Pills_status").push().setValue(
                                 mapOf(
                                     "status" to "true",
                                     "id" to currentItem.id,
                                     "date" to current,
-                                    "user" to uid
+                                    "user" to uid,
+                                    "time" to formattedTime.toString()
                                 )
                             ).addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
@@ -1006,12 +1031,17 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                 }
                             })
 
+                            val currentTime = LocalTime.now()
+                            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                            val formattedTime = currentTime.format(formatter)
+
                             dbReference.child("Pills_status").push().setValue(
                                 mapOf(
                                     "status" to "true",
                                     "id" to currentItem.id,
                                     "date" to current,
-                                    "user" to uid
+                                    "user" to uid,
+                                    "time" to formattedTime.toString()
                                 )
                             ).addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
