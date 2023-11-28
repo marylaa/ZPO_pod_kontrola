@@ -327,58 +327,58 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                     }
                 } else {
                     // To jest PillModelCustom
-//                    pillCustom = snapshot.getValue(PillModelCustom::class.java)
-//
-//                    pillCustom?.let {
-//                        pillName?.setText(it.name)
-//                        inputLeft?.setText(it.availability.toString())
-//                        inputPackage?.setText(it.inBox.toString())
-//                        val hour1 = it.time_list?.getOrNull(0)?.toString()?.split(":")
-//                        inputHour1?.setText(hour1?.getOrNull(0))
-//                        inputMinute1?.setText(hour1?.getOrNull(1))
-//
-//                        val spinner = findViewById<Spinner>(R.id.spinner1)
-//                        when (it.frequency) {
-//                            "Codziennie" -> spinner.setSelection(0)
-//                            "Dwa razy dziennie" -> {
-//                                spinner.setSelection(1)
-//                                inputHour2.setVisibility(View.VISIBLE);
-//                                inputMinute2.setVisibility(View.VISIBLE);
-//                                text2.setVisibility(View.VISIBLE);
-//                                text22.setVisibility(View.VISIBLE);
-//
-//                                val hour2 = it.time_list?.getOrNull(1)?.toString()?.split(":")
-//                                inputHour2?.setText(hour2?.getOrNull(0))
-//                                inputMinute2?.setText(hour2?.getOrNull(1))
-//                            }
-//                            "Trzy razy dziennie" -> {
-//                                spinner.setSelection(2)
-//
-//                                inputHour2.setVisibility(View.VISIBLE);
-//                                inputMinute2.setVisibility(View.VISIBLE);
-//                                text2.setVisibility(View.VISIBLE);
-//                                text22.setVisibility(View.VISIBLE);
-//                                inputHour3.setVisibility(View.VISIBLE);
-//                                inputMinute3.setVisibility(View.VISIBLE);
-//                                text3.setVisibility(View.VISIBLE);
-//                                text33.setVisibility(View.VISIBLE);
-//
-//                                val hour2 = it.time_list?.getOrNull(1)?.toString()?.split(":")
-//                                inputHour2?.setText(hour2?.getOrNull(0))
-//                                inputMinute2?.setText(hour2?.getOrNull(1))
-//
-//                                val hour3 = it.time_list?.getOrNull(2)?.toString()?.split(":")
-//                                inputHour3?.setText(hour3?.getOrNull(0))
-//                                inputMinute3?.setText(hour3?.getOrNull(1))
-//                            }
-//                            "Co drugi dzień" -> spinner.setSelection(3)
-//                            "Raz w tygodniu" -> spinner.setSelection(4)
-//                            "Niestandardowa" -> {
-//                                spinner.setSelection(5)
-//                                niestandardowaButtons.setVisibility(View.VISIBLE);
-//                                niestandardowaSeparator1.setVisibility(View.VISIBLE);
-//                                niestandardowaSeparator2.setVisibility(View.VISIBLE);
-//
+                    pillCustom = snapshot.getValue(PillModelCustom::class.java)
+
+                    pillCustom?.let {
+                        pillName?.setText(it.name)
+                        inputLeft?.setText(it.availability.toString())
+                        inputPackage?.setText(it.inBox.toString())
+                        val hour1 = it.time_list?.getOrNull(0)?.toString()?.split(":")
+                        inputHour1?.setText(hour1?.getOrNull(0))
+                        inputMinute1?.setText(hour1?.getOrNull(1))
+
+                        val spinner = findViewById<Spinner>(R.id.spinner1)
+                        when (it.frequency) {
+                            "Codziennie" -> spinner.setSelection(0)
+                            "Dwa razy dziennie" -> {
+                                spinner.setSelection(1)
+                                inputHour2.setVisibility(View.VISIBLE);
+                                inputMinute2.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                text22.setVisibility(View.VISIBLE);
+
+                                val hour2 = it.time_list?.getOrNull(1)?.toString()?.split(":")
+                                inputHour2?.setText(hour2?.getOrNull(0))
+                                inputMinute2?.setText(hour2?.getOrNull(1))
+                            }
+                            "Trzy razy dziennie" -> {
+                                spinner.setSelection(2)
+
+                                inputHour2.setVisibility(View.VISIBLE);
+                                inputMinute2.setVisibility(View.VISIBLE);
+                                text2.setVisibility(View.VISIBLE);
+                                text22.setVisibility(View.VISIBLE);
+                                inputHour3.setVisibility(View.VISIBLE);
+                                inputMinute3.setVisibility(View.VISIBLE);
+                                text3.setVisibility(View.VISIBLE);
+                                text33.setVisibility(View.VISIBLE);
+
+                                val hour2 = it.time_list?.getOrNull(1)?.toString()?.split(":")
+                                inputHour2?.setText(hour2?.getOrNull(0))
+                                inputMinute2?.setText(hour2?.getOrNull(1))
+
+                                val hour3 = it.time_list?.getOrNull(2)?.toString()?.split(":")
+                                inputHour3?.setText(hour3?.getOrNull(0))
+                                inputMinute3?.setText(hour3?.getOrNull(1))
+                            }
+                            "Co drugi dzień" -> spinner.setSelection(3)
+                            "Raz w tygodniu" -> spinner.setSelection(4)
+                            "Niestandardowa" -> {
+                                spinner.setSelection(5)
+                                niestandardowaButtons.setVisibility(View.VISIBLE);
+                                niestandardowaSeparator1.setVisibility(View.VISIBLE);
+                                niestandardowaSeparator2.setVisibility(View.VISIBLE);
+
 //                                inputHour3.text = null
 //                                inputMinute3.text = null
 //                                inputHour2.text = null
@@ -397,16 +397,15 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 //                                inputMinute3.setVisibility(View.GONE);
 //                                text3.setVisibility(View.GONE);
 //                                text33.setVisibility(View.GONE);
-//                            }
-//
-//                            else -> {}
-//                        }
-//                    }
-//
+                            }
+
+                            else -> {}
+                        }
+                    }
+
 
                 }
 
-                // Tutaj możesz kontynuować przetwarzanie obiektu pill
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -631,14 +630,24 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val date = current.format(formatter)
 
-        pill!!.name = pillName?.text.toString().trim() { it <= ' ' }
-        pill!!.availability = inputLeft?.text.toString().toIntOrNull()
-        pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
+        if(pill!=null) {
+
+            pill!!.name = pillName?.text.toString().trim() { it <= ' ' }
+            pill!!.availability = inputLeft?.text.toString().toIntOrNull()
+            pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
+        }else{
+            pillCustom!!.name = pillName?.text.toString().trim() { it <= ' ' }
+            pillCustom!!.availability = inputLeft?.text.toString().toIntOrNull()
+            pillCustom!!.inBox = inputPackage?.text.toString().toIntOrNull()
+        }
 
         val time1 = timeToString(hours.get(0), minutes.get(0))
         val times1 = mutableListOf<Any?>(time1, false)
         var times: MutableList<MutableList<Any?>?>? = null
-        var timesNiestandardowe: MutableList<HashMap<String, Any>>? = null
+//        var timesNiestandardowe: MutableList<HashMap<String, Any>>? = null
+//        var timesNiestandardowe: MutableList<Any?>? = null
+        val timesNiestandardowe: MutableList<HashMap<String, Any>> = mutableListOf()
+
 
 
         if (selectedFrequency.equals("Dwa razy dziennie")) {
@@ -710,9 +719,20 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
             }
             val sundayList = DayObject("Niedziela", timesSunday)
 
-//            timesNiestandardowe = convertToHashMapList(mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
-//                .filter { it.times.isNotEmpty() })
+//            timesNiestandardowe = mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
+//                .filter { it.times.isNotEmpty() }
+//                .toMutableList()
 
+            timesNiestandardowe.addAll(
+                mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
+                    .filter { it.times.isNotEmpty() }
+                    .map { dayObject ->
+                        hashMapOf(
+                            "day" to dayObject.day,
+                            "times" to dayObject.times
+                        )
+                    }
+            )
 
 
 
