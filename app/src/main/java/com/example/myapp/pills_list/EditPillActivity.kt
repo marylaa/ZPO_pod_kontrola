@@ -328,14 +328,410 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 } else {
                     // To jest PillModelCustom
                     pillCustom = snapshot.getValue(PillModelCustom::class.java)
+                    defineNiestandardowa()
 
                     pillCustom?.let {
                         pillName?.setText(it.name)
                         inputLeft?.setText(it.availability.toString())
                         inputPackage?.setText(it.inBox.toString())
-                        val hour1 = it.time_list?.getOrNull(0)?.toString()?.split(":")
-                        inputHour1?.setText(hour1?.getOrNull(0))
-                        inputMinute1?.setText(hour1?.getOrNull(1))
+//                        val hour1 = it.time_list?.getOrNull(0)?.toString()?.split(":")
+//                        inputHour1?.setText(hour1?.getOrNull(0))
+//                        inputMinute1?.setText(hour1?.getOrNull(1))
+
+                        for (item in pillCustom?.time_list.orEmpty()) {
+                            val dayValue = item["day"]
+                            val length = (item["times"] as? List<*>)?.size ?: 0
+                            val timesList = item["times"] as? List<List<Any>>
+
+                            println("dayyy value" + dayValue)
+                            println(length)
+                            if (dayValue!!.equals( "Poniedziałek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    monday = i
+                                    addMonday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    mondayInputHour1.setText(hours.toString())
+                                    mondayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    mondayInputHour1.setText(hours.toString())
+                                    mondayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    mondayInputHour2.setText(hours2.toString())
+                                    mondayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    mondayInputHour1.setText(hours.toString())
+                                    mondayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    mondayInputHour2.setText(hours2.toString())
+                                    mondayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    mondayInputHour3.setText(hours3.toString())
+                                    mondayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            } else if (dayValue!!.equals( "Wtorek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    tuesday = i
+                                    addTuesday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    tuesdayInputHour1.setText(hours.toString())
+                                    tuesdayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    tuesdayInputHour1.setText(hours.toString())
+                                    tuesdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    tuesdayInputHour2.setText(hours2.toString())
+                                    tuesdayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    tuesdayInputHour1.setText(hours.toString())
+                                    tuesdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    tuesdayInputHour2.setText(hours2.toString())
+                                    tuesdayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    tuesdayInputHour3.setText(hours3.toString())
+                                    tuesdayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            } else if (dayValue!!.equals( "Środa")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    wednesday = i
+                                    addWednesday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    wednesdayInputHour1.setText(hours.toString())
+                                    wednesdayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    wednesdayInputHour1.setText(hours.toString())
+                                    wednesdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    wednesdayInputHour2.setText(hours2.toString())
+                                    wednesdayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    wednesdayInputHour1.setText(hours.toString())
+                                    wednesdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    wednesdayInputHour2.setText(hours2.toString())
+                                    wednesdayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    wednesdayInputHour3.setText(hours3.toString())
+                                    wednesdayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            } else if (dayValue!!.equals( "Czwartek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    thursday = i
+                                    addThursday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    thursdayInputHour1.setText(hours.toString())
+                                    thursdayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    thursdayInputHour1.setText(hours.toString())
+                                    thursdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    thursdayInputHour2.setText(hours2.toString())
+                                    thursdayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    thursdayInputHour1.setText(hours.toString())
+                                    thursdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    thursdayInputHour2.setText(hours2.toString())
+                                    thursdayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    thursdayInputHour3.setText(hours3.toString())
+                                    thursdayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            } else if (dayValue!!.equals( "Piątek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    friday = i
+                                    addFriday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    fridayInputHour1.setText(hours.toString())
+                                    fridayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    fridayInputHour1.setText(hours.toString())
+                                    fridayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    fridayInputHour2.setText(hours2.toString())
+                                    fridayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    fridayInputHour1.setText(hours.toString())
+                                    fridayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    fridayInputHour2.setText(hours2.toString())
+                                    fridayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    fridayInputHour3.setText(hours3.toString())
+                                    fridayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            } else if (dayValue!!.equals( "Sobota")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    saturday = i
+                                    addSaturday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    saturdayInputHour1.setText(hours.toString())
+                                    saturdayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    saturdayInputHour1.setText(hours.toString())
+                                    saturdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    saturdayInputHour2.setText(hours2.toString())
+                                    saturdayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    saturdayInputHour1.setText(hours.toString())
+                                    saturdayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    saturdayInputHour2.setText(hours2.toString())
+                                    saturdayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    saturdayInputHour3.setText(hours3.toString())
+                                    saturdayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            } else if (dayValue!!.equals( "Niedziela")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    sunday = i
+                                    addSunday()
+                                    i++
+                                }
+                                if(length == 1){
+                                    val timeString = timesList!![0][0].toString()
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    sundayInputHour1.setText(hours.toString())
+                                    sundayInputMinute1.setText(minutes.toString())
+
+                                }else if(length == 2){
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    sundayInputHour1.setText(hours.toString())
+                                    sundayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    sundayInputHour2.setText(hours2.toString())
+                                    sundayInputMinute2.setText(minutes2.toString())
+
+                                }else{
+                                    val timeString = timesList!![0][0].toString()
+                                    println(timeString)
+                                    val timeParts = timeString.split(":")
+                                    val hours = timeParts[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes = timeParts[1].toInt() // Konwersja na liczbę całkowitą
+                                    sundayInputHour1.setText(hours.toString())
+                                    sundayInputMinute1.setText(minutes.toString())
+                                    val timeString2 = timesList!![1][0].toString()
+                                    println(timeString2)
+                                    val timeParts2 = timeString2.split(":")
+                                    val hours2 = timeParts2[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes2 = timeParts2[1].toInt() // Konwersja na liczbę całkowitą
+                                    sundayInputHour2.setText(hours2.toString())
+                                    sundayInputMinute2.setText(minutes2.toString())
+                                    val timeString3 = timesList!![2][0].toString()
+                                    println(timeString3)
+                                    val timeParts3 = timeString3.split(":")
+                                    val hours3 = timeParts3[0].toInt() // Konwersja na liczbę całkowitą
+                                    val minutes3 = timeParts3[1].toInt() // Konwersja na liczbę całkowitą
+                                    sundayInputHour3.setText(hours3.toString())
+                                    sundayInputMinute3.setText(minutes3.toString())
+
+                                }
+                            }
+                        }
 
                         val spinner = findViewById<Spinner>(R.id.spinner1)
                         when (it.frequency) {
@@ -379,24 +775,24 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                                 niestandardowaSeparator1.setVisibility(View.VISIBLE);
                                 niestandardowaSeparator2.setVisibility(View.VISIBLE);
 
-//                                inputHour3.text = null
-//                                inputMinute3.text = null
-//                                inputHour2.text = null
-//                                inputMinute2.text = null
-//                                inputHour1.text = null
-//                                inputMinute1.text = null
-//                                inputHour1.setVisibility(View.GONE);
-//                                inputMinute1.setVisibility(View.GONE);
-//                                text1.setVisibility(View.GONE);
-//                                text11.setVisibility(View.GONE);
-//                                inputHour2.setVisibility(View.GONE);
-//                                inputMinute2.setVisibility(View.GONE);
-//                                text2.setVisibility(View.GONE);
-//                                text22.setVisibility(View.GONE);
-//                                inputHour3.setVisibility(View.GONE);
-//                                inputMinute3.setVisibility(View.GONE);
-//                                text3.setVisibility(View.GONE);
-//                                text33.setVisibility(View.GONE);
+                                inputHour3.text = null
+                                inputMinute3.text = null
+                                inputHour2.text = null
+                                inputMinute2.text = null
+                                inputHour1.text = null
+                                inputMinute1.text = null
+                                inputHour1.setVisibility(View.GONE);
+                                inputMinute1.setVisibility(View.GONE);
+                                text1.setVisibility(View.GONE);
+                                text11.setVisibility(View.GONE);
+                                inputHour2.setVisibility(View.GONE);
+                                inputMinute2.setVisibility(View.GONE);
+                                text2.setVisibility(View.GONE);
+                                text22.setVisibility(View.GONE);
+                                inputHour3.setVisibility(View.GONE);
+                                inputMinute3.setVisibility(View.GONE);
+                                text3.setVisibility(View.GONE);
+                                text33.setVisibility(View.GONE);
                             }
 
                             else -> {}
@@ -438,6 +834,72 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                     niestandardowaButtons.setVisibility(View.VISIBLE);
                     niestandardowaSeparator1.setVisibility(View.VISIBLE);
                     niestandardowaSeparator2.setVisibility(View.VISIBLE);
+
+                    pillCustom?.let {
+                        pillName?.setText(it.name)
+                        inputLeft?.setText(it.availability.toString())
+                        inputPackage?.setText(it.inBox.toString())
+//                        val hour1 = it.time_list?.getOrNull(0)?.toString()?.split(":")
+//                        inputHour1?.setText(hour1?.getOrNull(0))
+//                        inputMinute1?.setText(hour1?.getOrNull(1))
+
+                        for (item in pillCustom?.time_list.orEmpty()) {
+                            val dayValue = item["day"]
+                            val length = (item["times"] as? List<*>)?.size ?: 0
+                            println("dayyy value" + dayValue)
+                            println(length)
+                            if (dayValue!!.equals( "Poniedziałek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    monday = i
+                                    addMonday()
+                                    i++
+                                }
+                            } else if (dayValue!!.equals( "Wtorek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    tuesday = i
+                                    addTuesday()
+                                    i++
+                                }
+                            } else if (dayValue!!.equals( "Środa")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    wednesday = i
+                                    addWednesday()
+                                    i++
+                                }
+                            } else if (dayValue!!.equals( "Czwartek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    thursday = i
+                                    addThursday()
+                                    i++
+                                }
+                            } else if (dayValue!!.equals( "Piątek")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    friday = i
+                                    addFriday()
+                                    i++
+                                }
+                            } else if (dayValue!!.equals( "Sobota")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    saturday = i
+                                    addSaturday()
+                                    i++
+                                }
+                            } else if (dayValue!!.equals( "Niedziela")) {
+                                var i = 0
+                                while (i < length-1) {
+                                    sunday = i
+                                    addSunday()
+                                    i++
+                                }
+                            }
+                        }
+                    }
 
                     inputHour3.text = null
                     inputMinute3.text = null
@@ -546,84 +1008,22 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 /////////////////////////////////////////////////////////////////////////////////
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun validatePillDetails(): Boolean {
-        hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
-        minutes = arrayOf(inputMinute1?.text.toString().toIntOrNull(), inputMinute2?.text.toString().toIntOrNull(), inputMinute3?.text.toString().toIntOrNull())
-        amountLeft = inputLeft?.text.toString().toIntOrNull()
-        amountInBox = inputPackage?.text.toString().toIntOrNull()
-
-        if (TextUtils.isEmpty(pillName?.text.toString().trim())) {
-            showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
-            return false
-        }
-
-        for (hour in hours) {
-            if (hour !== null && hour !in 1..24) {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
-                return false
-            }
-        }
-
-        for (minute in minutes) {
-            if (minute !== null && minute !in 0..59) {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
-                return false
-            }
-        }
-
-        for (i in 0 until hours.size - 1) {
-            val hour1 = hours[i]
-            val minute1 = minutes[i]
-            val hour2 = hours[i + 1]
-            val minute2 = minutes[i + 1]
-
-            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
-                val time1 = LocalTime.of(hour1, minute1)
-                val time2 = LocalTime.of(hour2, minute2)
-
-                if (time1.isAfter(time2) || time1 == time2) {
-                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
-                    return false
-                }
-            }
-        }
-
-        if (amountLeft == null || amountLeft!! < 1 || amountLeft!! > amountInBox!!) {
-            showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_amount), true)
-            return false
-        }
-
-        if (amountInBox == null || amountInBox!! < 1) {
-            showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_in_box), true)
-            return false
-        }
-
-        return true
-    }
-
     fun goToSchedule(view: View) {
         val intent = Intent(this, UserScheduleActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-//    fun convertToHashMapList(dayObjects: List<DayObject>): MutableList<HashMap<String, Any>>? {
-//        return dayObjects?.map { dayObject ->
-//            val hashMap = hashMapOf<String, Any>()
-//            hashMap["day"] = dayObject.day
-//            hashMap["times"] = dayObject.times.map { timeEntry ->
-//                listOf(timeEntry.time, timeEntry.isAvailable)
-//            }
-//            hashMap
-//        }?.toMutableList()
-//    }
 
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun savePill(completion: (Boolean) -> Unit) {
         dbRef = FirebaseDatabase.getInstance().getReference("Pills")
+
+        var time1 = ""
+        var times1 = mutableListOf<Any?>(time1, false)
+        var times: MutableList<MutableList<Any?>?>? = null
 
 
         val current = LocalDate.now()
@@ -635,15 +1035,16 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
             pill!!.name = pillName?.text.toString().trim() { it <= ' ' }
             pill!!.availability = inputLeft?.text.toString().toIntOrNull()
             pill!!.inBox = inputPackage?.text.toString().toIntOrNull()
+
+            time1 = timeToString(hours.get(0), minutes.get(0))
+            times1 = mutableListOf<Any?>(time1, false)
         }else{
             pillCustom!!.name = pillName?.text.toString().trim() { it <= ' ' }
             pillCustom!!.availability = inputLeft?.text.toString().toIntOrNull()
             pillCustom!!.inBox = inputPackage?.text.toString().toIntOrNull()
         }
 
-        val time1 = timeToString(hours.get(0), minutes.get(0))
-        val times1 = mutableListOf<Any?>(time1, false)
-        var times: MutableList<MutableList<Any?>?>? = null
+
 //        var timesNiestandardowe: MutableList<HashMap<String, Any>>? = null
 //        var timesNiestandardowe: MutableList<Any?>? = null
         val timesNiestandardowe: MutableList<HashMap<String, Any>> = mutableListOf()
@@ -661,6 +1062,10 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
             val times3 = mutableListOf<Any?>(time3, false)
             times = mutableListOf(times1, times2, times3)
         } else if (selectedFrequency.equals("Niestandardowa")) {
+
+            pillCustom!!.name = pillName?.text.toString().trim() { it <= ' ' }
+            pillCustom!!.availability = inputLeft?.text.toString().toIntOrNull()
+            pillCustom!!.inBox = inputPackage?.text.toString().toIntOrNull()
             data class DayObject(val day: String, val times: MutableList<MutableList<Any?>> = mutableListOf())
 
             val timesMonday: MutableList<MutableList<Any?>> = mutableListOf()
@@ -719,21 +1124,29 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
             }
             val sundayList = DayObject("Niedziela", timesSunday)
 
-//            timesNiestandardowe = mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
-//                .filter { it.times.isNotEmpty() }
-//                .toMutableList()
 
-            timesNiestandardowe.addAll(
-                mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
-                    .filter { it.times.isNotEmpty() }
-                    .map { dayObject ->
-                        hashMapOf(
-                            "day" to dayObject.day,
-                            "times" to dayObject.times
-                        )
-                    }
-            )
+//            timesNiestandardowe.addAll(
+//                mutableListOf(mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList)
+//                    .filter { it.times.isNotEmpty() }
+//                    .map { dayObject ->
+//                        hashMapOf(
+//                            "times" to dayObject.times,
+//                            "day" to dayObject.day
+//                        )
+//                    }
+//            )
 
+            val daysList: List<DayObject> = listOf(
+                mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList, sundayList
+            ).filter { it.times.isNotEmpty() }
+
+
+            for (dayObject in daysList) {
+                val dayMap = hashMapOf<String, Any>()
+                dayMap["times"] = dayObject.times
+                dayMap["day"] = dayObject.day
+                timesNiestandardowe.add(dayMap)
+            }
 
 
 
@@ -751,19 +1164,27 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                     // zostawienie checkboxa w stanie jaki byl
                     if (timesNiestandardowe != null) {
                         if (timesNiestandardowe.size < pillCustom!!.time_list!!.size) {
-                            for (i in 0..timesNiestandardowe.size - 1) {
-                                if (pillCustom?.time_list?.getOrNull(i)?.get("1") as? Boolean == true) {
-                                    timesNiestandardowe?.getOrNull(i)?.set("1", true)
+                            for (i in 0 until timesNiestandardowe.size) {
+                                val pillCustomValue = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                    (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(1) as? Boolean
                                 }
 
+                                if (pillCustomValue == true) {
+                                    timesNiestandardowe[i]?.set("1", true)
+                                }
                             }
+
                         } else {
-                            for (i in 0..pillCustom!!.time_list!!.size - 1) {
-                                if (pillCustom?.time_list?.getOrNull(i)?.get("1") as? Boolean == true) {
-                                    timesNiestandardowe?.getOrNull(i)?.set("1", true)
+                            for (i in 0 until timesNiestandardowe.size) {
+                                val pillCustomValue = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                    (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(1) as? Boolean
                                 }
 
+                                if (pillCustomValue == true) {
+                                    timesNiestandardowe[i]?.set("1", true)
+                                }
                             }
+
                         }
                     }
 
@@ -791,17 +1212,27 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                         // zostawienie checkboxa w stanie jaki byl
                         if (timesNiestandardowe != null) {
                             if (timesNiestandardowe.size < pillCustom!!.time_list!!.size) {
-                                for (i in 0..timesNiestandardowe.size - 1) {
-                                    if (pillCustom?.time_list?.getOrNull(i)?.get("1") as? Boolean == true) {
-                                        timesNiestandardowe?.getOrNull(i)?.set("1", true)
+                                for (i in 0 until timesNiestandardowe.size) {
+                                    val pillCustomValue = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                        (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(1) as? Boolean
+                                    }
+
+                                    if (pillCustomValue == true) {
+                                        timesNiestandardowe[i]?.set("1", true)
                                     }
                                 }
+
                             } else {
-                                for (i in 0..pillCustom!!.time_list!!.size - 1) {
-                                    if (pillCustom?.time_list?.getOrNull(i)?.get("1") as? Boolean == true) {
-                                        timesNiestandardowe?.getOrNull(i)?.set("1", true)
+                                for (i in 0 until timesNiestandardowe.size) {
+                                    val pillCustomValue = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                        (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(1) as? Boolean
+                                    }
+
+                                    if (pillCustomValue == true) {
+                                        timesNiestandardowe[i]?.set("1", true)
                                     }
                                 }
+
                             }
                         }
 
@@ -835,8 +1266,19 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 if (selectedFrequency.equals("Niestandardowa")) {
                     var same = true
                     if (timesNiestandardowe != null) {
-                        for (i in 0..timesNiestandardowe.size - 1) {
-                            if (!(pillCustom!!.time_list!![i]?.get("0")!!.equals(timesNiestandardowe[i]?.get("0")))) {
+                        for (i in 0 until timesNiestandardowe.size) {
+                            println(pillCustom!!.time_list.toString())
+                            println(timesNiestandardowe.toString())
+
+                            val pillCustomHour = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(0) as? String
+                            }
+
+                            val niestandardoweHour = timesNiestandardowe[i]?.get("times")?.let {
+                                (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(0) as? String
+                            }
+
+                            if (!(pillCustomHour.equals(niestandardoweHour))) {
                                 same = false
                             }
                         }
@@ -844,8 +1286,12 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                     if (!same) {
                         // zostawienie checkboxa w stanie jaki byl
                         if (timesNiestandardowe != null) {
-                            for (i in 0..timesNiestandardowe.size - 1) {
-                                if (pillCustom!!.time_list!![i]?.get("1") as Boolean) {
+                            for (i in 0 until timesNiestandardowe.size) {
+                                val pillCustomValue = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                    (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(1) as? Boolean
+                                }
+
+                                if (pillCustomValue == true) {
                                     timesNiestandardowe[i]?.set("1", true)
                                 }
                             }
@@ -862,7 +1308,7 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 pill!!.date_last = date
 
                     // zostawienie checkboxa w stanie jaki byl
-                    if (times != null) {
+                if (times != null) {
                         if (times.size < pill!!.time_list!!.size) {
                             for (i in 0..times.size - 1) {
                                 if (pill!!.time_list!![i]?.get(1) as Boolean) {
@@ -942,33 +1388,63 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
             } else {
 
                     var same = true
-                    if (times != null) {
-                        for (i in 0..times.size - 1) {
-                            if (!(pill!!.time_list!![i]?.get(0)!!.equals(times[i]?.get(0)))) {
+                    if (timesNiestandardowe != null) {
+                        for (i in 0 until timesNiestandardowe.size) {
+                            println(pillCustom!!.time_list.toString())
+                            println(timesNiestandardowe.toString())
+
+                            val pillCustomHour = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(0) as? String
+                            }
+
+                            val niestandardoweHour = timesNiestandardowe[i]?.get("times")?.let {
+                                (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(0) as? String
+                            }
+
+                            if (!(pillCustomHour.equals(niestandardoweHour))) {
                                 same = false
                             }
                         }
                     }
                     if (!same) {
                         // zostawienie checkboxa w stanie jaki byl
-                        if (times != null) {
-                            for (i in 0..times.size - 1) {
-                                if (pill!!.time_list!![i]?.get(1) as Boolean) {
-                                    times[i]?.set(1, true)
+                        if (timesNiestandardowe != null) {
+                            for (i in 0 until timesNiestandardowe.size) {
+                                val pillCustomValue = pillCustom!!.time_list?.getOrNull(i)?.get("times")?.let {
+                                    (it as? List<List<Any>>)?.getOrNull(0)?.getOrNull(1) as? Boolean
+                                }
+
+                                if (pillCustomValue == true) {
+                                    timesNiestandardowe[i]?.set("1", true)
                                 }
                             }
+
                         }
-                        pill!!.time_list = times
+                        pillCustom!!.time_list = timesNiestandardowe
                     }
             }
 
 
 
-        dbRef.child(pill!!.id.toString()).setValue(pill).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                completion(true) // Zwróć true w przypadku powodzenia
-            } else {
-                completion(false) // Zwróć false w przypadku błędu
+        println(pillCustom!!.time_list)
+        println(timesNiestandardowe)
+
+
+        if(pillCustom == null) {
+            dbRef.child(pill!!.id.toString()).setValue(pill).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    completion(true) // Zwróć true w przypadku powodzenia
+                } else {
+                    completion(false) // Zwróć false w przypadku błędu
+                }
+            }
+        }else{
+            dbRef.child(pillCustom!!.id.toString()).setValue(pillCustom).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    completion(true) // Zwróć true w przypadku powodzenia
+                } else {
+                    completion(false) // Zwróć false w przypadku błędu
+                }
             }
         }
     }
@@ -1060,6 +1536,8 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun addWednesday() {
+        println("add wed")
+        println(wednesday)
         if (wednesday == 0) {
             wednesday = 1
             wednesdayButtonRemove.setVisibility(View.VISIBLE)
@@ -1417,6 +1895,273 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
             sundayInputHour3.text = null
             sundayInputMinute3.text = null
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun validatePillDetails(): Boolean {
+        hours = arrayOf(inputHour1?.text.toString().toIntOrNull(), inputHour2?.text.toString().toIntOrNull(), inputHour3?.text.toString().toIntOrNull())
+        hoursMonday = arrayOf(mondayInputHour1?.text.toString().toIntOrNull(), mondayInputHour2?.text.toString().toIntOrNull(), mondayInputHour3?.text.toString().toIntOrNull())
+        hoursTuesday = arrayOf(tuesdayInputHour1?.text.toString().toIntOrNull(), tuesdayInputHour2?.text.toString().toIntOrNull(), tuesdayInputHour3?.text.toString().toIntOrNull())
+        hoursWednesday = arrayOf(wednesdayInputHour1?.text.toString().toIntOrNull(), wednesdayInputHour2?.text.toString().toIntOrNull(), wednesdayInputHour3?.text.toString().toIntOrNull())
+        hoursThursday = arrayOf(thursdayInputHour1?.text.toString().toIntOrNull(), thursdayInputHour2?.text.toString().toIntOrNull(), thursdayInputHour3?.text.toString().toIntOrNull())
+        hoursFriday = arrayOf(fridayInputHour1?.text.toString().toIntOrNull(), fridayInputHour2?.text.toString().toIntOrNull(), fridayInputHour3?.text.toString().toIntOrNull())
+        hoursSaturday = arrayOf(saturdayInputHour1?.text.toString().toIntOrNull(), saturdayInputHour2?.text.toString().toIntOrNull(), saturdayInputHour3?.text.toString().toIntOrNull())
+        hoursSunday = arrayOf(sundayInputHour1?.text.toString().toIntOrNull(), sundayInputHour2?.text.toString().toIntOrNull(), sundayInputHour3?.text.toString().toIntOrNull())
+        minutes = arrayOf(inputMinute1?.text.toString().toIntOrNull(), inputMinute2?.text.toString().toIntOrNull(), inputMinute3?.text.toString().toIntOrNull())
+        minutesMonday = arrayOf(mondayInputMinute1?.text.toString().toIntOrNull(), mondayInputMinute2?.text.toString().toIntOrNull(), mondayInputMinute3?.text.toString().toIntOrNull())
+        minutesTuesday = arrayOf(tuesdayInputMinute1?.text.toString().toIntOrNull(), tuesdayInputMinute2?.text.toString().toIntOrNull(), tuesdayInputMinute3?.text.toString().toIntOrNull())
+        minutesWednesday = arrayOf(wednesdayInputMinute1?.text.toString().toIntOrNull(), wednesdayInputMinute2?.text.toString().toIntOrNull(), wednesdayInputMinute3?.text.toString().toIntOrNull())
+        minutesThursday = arrayOf(thursdayInputMinute1?.text.toString().toIntOrNull(), thursdayInputMinute2?.text.toString().toIntOrNull(), thursdayInputMinute3?.text.toString().toIntOrNull())
+        minutesFriday = arrayOf(fridayInputMinute1?.text.toString().toIntOrNull(), fridayInputMinute2?.text.toString().toIntOrNull(), fridayInputMinute3?.text.toString().toIntOrNull())
+        minutesSaturday = arrayOf(saturdayInputMinute1?.text.toString().toIntOrNull(), saturdayInputMinute2?.text.toString().toIntOrNull(), saturdayInputMinute3?.text.toString().toIntOrNull())
+        minutesSunday = arrayOf(sundayInputMinute1?.text.toString().toIntOrNull(), sundayInputMinute2?.text.toString().toIntOrNull(), sundayInputMinute3?.text.toString().toIntOrNull())
+        amountLeft = inputLeft?.text.toString().toIntOrNull()
+        amountInBox = inputPackage?.text.toString().toIntOrNull()
+
+        if (TextUtils.isEmpty(pillName?.text.toString().trim())) {
+            showErrorSnackBar(resources.getString(R.string.err_msg_enter_pill_name), true)
+            return false
+        }
+
+        for (hour in hours) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursMonday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursTuesday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursWednesday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursFriday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursSaturday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursSunday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+        for (hour in hoursThursday) {
+            if (hour !== null && hour !in 1..24) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_hour), true)
+                return false
+            }
+        }
+
+        for (minute in minutes) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesMonday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesTuesday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesWednesday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesThursday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesFriday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesSaturday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+        for (minute in minutesSunday) {
+            if (minute !== null && minute !in 0..59) {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_minute), true)
+                return false
+            }
+        }
+
+        for (i in 0 until hours.size - 1) {
+            val hour1 = hours[i]
+            val minute1 = minutes[i]
+            val hour2 = hours[i + 1]
+            val minute2 = minutes[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+
+        for (i in 0 until hoursMonday.size - 1) {
+            val hour1 = hoursMonday[i]
+            val minute1 = minutesMonday[i]
+            val hour2 = hoursMonday[i + 1]
+            val minute2 = minutesMonday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+        for (i in 0 until hoursTuesday.size - 1) {
+            val hour1 = hoursTuesday[i]
+            val minute1 = minutesTuesday[i]
+            val hour2 = hoursTuesday[i + 1]
+            val minute2 = minutesTuesday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+        for (i in 0 until hoursWednesday.size - 1) {
+            val hour1 = hoursWednesday[i]
+            val minute1 = minutesWednesday[i]
+            val hour2 = hoursWednesday[i + 1]
+            val minute2 = minutesWednesday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+        for (i in 0 until hoursThursday.size - 1) {
+            val hour1 = hoursThursday[i]
+            val minute1 = minutesThursday[i]
+            val hour2 = hoursThursday[i + 1]
+            val minute2 = minutesThursday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+        for (i in 0 until hoursFriday.size - 1) {
+            val hour1 = hoursFriday[i]
+            val minute1 = minutesFriday[i]
+            val hour2 = hoursFriday[i + 1]
+            val minute2 = minutesFriday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+        for (i in 0 until hoursSaturday.size - 1) {
+            val hour1 = hoursSaturday[i]
+            val minute1 = minutesSaturday[i]
+            val hour2 = hoursSaturday[i + 1]
+            val minute2 = minutesSaturday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+        for (i in 0 until hoursSunday.size - 1) {
+            val hour1 = hoursSunday[i]
+            val minute1 = minutesSunday[i]
+            val hour2 = hoursSunday[i + 1]
+            val minute2 = minutesSunday[i + 1]
+
+            if (hour1 != null && minute1 != null && hour2 != null && minute2 != null) {
+                val time1 = LocalTime.of(hour1, minute1)
+                val time2 = LocalTime.of(hour2, minute2)
+
+                if (time1.isAfter(time2) || time1 == time2) {
+                    showErrorSnackBar("Godziny muszą być podane chronologicznie", true)
+                    return false
+                }
+            }
+        }
+
+        if (amountLeft == null || amountLeft!! < 1 || amountLeft!! > amountInBox!!) {
+            showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_amount), true)
+            return false
+        }
+
+        if (amountInBox == null || amountInBox!! < 1) {
+            showErrorSnackBar(resources.getString(R.string.err_msg_enter_valid_in_box), true)
+            return false
+        }
+
+        return true
     }
 
     private fun defineNiestandardowa() {
