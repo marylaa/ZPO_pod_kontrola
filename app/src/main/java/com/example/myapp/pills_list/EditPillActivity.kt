@@ -1428,6 +1428,9 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
         println(pillCustom!!.time_list)
         println(timesNiestandardowe)
+        pillCustom!!.time_list = timesNiestandardowe
+        println(pillCustom!!.time_list)
+        println(timesNiestandardowe)
 
 
         if(pillCustom == null) {
