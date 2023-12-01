@@ -1426,11 +1426,6 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
 
 
 
-        println(pillCustom!!.time_list)
-        println(timesNiestandardowe)
-        pillCustom!!.time_list = timesNiestandardowe
-        println(pillCustom!!.time_list)
-        println(timesNiestandardowe)
 
 
         if(pillCustom == null) {
@@ -1442,6 +1437,12 @@ class EditPillActivity : BaseActivity(), View.OnClickListener {
                 }
             }
         }else{
+            println(pillCustom!!.time_list)
+            println(timesNiestandardowe)
+            pillCustom!!.time_list = timesNiestandardowe
+            println(pillCustom!!.time_list)
+            println(timesNiestandardowe)
+
             dbRef.child(pillCustom!!.id.toString()).setValue(pillCustom).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     completion(true) // Zwróć true w przypadku powodzenia
