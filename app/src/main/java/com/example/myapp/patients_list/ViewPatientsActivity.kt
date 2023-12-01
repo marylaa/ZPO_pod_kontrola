@@ -9,6 +9,9 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,9 +20,7 @@ import com.example.myapp.settings.DoctorSettingsActivity
 import com.example.myapp.R
 import com.example.myapp.SharedObject
 import com.example.myapp.login.UserModel
-import com.example.myapp.notifications.MainNotificationsDoctor
 import com.example.myapp.notifications.NotificationModelAlert
-import com.example.myapp.pills_list.UserScheduleActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -31,6 +32,7 @@ class ViewPatientsActivity : AppCompatActivity() {
     private var patientDoctorsList: MutableList<PatientDoctorModel> = mutableListOf()
     private lateinit var userId: String
     private lateinit var patientIds: Array<String>
+    private lateinit var sortButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,11 @@ class ViewPatientsActivity : AppCompatActivity() {
         newRecyclerView.layoutManager = LinearLayoutManager(this)
         newRecyclerView.setHasFixedSize(true)
         getDataFromDatabase()
+
+        sortButton = findViewById(R.id.sortButton)
+        sortButton.setOnClickListener {
+            showSortMenu(it)
+        }
 
         val navView: BottomNavigationView = findViewById(R.id.navigation_bar)
         navView.menu.findItem(R.id.navigation_home).isChecked = true
@@ -65,6 +72,7 @@ class ViewPatientsActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
     }
 
     private fun getDataFromDatabase() {
@@ -100,6 +108,7 @@ class ViewPatientsActivity : AppCompatActivity() {
                 val patient = dataSnapshot.getValue(UserModel::class.java)
                 if (patient != null) { // sprawdzamy czy pacjent nie jest pusty
                     patientList.add(patient)
+                    println(patientList.toString())
                     newRecyclerView.adapter?.notifyDataSetChanged()
                 }
             }
@@ -169,5 +178,33 @@ class ViewPatientsActivity : AppCompatActivity() {
 
         val notificationId = 0
         notificationManager.notify(notificationId, notificationBuilder.build())
+    }
+
+    private fun showSortMenu(view: View) {
+        val popupMenu = PopupMenu(this, view)
+        popupMenu.menuInflater.inflate(R.menu.sort_menu, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.sort_alphabetically_name -> {
+                    // Wywołanie funkcji sortującej alfabetycznie
+                    patientList.sortBy { it.firstName?.toString()?.toUpperCase() } // Załóżmy, że sortujemy po nazwie pacjenta
+                    println(patientList.toString())
+                    newRecyclerView.adapter?.notifyDataSetChanged()
+                    true
+                }
+                R.id.sort_alphabetically_surname -> {
+                    // Wywołanie funkcji sortującej alfabetycznie
+                    patientList.sortBy { it.lastName?.toString()?.toUpperCase() } // Załóżmy, że sortujemy po nazwie pacjenta
+                    println(patientList.toString())
+                    newRecyclerView.adapter?.notifyDataSetChanged()
+                    true
+                }
+                // Dodaj inne opcje sortowania, jeśli są potrzebne
+                else -> false
+            }
+        }
+
+        popupMenu.show()
     }
 }
