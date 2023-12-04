@@ -80,7 +80,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:hint="Numer PESEL"
-        android:inputType="text"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputEmaill" />
