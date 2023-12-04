@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -44,16 +45,16 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings_patient)
 
-
-
         userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         doctorsList = arrayListOf()
 
         getDoctorFromDatabase(userId)
 
-
         logoutButton = findViewById(R.id.logoutButton)
         logoutButton?.setOnClickListener { logoutUser() }
+
+        var textLogout = findViewById<TextView>(R.id.textLogout)
+        textLogout?.setOnClickListener { logoutUser() }
 
         val showPills = findViewById<ImageButton>(R.id.showPills)
         showPills.setOnClickListener(this)
@@ -66,6 +67,36 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
         val healthAlertButton = findViewById<ImageButton>(R.id.healthAlertImage)
         healthAlertButton.setOnClickListener {
+            val alertDialog = AlertDialog.Builder(this)
+                .setTitle("Potwierdzenie")
+                .setMessage("Czy na pewno chcesz powiadomić lekarza o pogorszeniu się stanu Twojego zdrowia?")
+                .setPositiveButton("Tak") { _, _ ->
+                    getDoctorFromDatabase(userId).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            healthAlert { success ->
+                                if (success) {
+                                    runOnUiThread {
+                                        Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
+                                    }
+                                } else {
+                                    runOnUiThread {
+                                        Toast.makeText(this@PatientSettingsActivity, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .setNegativeButton("Anuluj") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+
+            alertDialog.show()
+        }
+
+        val healthAlert = findViewById<TextView>(R.id.healthAlert)
+        healthAlert.setOnClickListener {
             val alertDialog = AlertDialog.Builder(this)
                 .setTitle("Potwierdzenie")
                 .setMessage("Czy na pewno chcesz powiadomić lekarza o pogorszeniu się stanu Twojego zdrowia?")
@@ -136,13 +167,25 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                     val intent = Intent(this, PatientAllPillsActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.pacientPills -> {
+                    val intent = Intent(this, PatientAllPillsActivity::class.java)
+                    startActivity(intent)
+                }
                 R.id.showNotifications -> {
+                    val intent = Intent(this, MainNotifications::class.java)
+                    startActivity(intent)
+                }
+                R.id.notifications -> {
                     val intent = Intent(this, MainNotifications::class.java)
                     startActivity(intent)
                 }
                 R.id.choosedChat ->{
                     val intent = Intent(this, ChatActivity::class.java)
                     intent.putExtra("Id", doctorsList[0])
+                    startActivity(intent)
+                }
+                R.id.chat -> {
+                    val intent = Intent(this, MainNotifications::class.java)
                     startActivity(intent)
                 }
 
