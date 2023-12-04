@@ -93,10 +93,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                         query.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                 for (snapshot in dataSnapshot.children) {
-                                    val pillModel = snapshot.getValue(PillModel::class.java)
-                                    if (pillModel!!.id == pillId) {
-                                        oldAvailability = pillModel.availability!!
-                                        break;
+                                    val frequencyValue = snapshot.child("frequency").getValue(String::class.java)
+                                    if (!frequencyValue.equals("Niestandardowa")) {
+                                        val pillModel = snapshot.getValue(PillModel::class.java)
+                                        if (pillModel!!.id == pillId) {
+                                            oldAvailability = pillModel.availability!!
+                                            Log.d("old av", oldAvailability.toString())
+                                            break;
+                                        }
                                     }
                                 }
 
@@ -243,11 +247,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                             query.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                     for (snapshot in dataSnapshot.children) {
+                                        val frequencyValue = snapshot.child("frequency").getValue(String::class.java)
+                                        if (!frequencyValue.equals("Niestandardowa")) {
                                         val pillModel = snapshot.getValue(PillModel::class.java)
                                         if (pillModel!!.id == pillId) {
                                             oldAvailability = pillModel.availability!!
                                             Log.d("old av", oldAvailability.toString())
                                             break;
+                                            }
                                         }
                                     }
 
@@ -326,12 +333,14 @@ class PillItemAdapter(private val pillList: MutableList<Any>?, private val conte
                                                 ValueEventListener {
                                                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                                                     for (snapshot in dataSnapshot.children) {
-                                                        val pillModel =
-                                                            snapshot.getValue(PillModel::class.java)
-                                                        if (pillModel!!.id == pillId) {
-                                                            oldAvailability =
-                                                                pillModel.availability!!
-                                                            break;
+                                                        val frequencyValue = snapshot.child("frequency").getValue(String::class.java)
+                                                        if (!frequencyValue.equals("Niestandardowa")) {
+                                                            val pillModel = snapshot.getValue(PillModel::class.java)
+                                                            if (pillModel!!.id == pillId) {
+                                                                oldAvailability = pillModel.availability!!
+                                                                Log.d("old av", oldAvailability.toString())
+                                                                break;
+                                                            }
                                                         }
                                                     }
 
