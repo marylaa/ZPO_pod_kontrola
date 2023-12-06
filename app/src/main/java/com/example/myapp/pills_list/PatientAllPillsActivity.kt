@@ -78,16 +78,26 @@ class PatientAllPillsActivity : AppCompatActivity(), View.OnClickListener {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
         val pillList: MutableList<PillModel> = mutableListOf()
+        val pillListCustom: MutableList<PillModelCustom> = mutableListOf()
 
         val query = dbRef.orderByChild("pacient").equalTo(userId)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 pillList.clear()
+                pillListCustom.clear()
                 for (snapshot in dataSnapshot.children) {
-                    val pill = snapshot.getValue(PillModel::class.java)
-                    pillList.add(pill!!)
+                    try {
+                        val pill = snapshot.getValue(PillModel::class.java)
+                        pillList.add(pill!!)
+                    } catch (e: Exception) {
+                        val pill = snapshot.getValue(PillModelCustom::class.java)
+                        pillListCustom.add(pill!!)
+                    }
                 }
-                newRecyclerView.adapter = PatientAllPillItemAdapter(pillList)
+                val mergedList = mutableListOf<Any>()
+                mergedList.addAll(pillList)
+                mergedList.addAll(pillListCustom)
+                newRecyclerView.adapter = PatientAllPillItemAdapter(mergedList)
             }
 
             override fun onCancelled(error: DatabaseError) {

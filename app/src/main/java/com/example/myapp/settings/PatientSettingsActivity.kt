@@ -59,11 +59,20 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         val showPills = findViewById<ImageButton>(R.id.showPills)
         showPills.setOnClickListener(this)
 
-        val notifications = findViewById<ImageButton>(R.id.showNotifications)
-        notifications.setOnClickListener(this)
+        val showNotifications = findViewById<ImageButton>(R.id.showNotifications)
+        showNotifications.setOnClickListener(this)
 
         val chatButton = findViewById<ImageButton>(R.id.choosedChat)
         chatButton.setOnClickListener(this)
+
+        val pacientPills = findViewById<TextView>(R.id.pacientPills)
+        pacientPills.setOnClickListener(this)
+
+        val notifications = findViewById<TextView>(R.id.notifications)
+        notifications.setOnClickListener(this)
+
+        val chat = findViewById<TextView>(R.id.chat)
+        chat.setOnClickListener(this)
 
         val healthAlertButton = findViewById<ImageButton>(R.id.healthAlertImage)
         healthAlertButton.setOnClickListener {
@@ -185,7 +194,8 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                     startActivity(intent)
                 }
                 R.id.chat -> {
-                    val intent = Intent(this, MainNotifications::class.java)
+                    val intent = Intent(this, ChatActivity::class.java)
+                    intent.putExtra("Id", doctorsList[0])
                     startActivity(intent)
                 }
 

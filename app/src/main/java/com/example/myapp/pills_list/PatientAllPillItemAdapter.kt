@@ -14,7 +14,7 @@ import com.example.myapp.R
 import com.example.myapp.pills_list.PillModel
 import com.google.firebase.database.FirebaseDatabase
 
-class PatientAllPillItemAdapter(private val pillList: MutableList<PillModel>?) :
+class PatientAllPillItemAdapter(private val pillList: MutableList<Any>?) :
     RecyclerView.Adapter<PatientAllPillItemAdapter.PillItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PillItemViewHolder {
@@ -24,53 +24,126 @@ class PatientAllPillItemAdapter(private val pillList: MutableList<PillModel>?) :
     }
 
     override fun onBindViewHolder(holder: PillItemViewHolder, position: Int) {
-        val currentItem = pillList!![position]
-        holder.pillTitle.text = currentItem.name
+        var item = pillList!![position]
+        if (item is PillModel) {
+            val currentItem = item as PillModel
+            holder.pillTitle.text = currentItem.name
 
-        holder.itemView.apply {
-            val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
-            pillActionsButton.setOnClickListener {
-                val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
+            holder.itemView.apply {
+                val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
+                pillActionsButton.setOnClickListener {
+                    val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
 
-                popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
-                popupMenu.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.title) {
-                        "Edytuj lek" -> {
-                            val intent =
-                                Intent(holder.itemView.context, EditPillActivity::class.java)
-                            intent.putExtra("pillId", currentItem.id)
-                            holder.itemView.context.startActivity(intent)
-                            true
-                        }
-                        "Usuń lek" -> {
-                            val alertDialog = AlertDialog.Builder(context)
-                                .setTitle("Potwierdzenie")
-                                .setMessage("Czy na pewno chcesz usunąć lek?")
-                                .setPositiveButton("Tak") { _, _ ->
-                                    val pillModel = pillList?.get(position)
-                                    val pillId = pillModel?.id
-                                    if (pillId != null) {
-                                        val dbRef = FirebaseDatabase.getInstance().getReference("Pills").child(pillId)
-                                        dbRef.removeValue().addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                Toast.makeText(context, "Tabletka została usunięta", Toast.LENGTH_SHORT).show()
-                                            } else {
-                                                Toast.makeText(context, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                    popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
+                    popupMenu.setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.title) {
+                            "Edytuj lek" -> {
+                                val intent =
+                                    Intent(holder.itemView.context, EditPillActivity::class.java)
+                                intent.putExtra("pillId", currentItem.id)
+                                holder.itemView.context.startActivity(intent)
+                                true
+                            }
+                            "Usuń lek" -> {
+                                val alertDialog = AlertDialog.Builder(context)
+                                    .setTitle("Potwierdzenie")
+                                    .setMessage("Czy na pewno chcesz usunąć lek?")
+                                    .setPositiveButton("Tak") { _, _ ->
+                                        val pillModel = pillList?.get(position) as PillModel
+                                        val pillId = pillModel?.id
+                                        if (pillId != null) {
+                                            val dbRef =
+                                                FirebaseDatabase.getInstance().getReference("Pills")
+                                                    .child(pillId)
+                                            dbRef.removeValue().addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Tabletka została usunięta",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Wystąpił błąd",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
+                                    }.setNegativeButton("Anuluj") { dialog, _ ->
+                                        dialog.dismiss()
                                     }
-                                }.setNegativeButton("Anuluj") { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                .create()
+                                    .create()
 
-                            alertDialog.show()
-                            true
+                                alertDialog.show()
+                                true
+                            }
+                            else -> false
                         }
-                        else -> false
                     }
+                    popupMenu.show()
                 }
-                popupMenu.show()
+            }
+        } else if (item is PillModelCustom) {
+            val currentItem = item as PillModelCustom
+            holder.pillTitle.text = currentItem.name
+
+            holder.itemView.apply {
+                val pillActionsButton = findViewById<ImageButton>(R.id.imageButton)
+                pillActionsButton.setOnClickListener {
+                    val popupMenu = PopupMenu(holder.itemView.context, pillActionsButton)
+
+                    popupMenu.menuInflater.inflate(R.menu.pill_menu, popupMenu.menu)
+                    popupMenu.setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.title) {
+                            "Edytuj lek" -> {
+                                val intent =
+                                    Intent(holder.itemView.context, EditPillActivity::class.java)
+                                intent.putExtra("pillId", currentItem.id)
+                                holder.itemView.context.startActivity(intent)
+                                true
+                            }
+                            "Usuń lek" -> {
+                                val alertDialog = AlertDialog.Builder(context)
+                                    .setTitle("Potwierdzenie")
+                                    .setMessage("Czy na pewno chcesz usunąć lek?")
+                                    .setPositiveButton("Tak") { _, _ ->
+                                        val pillModel = pillList.get(position) as PillModelCustom
+                                        val pillId = pillModel.id
+                                        if (pillId != null) {
+                                            val dbRef =
+                                                FirebaseDatabase.getInstance().getReference("Pills")
+                                                    .child(pillId)
+                                            dbRef.removeValue().addOnCompleteListener { task ->
+                                                if (task.isSuccessful) {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Tabletka została usunięta",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                } else {
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Wystąpił błąd",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        }
+                                    }.setNegativeButton("Anuluj") { dialog, _ ->
+                                        dialog.dismiss()
+                                    }
+                                    .create()
+
+                                alertDialog.show()
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                    popupMenu.show()
+                }
             }
         }
     }
