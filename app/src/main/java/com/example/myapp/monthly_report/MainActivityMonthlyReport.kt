@@ -710,10 +710,10 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
 
         if (!pillListFreq[selectedItem].equals("Niestandardowa", ignoreCase = true)) {
 
-            println("tutaj")
-            getPillsDataFromDatabase { data ->
-                Create(data, selectedMonth, selectedPill)
-            }
+//            println("tutaj")
+//            getPillsDataFromDatabase { data ->
+//                Create(data, selectedMonth, selectedPill)
+//            }
 
             adapter.notifyDataSetChanged()
 

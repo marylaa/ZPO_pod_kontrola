@@ -1,9 +1,11 @@
 package com.example.myapp.chat
 
 import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +22,7 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
     private lateinit var mDbRef: DatabaseReference
-
+    private lateinit var rootView: View
 
     var receiverRoom: String? = null
     var senderRoom: String? = null
@@ -33,7 +35,6 @@ class ChatActivity : AppCompatActivity() {
         val intent = intent
         val receiverUid = intent.getStringExtra("Id")
 
-
         senderUid = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
         mDbRef = FirebaseDatabase.getInstance().getReference()
@@ -41,15 +42,13 @@ class ChatActivity : AppCompatActivity() {
         senderRoom = receiverUid + senderUid
         receiverRoom = senderUid + receiverUid
 
-
-//        supportActionBar?.title = name
-
         chatRecyclerView = findViewById(R.id.chatRecyclerView)
         messageBox = findViewById(R.id.messageBox)
         sendButton = findViewById(R.id.sendButton)
+        rootView = findViewById(android.R.id.content)
+
         messageList = ArrayList()
         messageAdapter = MessageAdapter(this, messageList)
-
 
         chatRecyclerView.layoutManager = LinearLayoutManager(this)
         chatRecyclerView.adapter = messageAdapter
@@ -62,11 +61,11 @@ class ChatActivity : AppCompatActivity() {
                     val message = postSnapshot.getValue(Message::class.java)
                     messageList.add(message!!)
                 }
-                for(n in messageList){
-                    println(n.toString())
-                }
 
                 messageAdapter.notifyDataSetChanged()
+
+                // Przesuń RecyclerView na dół po zaktualizowaniu wiadomości
+                scrollRecyclerViewToBottom()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -74,15 +73,12 @@ class ChatActivity : AppCompatActivity() {
             }
         })
 
-
-
-
         sendButton.setOnClickListener {
             val messageText = messageBox.text.toString()
 
             if (messageText.isNotEmpty()) {
                 val currentTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
-                val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale("pl", "PL")).format(Date()) // Formatuj datę po polsku
+                val currentDate = SimpleDateFormat("dd MMMM yyyy", Locale("pl", "PL")).format(Date())
                 val messageObject = Message(messageText, senderUid, currentDate, currentTime)
 
                 mDbRef.child("chats").child(senderRoom!!).child("messages").push().setValue(messageObject).addOnSuccessListener {
@@ -94,6 +90,38 @@ class ChatActivity : AppCompatActivity() {
             }
         }
 
+        rootView.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                val rootViewHeight = rootView.height
+                val heightDiff = rootViewHeight - rootView.rootView.height
 
+                if (heightDiff > 100) {
+                    // Klawiatura jest widoczna, zmniejsz chatRecyclerView
+                    adjustViewForKeyboard(true)
+                } else {
+                    // Klawiatura jest ukryta, przywróć pierwotny rozmiar chatRecyclerView
+                    adjustViewForKeyboard(false)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun adjustViewForKeyboard(isKeyboardVisible: Boolean) {
+        val params = chatRecyclerView.layoutParams as ViewGroup.MarginLayoutParams
+
+        if (isKeyboardVisible) {
+            // Klawiatura jest widoczna, dostosuj widok chatRecyclerView
+            params.bottomMargin = resources.getDimensionPixelSize(R.dimen.keyboard_height)
+        } else {
+            // Klawiatura jest ukryta, przywróć pierwotny rozmiar chatRecyclerView
+            params.bottomMargin = 0
+        }
+
+        chatRecyclerView.layoutParams = params
+    }
+
+    private fun scrollRecyclerViewToBottom() {
+        chatRecyclerView.scrollToPosition(messageAdapter.itemCount - 1)
     }
 }

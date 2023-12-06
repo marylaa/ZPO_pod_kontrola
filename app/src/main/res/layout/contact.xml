@@ -22,14 +22,16 @@
     <EditText
         android:id="@+id/contact_name3"
         android:layout_width="80dp"
-        android:inputType="number"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
         android:padding="5dp"
         android:textSize="18dp"
         android:hint=" "
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:digits="0123456789."
+        android:inputType="numberDecimal"/>
+
 
     <TextView
         android:id="@+id/contact_name2"
