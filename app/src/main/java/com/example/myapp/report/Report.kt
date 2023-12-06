@@ -65,17 +65,21 @@ data class Report(
         val dbFirebase = FirebaseDatabase.getInstance()
         val dbReference = dbFirebase.getReference()
 
+
         val user = FirebaseAuth.getInstance().currentUser;
         val uid = user?.uid
 
+        println("value list" + valuesList[0].getInputAsString())
+
+
         dbReference.child("report").push().setValue(
             mapOf(
-                "Ciśnienie" to this.valuesList[0].toString(),
-                "Aktywność" to this.valuesList[1].toString(),
-                "Waga" to this.valuesList[2].toString(),
-                "Sen" to this.valuesList[3].toString(),
-                "Temp" to this.valuesList[4].toString(),
-                "Poziom" to this.valuesList[5].toString(),
+                "Ciśnienie" to this.valuesList[0].getInputAsString(),
+                "Aktywność" to this.valuesList[1].getInputAsString(),
+                "Waga" to this.valuesList[2].getInputAsString(),
+                "Sen" to this.valuesList[3].getInputAsString(),
+                "Temp" to this.valuesList[4].getInputAsString(),
+                "Poziom" to this.valuesList[5].getInputAsString(),
                 "mood" to this.mood,
                 "notes" to this.notes,
                 "date" to this.date,

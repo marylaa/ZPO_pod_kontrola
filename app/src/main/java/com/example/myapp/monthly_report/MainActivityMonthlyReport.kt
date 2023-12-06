@@ -581,7 +581,7 @@ class MainActivityMonthlyReport : AppCompatActivity(), AdapterView.OnItemSelecte
                     val month = dateTime.monthValue
                     val monthFormatted = String.format("%02d", month)
                     if (monthFormatted.equals(months[wantedMonth].toString())) {
-                        resultDict[date] = value.toFloat()
+                        resultDict[date] = value.replace(",", ".").toFloat()
                     }
                 } catch (e: IndexOutOfBoundsException) {
                     continue
