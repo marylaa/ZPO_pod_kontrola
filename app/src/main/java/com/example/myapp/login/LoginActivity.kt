@@ -27,6 +27,7 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
@@ -180,15 +181,19 @@ open class LoginActivity : BaseActivity(), View.OnClickListener {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(baseContext, "Authentication succeeded.", Toast.LENGTH_SHORT).show()
+                    val user = auth.currentUser
+                    val displayName = user?.displayName
+                    val email = user?.email
+                    // Dodaj inne informacje, które są dostępne po logowaniu
+                    Toast.makeText(baseContext, "Authentication succeeded. User: $displayName, Email: $email", Toast.LENGTH_SHORT).show()
+                    saveUser(user)
                     goToNextActivity()
                 } else {
-                    // If sign in fails, display a message to the user.
                     Toast.makeText(baseContext, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
 
     private fun goToNextActivity() {
         val user = auth.currentUser
@@ -240,16 +245,49 @@ open class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private fun updateUI(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        auth1.signInWithCredential(credential).addOnCompleteListener{ task ->
+        auth1.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                val user = auth1.currentUser
+                val displayName = user?.displayName
+                val email = user?.email
+                // Dodaj inne informacje, które są dostępne po logowaniu
+                Toast.makeText(baseContext, "Authentication succeeded. User: $displayName, Email: $email", Toast.LENGTH_SHORT).show()
+                saveUser(user)
                 val intent: Intent = Intent(this, UserScheduleActivity::class.java)
                 startActivity(intent)
-
-                // Dodaj Toast poniżej
-                Toast.makeText(this, "Zalogowano pomyślnie przez konto Google", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(baseContext, task.exception.toString(), Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+
+    private fun saveUser(firebaseUser: FirebaseUser?) {
+        if (firebaseUser != null) {
+            dbRef = FirebaseDatabase.getInstance().getReference("Users")
+
+            // Pobierz dane użytkownika
+            val email = firebaseUser.email
+            val uid = firebaseUser.uid
+            val displayName = firebaseUser.displayName
+            var firstName = ""
+            var lastName = ""
+
+            if (!displayName.isNullOrBlank()) {
+                val nameParts = displayName.split(" ")
+
+                // Sprawdź, czy udało się podzielić na imię i nazwisko
+                if (nameParts.size >= 2) {
+                    firstName = nameParts[0]
+                    lastName = nameParts.subList(1, nameParts.size).joinToString(" ")
+                }
+            }
+
+
+
+            val newUser = UserModel(email!!,"",firstName, uid, lastName,"Pacjent" )
+
+            dbRef.child(uid).setValue(newUser)
         }
     }
 
