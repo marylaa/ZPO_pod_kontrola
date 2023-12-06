@@ -5,6 +5,8 @@ import android.content.ContentValues.TAG
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
+import android.text.method.KeyListener
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.R
+import java.lang.Double
+
 
 class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>()
 {
@@ -49,7 +53,11 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
         textView2.text = elem.getUnit()
 
         val textView3 = viewHolder.nameTextView3
-        textView3.setInputType(InputType.TYPE_CLASS_NUMBER)
+//        textView3.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL)
+        textView3.setInputType(InputType.TYPE_CLASS_PHONE)
+
+        val keyListener: KeyListener = DigitsKeyListener.getInstance("1234567890.")
+        textView3.setKeyListener(keyListener)
         textView3.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, i: Int, i1: Int, i2: Int) {
             }
@@ -72,7 +80,7 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
                                 Toast.makeText(context, "Wprowadź wartość mniejszą lub równą 24", Toast.LENGTH_SHORT).show()
                                 textView3.setText("24")
                             } else {
-                                ValuesArray[currentPos].setInput((inputValue ?: 0.0).toString())
+                                ValuesArray[currentPos].setInput((inputValue ?: 0.0))
                             }
                         }
                         2 -> {
@@ -81,14 +89,14 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
                                 Toast.makeText(context, "Wprowadź wartość mniejszą lub równą 160", Toast.LENGTH_SHORT).show()
                                 textView3.setText("70")
                             } else {
-                                ValuesArray[currentPos].setInput((inputValue ?: 0.0).toString())
+                                ValuesArray[currentPos].setInput((inputValue ?: 0.0))
                             }
                         }
                         4 -> {
 //                            val inputValue = editable.toString().toDoubleOrNull()
                             val isDefaultValue = (inputValue == null || inputValue <= 45) // Sprawdzamy, czy wartość jest domyślna lub mniejsza niż 45
                             if (isDefaultValue) {
-                                ValuesArray[currentPos].setInput((inputValue ?: 0.0).toString())
+                                ValuesArray[currentPos].setInput((inputValue ?: 0.0))
                             } else {
                                 Toast.makeText(context, "Wprowadź wartość mniejszą lub równą 45", Toast.LENGTH_SHORT).show()
                                 textView3.setText("36,6")
@@ -98,7 +106,7 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
 //                            val inputValue = editable.toString().toIntOrNull()
                             val isDefaultValue = (inputValue == null || (inputValue <= 200))
                             if (isDefaultValue && !isValueChanged) { // Sprawdzamy, czy wartość domyślna nie została jeszcze zmieniona
-                                ValuesArray[currentPos].setInput((inputValue ?: 0.0).toString())
+                                ValuesArray[currentPos].setInput((inputValue ?: 0.0))
                             } else {
                                 Toast.makeText(context, "Wprowadź wartość pomiędzy 100 a 200", Toast.LENGTH_SHORT).show()
                                 textView3.setText("120")
@@ -109,14 +117,14 @@ class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adap
 //                            val inputValue = editable.toString().toIntOrNull()
                             val isDefaultValue = (inputValue == null || (inputValue <= 150))
                             if (isDefaultValue) {
-                                ValuesArray[currentPos].setInput((inputValue ?: 0.0).toString())
+                                ValuesArray[currentPos].setInput((inputValue ?: 0.0))
                             } else {
                                 Toast.makeText(context, "Wprowadź wartość pomiędzy 50 a 150", Toast.LENGTH_SHORT).show()
                                 textView3.setText("80")
                             }
                         }
                         else -> {
-                            ValuesArray[currentPos].setInput(editable.toString())
+                            ValuesArray[currentPos].setInput(editable.toString().toDoubleOrNull() ?: 0.0)
                         }
                     }
                     Log.d(TAG, editable.toString())

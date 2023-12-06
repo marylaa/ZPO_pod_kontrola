@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
         for (i in valuesName.indices) {
-            value = Value(valuesName[i], valuesUnit[i], i, " ")
+            value = Value(valuesName[i], valuesUnit[i], i, 0.0)
             Log.d(TAG, valuesName[i])
             valuesList.add(value)
         }
@@ -225,6 +225,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         var isDataAddedForToday = false
+
+        println(valuesList.toString())
 
         val query = dbRef.orderByChild("user").equalTo(uid)
         query.addListenerForSingleValueEvent(object : ValueEventListener {

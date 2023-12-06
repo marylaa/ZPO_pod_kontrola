@@ -70,12 +70,12 @@ data class Report(
 
         dbReference.child("report").push().setValue(
             mapOf(
-                "Ciśnienie" to this.valuesList[0].getInput().toString(),
-                "Aktywność" to this.valuesList[1].getInput().toString(),
-                "Waga" to this.valuesList[2].getInput().toString(),
-                "Sen" to this.valuesList[3].getInput().toString(),
-                "Temp" to this.valuesList[4].getInput().toString(),
-                "Poziom" to this.valuesList[5].getInput().toString(),
+                "Ciśnienie" to this.valuesList[0].toString(),
+                "Aktywność" to this.valuesList[1].toString(),
+                "Waga" to this.valuesList[2].toString(),
+                "Sen" to this.valuesList[3].toString(),
+                "Temp" to this.valuesList[4].toString(),
+                "Poziom" to this.valuesList[5].toString(),
                 "mood" to this.mood,
                 "notes" to this.notes,
                 "date" to this.date,

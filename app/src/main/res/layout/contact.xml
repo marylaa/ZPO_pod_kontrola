@@ -28,8 +28,8 @@
         android:hint=" "
         android:text=""
         android:textAlignment="center"
-        android:digits="0123456789.,"
-        android:inputType="numberDecimal"/>
+        android:inputType="number"/>
+
 
     <TextView
         android:id="@+id/contact_name2"
