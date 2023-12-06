@@ -72,18 +72,40 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 .setMessage("Czy na pewno chcesz powiadomić lekarza o pogorszeniu się stanu Twojego zdrowia?")
                 .setPositiveButton("Tak") { _, _ ->
                     getDoctorFromDatabase(userId).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            healthAlert { success ->
-                                if (success) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
-                                    }
-                                } else {
-                                    runOnUiThread {
-                                        Toast.makeText(this@PatientSettingsActivity, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
+                        if(doctorsList.isNotEmpty()) {
+                            if (task.isSuccessful) {
+                                healthAlert { success ->
+                                    if (success) {
+                                        runOnUiThread {
+                                            Toast.makeText(
+                                                this@PatientSettingsActivity,
+                                                "Zgłoszenie zostało wysłane",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    } else {
+                                        runOnUiThread {
+                                            Toast.makeText(
+                                                this@PatientSettingsActivity,
+                                                "Wystąpił błąd",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
                                 }
                             }
+                        }else{
+                            val alertDialog = AlertDialog.Builder(this)
+                                .setTitle("Brak lekarza")
+                                .setMessage("Nie jesteś przypisany do żadnego lekarza. Zgłoszenie jest niemożliwe do wysłania")
+                                .setPositiveButton("OK") { dialog, _ ->
+                                    // Tutaj umieść kod, który ma być wykonany po naciśnięciu przycisku "OK"
+                                    dialog.dismiss() // Zamyka okno dialogowe
+                                }
+                                .create()
+
+                            alertDialog.show()
+
                         }
                     }
                 }
@@ -180,9 +202,23 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                     startActivity(intent)
                 }
                 R.id.choosedChat ->{
-                    val intent = Intent(this, ChatActivity::class.java)
-                    intent.putExtra("Id", doctorsList[0])
-                    startActivity(intent)
+                    if(doctorsList.isNotEmpty()) {
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("Id", doctorsList[0])
+                        startActivity(intent)
+                    }else{
+                        val alertDialog = AlertDialog.Builder(this)
+                            .setTitle("Brak lekarza")
+                            .setMessage("Nie jesteś przypisany do żadnego lekarza. Kontakt jest niemożliwy")
+                            .setPositiveButton("OK") { dialog, _ ->
+                                // Tutaj umieść kod, który ma być wykonany po naciśnięciu przycisku "OK"
+                                dialog.dismiss() // Zamyka okno dialogowe
+                            }
+                            .create()
+
+                        alertDialog.show()
+
+                    }
                 }
                 R.id.chat -> {
                     val intent = Intent(this, MainNotifications::class.java)
