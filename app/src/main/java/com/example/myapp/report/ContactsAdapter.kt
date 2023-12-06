@@ -19,6 +19,7 @@ import com.example.myapp.R
 class ContactsAdapter (private val ValuesArray: List<Value>) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>()
 {
 
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Your holder should contain and initialize a member variable
         // for any view that will be set as you render a row

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapp.EmptyActivity
 import com.example.myapp.R
+import com.example.myapp.databinding.ActivityMainBinding
 import com.example.myapp.monthly_report.MainActivityMonthlyReport
 import com.example.myapp.pills_list.UserScheduleActivity
 import com.example.myapp.settings.PatientSettingsActivity
@@ -33,11 +34,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var dataExist: Boolean = false
     var report: Report = Report()
     val valuesList = arrayListOf<Value>()
+    private lateinit var binding: ActivityMainBinding  // Dodaj deklarację obiektu ViewBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+//        setContentView(R.layout.activity_main)
 
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener(this)
