@@ -49,10 +49,10 @@
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <TextView
-        android:id="@+id/textViewFirstName"
+        android:id="@+id/textViewPesel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Podaj imię"
+        android:text="Podaj numer PESEL"
         android:layout_marginTop="60dp"
         android:textAlignment="center"
         android:padding="5dp"
@@ -63,62 +63,40 @@
         app:layout_constraintTop_toBottomOf="@+id/accountImage" />
 
     <EditText
-        android:id="@+id/patientFirstName"
+        android:id="@+id/patientPesel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner"
         android:backgroundTint="#25000000"
         android:padding="8dp"
+        android:inputType="number"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Imię pacjenta"
+        android:hint="PESEL pacjenta"
         android:textSize="14sp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewFirstName" />
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_margin="10dp"
-        android:background="@color/background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/patientFirstName" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewPesel" />
 
     <TextView
-        android:id="@+id/textViewLastName"
+        android:id="@+id/data"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Podaj nazwisko"
+        android:text="Dane pacjenta"
         android:padding="5dp"
         android:textSize="18sp"
+        android:layout_marginTop="40px"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
-
-    <EditText
-        android:id="@+id/patientLastName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner"
-        android:backgroundTint="#25000000"
-        android:padding="8dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:hint="Nazwisko pacjenta"
-        android:textAlignment="center"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLastName" />
+        app:layout_constraintTop_toBottomOf="@+id/searchPatient" />
 
     <View
         android:id="@+id/view"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_margin="10dp"
@@ -126,38 +104,131 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/patientLastName" />
+        app:layout_constraintTop_toBottomOf="@+id/data" />
 
     <TextView
-        android:id="@+id/textViewEmail"
-        android:layout_width="match_parent"
+        android:id="@+id/nazwisko"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Podaj email"
+        android:layout_marginTop="40px"
         android:padding="5dp"
-        android:textSize="18sp"
-        android:textColor="@color/black"
+        android:layout_marginLeft="10px"
+        android:text="Nazwisko: "
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
-    <EditText
-        android:id="@+id/patientEmail"
-        android:layout_width="match_parent"
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/nazwiskoPatient"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner"
-        android:backgroundTint="#25000000"
-        android:padding="8dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:hint="Email pacjenta"
-        android:textSize="14sp"
+        android:layout_marginTop="40px"
+        android:padding="5dp"
+        android:text=""
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/nazwisko"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/imię"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Imię: "
+        android:layout_marginLeft="10px"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/nazwisko" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/imięPatient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/imię"
+        app:layout_constraintTop_toBottomOf="@+id/nazwisko" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="Email: "
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="10px"
+        app:layout_constraintTop_toBottomOf="@+id/imię" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/emailPatient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/email"
+        app:layout_constraintTop_toBottomOf="@+id/imię" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/pesel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="PESEL: "
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:layout_marginLeft="10px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/peselPatient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/pesel"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <Button
+        android:id="@+id/searchPatient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/yellow"
+        android:text="Szukaj"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/patientPesel" />
+
+    <Button
+        android:visibility="gone"
         android:id="@+id/addPatient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -166,7 +237,7 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/patientEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/pesel" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_view"
@@ -182,3 +253,188 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    tools:context=".pills_list.AddPillActivity"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto">-->
+
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linearLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:background="@color/background"-->
+<!--        android:gravity="center"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/close"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/baseline_close_24"-->
+<!--            android:scaleX="2"-->
+<!--            android:scaleY="2" />-->
+
+<!--        <TextView-->
+<!--            android:layout_width="330dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:paddingLeft="10dp"-->
+<!--            android:text="Pacjenci"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="27sp" />-->
+<!--    </LinearLayout>-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/accountImage"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/baseline_account_circle_24"-->
+<!--        android:scaleX="3"-->
+<!--        android:layout_marginTop="70dp"-->
+<!--        android:scaleY="3"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textViewFirstName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Podaj imię"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:textAlignment="center"-->
+<!--        android:padding="5dp"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/accountImage" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/patientFirstName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:backgroundTint="#25000000"-->
+<!--        android:padding="8dp"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_marginRight="15dp"-->
+<!--        android:hint="Imię pacjenta"-->
+<!--        android:textSize="14sp"-->
+<!--        android:textAlignment="center"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textViewFirstName" />-->
+
+<!--    <View-->
+<!--        android:id="@+id/view2"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="@color/background"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/patientFirstName" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textViewLastName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Podaj nazwisko"-->
+<!--        android:padding="5dp"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:textAlignment="center"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/view2" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/patientLastName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:backgroundTint="#25000000"-->
+<!--        android:padding="8dp"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_marginRight="15dp"-->
+<!--        android:hint="Nazwisko pacjenta"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="14sp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textViewLastName" />-->
+
+<!--    <View-->
+<!--        android:id="@+id/view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:background="@color/background"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/patientLastName" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textViewEmail"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Podaj email"-->
+<!--        android:padding="5dp"-->
+<!--        android:textSize="18sp"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textAlignment="center"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/view" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/patientEmail"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/rounded_corner"-->
+<!--        android:backgroundTint="#25000000"-->
+<!--        android:padding="8dp"-->
+<!--        android:layout_marginLeft="15dp"-->
+<!--        android:layout_marginRight="15dp"-->
+<!--        android:hint="Email pacjenta"-->
+<!--        android:textSize="14sp"-->
+<!--        android:textAlignment="center"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/addPatient"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/yellow"-->
+<!--        android:text="Dodaj"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/patientEmail" />-->
+
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/bottom_navigation_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:background="#3C000000"-->
+<!--        android:paddingLeft="100dp"-->
+<!--        android:paddingRight="100dp"-->
+<!--        app:labelVisibilityMode="unlabeled"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:menu="@menu/doctor_nav_menu"-->
+<!--        app:itemIconSize="33dp"/>-->
+
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

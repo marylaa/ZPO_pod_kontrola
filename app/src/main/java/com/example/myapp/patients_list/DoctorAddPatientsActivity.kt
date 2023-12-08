@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import com.example.myapp.R
@@ -21,14 +22,23 @@ import java.util.UUID
 
 class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
 
-    private var inputEmail: EditText? = null
-    private var inputFirstName: EditText? = null
-    private var inputLastName: EditText? = null
+    private var inputPesel: EditText? = null
     private var addButton: Button? = null
+    private var searchButton: Button? = null
     private var backButton: AppCompatImageButton? = null
     private lateinit var dbRef: DatabaseReference
     private var patientId = ""
     private lateinit var patientIds: Array<String>
+
+    private var patientLastName: TextView? = null
+    private var patientFirstName: TextView? = null
+    private var patientEmail: TextView? = null
+    private var patientPesel: TextView? = null
+    private var LastName: TextView? = null
+    private var FirstName: TextView? = null
+    private var Email: TextView? = null
+    private var Pesel: TextView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +46,19 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
 
         patientIds = intent.getStringArrayExtra("patientIds")!!
 
-        inputFirstName = findViewById(R.id.patientFirstName)
-        inputLastName = findViewById(R.id.patientLastName)
-        inputEmail = findViewById(R.id.patientEmail)
+        inputPesel = findViewById(R.id.patientPesel)
         addButton = findViewById(R.id.addPatient)
+        patientLastName = findViewById(R.id.nazwiskoPatient)
+        patientFirstName = findViewById(R.id.imięPatient)
+        patientEmail = findViewById(R.id.emailPatient)
+        patientPesel = findViewById(R.id.peselPatient)
+        LastName = findViewById(R.id.nazwisko)
+        FirstName = findViewById(R.id.imię)
+        Email = findViewById(R.id.email)
+        Pesel = findViewById(R.id.pesel)
         addButton?.setOnClickListener(this)
+        searchButton = findViewById(R.id.searchPatient)
+        searchButton?.setOnClickListener(this)
 
         backButton = findViewById(R.id.close)
         backButton?.setOnClickListener(this)
@@ -66,16 +84,12 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
 
     private fun validateDetails(): Boolean {
         return when {
-            TextUtils.isEmpty(inputFirstName?.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_first_name), true)
+            TextUtils.isEmpty(inputPesel?.text.toString().trim { it <= ' ' }) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_enter_pesel), true)
                 false
             }
-            TextUtils.isEmpty(inputLastName?.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_last_name), true)
-                false
-            }
-            TextUtils.isEmpty(inputEmail?.text.toString().trim { it <= ' ' }) -> {
-                showErrorSnackBar(resources.getString(R.string.err_msg_enter_email), true)
+            (inputPesel?.text.toString().length !== 11) -> {
+                showErrorSnackBar(resources.getString(R.string.err_msg_wrong_pesel),true)
                 false
             }
             else -> {
@@ -89,6 +103,20 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
             when (view.id) {
 
                 R.id.addPatient -> {
+                    if (validateDetails()) {
+                        addPatient().addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                if (task.result) {
+                                    Toast.makeText(this@DoctorAddPatientsActivity, "Pacjent został dodany", Toast.LENGTH_SHORT).show()
+                                    val intent = Intent(this, DoctorSettingsActivity::class.java)
+                                    startActivity(intent)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                R.id.searchPatient -> {
                     if (validateDetails()) {
                         ifUserExist().addOnCompleteListener { task ->
                             if (task.isSuccessful) {
@@ -115,33 +143,63 @@ class DoctorAddPatientsActivity : BaseActivity(), View.OnClickListener {
         var exists = false
         dbRef = FirebaseDatabase.getInstance().getReference("Users")
 
-        val query = dbRef.orderByChild("email").equalTo(inputEmail!!.text.toString())
+        val query = dbRef.orderByChild("pesel").equalTo(inputPesel!!.text.toString())
         return query.get().continueWith { task ->
             if (task.isSuccessful) {
                 val snapshot = task.result
                 if (snapshot.exists()) {
                     val user = snapshot.children.first().getValue(UserModel::class.java)
+                    patientId = user!!.id
 
-                    if (user!!.lastName.equals(inputLastName!!.text.toString()) && user!!.firstName.equals(inputFirstName!!.text.toString())) {
-                        exists = true
-                        patientId = user.id
+                    patientFirstName?.setText(user.firstName)
+                    patientLastName?.setText(user.lastName)
+                    patientPesel?.setText(user.pesel)
+                    patientEmail?.setText(user.email)
+                    patientFirstName?.setVisibility(View.VISIBLE);
+                    patientLastName?.setVisibility(View.VISIBLE);
+                    patientPesel?.setVisibility(View.VISIBLE);
+                    patientEmail?.setVisibility(View.VISIBLE);
+                    LastName?.setVisibility(View.VISIBLE);
+                    FirstName?.setVisibility(View.VISIBLE);
+                    Email?.setVisibility(View.VISIBLE);
+                    Pesel?.setVisibility(View.VISIBLE);
+                    addButton?.setVisibility(View.VISIBLE);
 
-                        if (patientId in patientIds) {
-                            showErrorSnackBar("Dany użytkownik jest już zapisany", true)
-                            exists = false
-                        } else {
-                            addToDatabase()
-                        }
-                    } else {
-                        showErrorSnackBar("Dane użytkownika nie są zgodne", true)
-                    }
                 } else {
                     showErrorSnackBar("Dane użytkownika nie są zgodne", true)
                 }
             } else {
-                Log.d("TAG", "Błąd w pobieraniu danych")
+                Log.d("TAG", task.exception.toString())
             }
             exists
+        }
+    }
+
+    private fun addPatient(): Task<Boolean> {
+        dbRef = FirebaseDatabase.getInstance().getReference("Users")
+        var added = false
+
+        val query = dbRef.orderByChild("pesel").equalTo(inputPesel!!.text.toString())
+        return query.get().continueWith { task ->
+            if (task.isSuccessful) {
+                val snapshot = task.result
+                if (snapshot.exists()) {
+                    val user = snapshot.children.first().getValue(UserModel::class.java)
+                    patientId = user!!.id
+                    
+                    if (patientId in patientIds) {
+                        showErrorSnackBar("Dany użytkownik jest już zapisany", true)
+                    } else {
+                        addToDatabase()
+                        added = true
+                    }
+                } else {
+
+                }
+            } else {
+                Log.d("TAG", "Błąd w pobieraniu danych")
+            }
+            added
         }
     }
 
