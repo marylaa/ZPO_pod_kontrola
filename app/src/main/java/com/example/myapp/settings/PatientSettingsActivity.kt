@@ -126,36 +126,6 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
             alertDialog.show()
         }
 
-        val healthAlert = findViewById<TextView>(R.id.healthAlert)
-        healthAlert.setOnClickListener {
-            val alertDialog = AlertDialog.Builder(this)
-                .setTitle("Potwierdzenie")
-                .setMessage("Czy na pewno chcesz powiadomić lekarza o pogorszeniu się stanu Twojego zdrowia?")
-                .setPositiveButton("Tak") { _, _ ->
-                    getDoctorFromDatabase(userId).addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            healthAlert { success ->
-                                if (success) {
-                                    runOnUiThread {
-                                        Toast.makeText(this@PatientSettingsActivity, "Zgłoszenie zostało wysłane", Toast.LENGTH_SHORT).show()
-                                    }
-                                } else {
-                                    runOnUiThread {
-                                        Toast.makeText(this@PatientSettingsActivity, "Wystąpił błąd", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                .setNegativeButton("Anuluj") { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .create()
-
-            alertDialog.show()
-        }
-
 
         val navView: BottomNavigationView = findViewById(R.id.bottom_navigation_view)
         navView.menu.findItem(R.id.navigation_settings).isChecked = true
@@ -245,6 +215,8 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         val dbFirebase = FirebaseDatabase.getInstance()
         val dbReference = dbFirebase.getReference()
 
+        println("Health alert")
+
         dbRef = FirebaseDatabase.getInstance().getReference("Notifications")
 
         var firstName = ""
@@ -256,58 +228,25 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
 
         notificationsQuery.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (snapshot in dataSnapshot.children) {
-                    firstName = snapshot.child("firstName").getValue(String::class.java)!!
-                    lastName = snapshot.child("lastName").getValue(String::class.java)!!
-                    break
-                }
+                if (dataSnapshot.exists()) {
+                    for (snapshot in dataSnapshot.children) {
+                        firstName = snapshot.child("firstName").getValue(String::class.java)!!
+                        lastName = snapshot.child("lastName").getValue(String::class.java)!!
+                        break
+                    }
 
-                Log.d("LEKARZE", doctorsList.toString())
-                val patientName = firstName + " " + lastName
-                sendAlertToDoctor(patientName)
-
-                for (doctor in doctorsList) {
-                    val notificationsQuery =
-                        dbReference.child("Users").orderByChild("id").equalTo(doctor)
-                    notificationsQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-                            for (snapshot in dataSnapshot.children) {
-                                firstName = snapshot.child("firstName").getValue(String::class.java)!!
-                                lastName = snapshot.child("lastName").getValue(String::class.java)!!
-
-                                val id = UUID.randomUUID().toString()
-                                val message = "Potwierdzenie, lekarz $firstName $lastName otrzymał zgłoszenie o Twoim złym stanie zdrowia."
-
-                                val currentDate = LocalDate.now().toString()
-                                var pillName = "Nie dotyczy"
-
-                                val notification = NotificationModelAlert(
-                                    message,
-                                    pillName,
-                                    currentDate,
-                                    userId,
-                                    id,
-                                    false
-                                )
-                                dbRef.child(id).setValue(notification).addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        completion(true) // Zwróć true w przypadku powodzenia
-                                    } else {
-                                        completion(false) // Zwróć false w przypadku błędu
-                                    }
-                                }
-                            }
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            Log.e("Error", databaseError.message)
-                        }
-                    })
+                    Log.d("LEKARZE", doctorsList.toString())
+                    val patientName = "$firstName $lastName"
+                    sendAlertToDoctor(patientName)
+                } else {
+                    Log.d("Health Alert", "No matching user found.")
+                    completion(false)
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("Error", databaseError.message)
+                Log.e("Error", "Health Alert query cancelled: ${databaseError.message}")
+                completion(false)
             }
         })
     }
@@ -320,13 +259,18 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
                 val snapshot = task.result.children
                 for (snap in snapshot) {
                     val doctor = snap.getValue(PatientDoctorModel::class.java)
-                    doctorsList.add(doctor!!.doctor)
-                    exists = true
+                    val doctorId = doctor?.doctor
+
+                    if (doctorId != null && !doctorsList.contains(doctorId)) {
+                        doctorsList.add(doctorId)
+                        exists = true
+                    }
                 }
             }
             exists
         }
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendAlertToDoctor(patientName: String) {
@@ -337,6 +281,7 @@ class PatientSettingsActivity : AppCompatActivity(), View.OnClickListener {
         val currentDate = LocalDate.now().toString()
         var pillName = "Nie dotyczy"
 
+        println(doctorsList.toString())
         for (doctor in doctorsList) {
             val id = UUID.randomUUID().toString()
 
